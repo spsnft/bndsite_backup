@@ -31,8 +31,8 @@ const InfoModal = ({ isOpen, onClose, title, children }: { isOpen: boolean, onCl
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-fade-in">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={onClose} />
-      <div className="relative w-full max-w-sm bg-[#0D1F18] border border-white/10 rounded-[2.5rem] p-6 text-white shadow-2xl overflow-hidden z-10 max-h-[85vh] flex flex-col">
-        <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ background: `radial-gradient(circle at 50% 0%, #10B981, transparent 70%)` }} />
+      <div className="relative w-full max-w-sm bg-[#112D21] border border-white/15 rounded-[2.5rem] p-6 text-white shadow-2xl overflow-hidden z-10 max-h-[85vh] flex flex-col">
+        <div className="absolute inset-0 opacity-15 pointer-events-none" style={{ background: `radial-gradient(circle at 50% 0%, #10B981, transparent 70%)` }} />
         <div className="flex items-center justify-between mb-6 shrink-0 relative z-10">
           <h3 className="text-[14px] font-black uppercase tracking-[0.15em] text-white">{title}</h3>
           <button onClick={onClose} className="p-2 bg-white/5 hover:bg-white/10 active:scale-90 rounded-full border border-white/10 transition-all text-white/60 hover:text-white">
@@ -74,7 +74,7 @@ const BadgeIcon = React.memo(({ type, isSmall }: { type: string, isSmall?: boole
   const iconSize = isSmall ? 13 : 18;
   const colorClass = { NEW: "text-blue-400", SALE: "text-emerald-400", HIT: "text-orange-400" }[type.toUpperCase()] || "text-white";
   const iconWrapper = (icon: React.ReactNode) => (
-    <div className={`${isSmall ? '' : 'p-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10 shadow-lg'}`}>{icon}</div>
+    <div className={`${isSmall ? '' : 'p-2 bg-black/40 backdrop-blur-md rounded-full border border-white/15 shadow-lg'}`}>{icon}</div>
   );
   switch (type.toUpperCase()) {
     case "NEW": return iconWrapper(<Plus size={iconSize} className={colorClass} strokeWidth={3} />);
@@ -103,28 +103,28 @@ const HighlightCard = React.memo(({ item, onClick, priority, hideBadge, isMini, 
   return (
     <div 
       onClick={() => { triggerHaptic('light'); onClick(); }} 
-      className={`relative rounded-[2rem] active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden border ${isMini ? 'h-[170px]' : 'h-[230px]'} bg-[#0D1F18]`} 
-      style={{ borderColor: `${accentColor}80` }}
+      className={`relative rounded-[2rem] active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden border ${isMini ? 'h-[170px]' : 'h-[230px]'} bg-[#112D21] hover:border-white/30`} 
+      style={{ borderColor: `${accentColor}A0` }}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80 pointer-events-none" />
-      <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ background: `radial-gradient(circle at 50% 110%, ${accentColor}, transparent 70%)` }} />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/70 pointer-events-none" />
+      <div className="absolute inset-0 opacity-50 pointer-events-none transition-opacity group-hover:opacity-70" style={{ background: `radial-gradient(circle at 50% 100%, ${accentColor}, transparent 65%)` }} />
       
       {!hideBadge && item.badge && (<div className={`absolute top-2 right-2 z-20 ${isMini ? 'scale-75' : 'scale-90'}`}><BadgeIcon type={item.badge} /></div>)}
       
       <div className="relative z-10 px-4 py-3 pb-0 flex-1 flex flex-col min-h-0">
         <div className="min-w-0 pr-6">
-          <h3 className={`${isMini ? 'text-[11px]' : 'text-[13px]'} font-black uppercase tracking-tight leading-tight text-white`}>{item.name}</h3>
-          {showSubcategory && (<p className={`${isMini ? 'text-[8px]' : 'text-[9px]'} font-bold mt-1 text-white/40 uppercase tracking-widest italic`}>{item.subcategory === 'classic' ? 'Classic' : (item.subcategory === 'selected' ? 'Selected' : item.subcategory || "Product")}</p>)}
+          <h3 className={`${isMini ? 'text-[11px]' : 'text-[13px]'} font-black uppercase tracking-tight leading-tight text-white group-hover:text-emerald-300 transition-colors`}>{item.name}</h3>
+          {showSubcategory && (<p className={`${isMini ? 'text-[8px]' : 'text-[9px]'} font-bold mt-1 text-white/50 uppercase tracking-widest italic`}>{item.subcategory === 'classic' ? 'Classic' : (item.subcategory === 'selected' ? 'Selected' : item.subcategory || "Product")}</p>)}
         </div>
         <div className="relative flex-1 w-full min-h-0 flex items-center justify-center my-1">
-            <BlurImage src={item.image} priority={priority} width={180} height={180} className="max-w-full max-h-full object-contain" alt={item.name} />
+            <BlurImage src={item.image} priority={priority} width={180} height={180} className="max-w-full max-h-full object-contain transform group-hover:scale-105 transition-transform duration-300" alt={item.name} />
         </div>
       </div>
 
       <div className="relative z-10 flex justify-between items-end px-4 pb-4 mt-auto">
         <span className={`${isMini ? 'text-[8px]' : 'text-[9px]'} font-black uppercase tracking-widest brightness-125`} style={{ color: TYPE_COLORS[item.type?.toLowerCase()] || "#FFF" }}>{item.type}</span>
         <div className="flex flex-col items-end">
-          {oldPrice > currentPrice && <span className={`${isMini ? 'text-[9px]' : 'text-[11px]'} font-bold line-through opacity-30 text-white leading-none mb-0.5`}>{oldPrice}<BahtSymbol /></span>}
+          {oldPrice > currentPrice && <span className={`${isMini ? 'text-[9px]' : 'text-[11px]'} font-bold line-through opacity-40 text-white leading-none mb-0.5`}>{oldPrice}<BahtSymbol /></span>}
           <p className={`${isMini ? 'text-[15px]' : 'text-[19px]'} font-black tracking-tighter leading-none text-white`}>{currentPrice > 0 ? (<>{currentPrice}<BahtSymbol /></>) : '—'}</p>
         </div>
       </div>
@@ -135,16 +135,16 @@ const HighlightCard = React.memo(({ item, onClick, priority, hideBadge, isMini, 
 const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => void }) => {
   const isAccessory = p.category === 'accessories';
   return (
-    <div onClick={() => { triggerHaptic('light'); onClick(); }} className="flex items-center justify-between gap-3 px-4 py-4 text-white border-b border-white/10 last:border-b-0 active:bg-white/5 transition-colors cursor-pointer group">
+    <div onClick={() => { triggerHaptic('light'); onClick(); }} className="flex items-center justify-between gap-3 px-4 py-4 text-white border-b border-white/10 last:border-b-0 active:bg-white/5 hover:bg-white/5 transition-colors cursor-pointer group">
         <div className="flex items-center gap-4 truncate flex-1">
           <div className="w-8 flex justify-center shrink-0">{p.badge && <BadgeIcon type={p.badge} isSmall={true} />}</div>
-          <span className="text-[14px] font-black uppercase tracking-tight text-white/90 truncate leading-tight">{p.name}</span>
+          <span className="text-[14px] font-black uppercase tracking-tight text-white/90 truncate leading-tight group-hover:text-emerald-300 transition-colors">{p.name}</span>
         </div>
         <div className="flex items-center gap-5 shrink-0 pr-4">
           {isAccessory ? (
             <span className="text-[14px] font-black text-white/90">{Math.round(Number(p.prices?.['1']) || 0)}<BahtSymbol /></span>
           ) : (
-            p.farm && p.farm !== "-" && <span className="text-[9px] font-bold text-white/40 uppercase tracking-widest truncate max-w-[90px]">{p.farm}</span>
+            p.farm && p.farm !== "-" && <span className="text-[9px] font-bold text-white/50 uppercase tracking-widest truncate max-w-[90px]">{p.farm}</span>
           )}
           <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: TYPE_COLORS[p.type?.toLowerCase()] || '#10B981' }}>{p.type}</span>
         </div>
@@ -255,7 +255,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
            </div>
            <div className="flex items-center flex-1 justify-end">
               <div className="flex gap-3">
-                <Link href="https://t.me/bshk_phuket" target="_blank" className="w-14 h-14 flex items-center justify-center bg-white/5 rounded-2xl border border-white/5 active:scale-90 transition-all shadow-xl">
+                <Link href="https://t.me/bshk_phuket" target="_blank" className="w-14 h-14 flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-xl">
                   <SendHorizontal size={22} className="opacity-80"/>
                 </Link>
 
@@ -263,11 +263,11 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                   <Phone size={22} />
                 </div>
 
-                <Link href="https://www.instagram.com/boshkunadoroshku" target="_blank" className="w-14 h-14 flex items-center justify-center bg-white/5 rounded-2xl border border-white/5 active:scale-90 transition-all shadow-xl">
+                <Link href="https://www.instagram.com/boshkunadoroshku" target="_blank" className="w-14 h-14 flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-xl">
                   <Instagram size={22} className="opacity-80"/>
                 </Link>
               </div>
-              <button onClick={() => { triggerHaptic('light'); setLang(lang === 'en' ? 'ru' : 'en'); }} className="ml-3 w-14 h-14 flex items-center justify-center bg-white/5 rounded-2xl border border-white/5 font-black text-[11px] text-emerald-400 active:scale-90 transition-all shrink-0">{lang === 'en' ? 'RU' : 'EN'}</button>
+              <button onClick={() => { triggerHaptic('light'); setLang(lang === 'en' ? 'ru' : 'en'); }} className="ml-3 w-14 h-14 flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 font-black text-[11px] text-emerald-400 active:scale-90 transition-all shrink-0">{lang === 'en' ? 'RU' : 'EN'}</button>
            </div>
         </div>
 
@@ -275,7 +275,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
         <div className="flex flex-wrap sm:flex-nowrap gap-2 px-2 mb-4 mt-2 relative z-20">
           <button 
             onClick={() => { triggerHaptic('light'); setIsDeliveryModalOpen(true); }}
-            className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-2xl border border-white/10 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden"
+            className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-2xl border border-white/15 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden"
           >
             <Bike size={15} className="text-emerald-400 shrink-0" />
             <span className="text-[10px] font-black uppercase tracking-wider text-white/90 truncate">
@@ -285,7 +285,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
 
           <button 
             onClick={() => { triggerHaptic('light'); setIsGuaranteesModalOpen(true); }}
-            className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-2xl border border-white/10 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden"
+            className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-2xl border border-white/15 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden"
           >
             <ShieldCheck size={15} className="text-emerald-400 shrink-0" />
             <span className="text-[10px] font-black uppercase tracking-wider text-white/90 truncate">
@@ -294,44 +294,68 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
           </button>
         </div>
 
-        {/* СМЫСЛОВОЙ ХАБ С ХАРДКОДНЫМИ ПЕРЕВОДАМИ КАТЕГОРИЙ */}
+        {/* СМЫСЛОВОЙ ХАБ СО SPLIT CARD И ОБНОВЛЕННЫМИ БЕКГРАУНДАМИ */}
         <div className="grid grid-cols-2 gap-2 px-2 mb-6 relative z-20">
           
-          {/* УРОВЕНЬ 1: ЦАРЬ-ПЛИТКА (MAIN MENU) */}
-          <div
-            onClick={() => {
-              triggerHaptic('medium');
-              setClosedGrades(p => p.filter(x => x !== 'classic' && x !== 'selected'));
-              scrollToSection('buds-menu');
-            }}
-            className="relative rounded-2xl border py-4 px-4 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 bg-[#0D1F18] active:scale-[0.99] group col-span-2 h-[110px]"
-            style={{ borderColor: `${GOLDEN_COLOR}40` }}
+          {/* ИЗЯЩНЫЙ SPLIT CARD (РАЗДЕЛЕННАЯ КНОПКА FLOWERS) */}
+          <div 
+            className="relative rounded-2xl border flex overflow-hidden col-span-2 h-[110px] bg-[#112D21]"
+            style={{ borderColor: `${GOLDEN_COLOR}50` }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40 pointer-events-none z-0" />
-            <div className="absolute inset-0 opacity-20 pointer-events-none z-0 transition-opacity group-hover:opacity-35" 
-                 style={{ background: `linear-gradient(135deg, ${GOLDEN_COLOR} 0%, transparent 50%, #10B981 100%)` }} />
-
-            <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none z-0 opacity-[0.07] scale-[2.5] blur-[0.5px] transition-transform group-hover:scale-[2.7] duration-500">
-              <Leaf style={{ color: GOLDEN_COLOR }} strokeWidth={1.2} />
-            </div>
-            <div className="absolute inset-y-0 right-6 flex items-center pointer-events-none z-0 opacity-[0.07] scale-[2.5] blur-[0.5px] transition-transform group-hover:scale-[2.7] duration-500">
-              <Sparkles style={{ color: '#10B981' }} strokeWidth={1.2} />
-            </div>
-
-            <div className="relative z-10 flex flex-col justify-between w-full h-full min-w-0">
-              <div className="flex items-center justify-between w-full">
-                <h3 className="text-[13px] font-black tracking-[0.08em] text-white uppercase leading-none">
-                  {lang === 'ru' ? 'ОСНОВНОЕ МЕНЮ • FLOWERS' : 'MAIN MENU • FLOWERS'}
-                </h3>
-                <span className="text-[8px] font-black tracking-widest text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full uppercase">
-                  Classic & Premium
-                </span>
+            {/* Левая половина - CLASSIC */}
+            <div 
+              onClick={() => {
+                triggerHaptic('medium');
+                setClosedGrades(p => p.filter(x => x !== 'classic'));
+                scrollToSection('buds-menu');
+              }}
+              className="relative flex-1 py-4 px-4 flex flex-col justify-between cursor-pointer transition-all duration-300 active:bg-black/20 group border-r border-white/5"
+            >
+              <div className="absolute inset-0 opacity-15 pointer-events-none transition-opacity group-hover:opacity-35" 
+                   style={{ background: `radial-gradient(circle at 20% 120%, ${GOLDEN_COLOR}, transparent 70%)` }} />
+              
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none z-0 opacity-[0.06] scale-[2.2] blur-[0.5px] transition-transform group-hover:scale-[2.4] duration-500">
+                <Leaf style={{ color: GOLDEN_COLOR }} strokeWidth={1.2} />
               </div>
-              <p className="text-[10px] font-medium text-white/50 leading-tight mt-2 max-w-[90%] group-hover:text-white/80 transition-colors">
-                {lang === 'ru' 
-                  ? 'Основное меню соцветий: от выверенной классики до премиальных селекционных сортов.' 
-                  : 'Main flower menu: from true time-tested classics to selected premium grades.'}
-              </p>
+
+              <div className="relative z-10 flex flex-col justify-between h-full min-w-0">
+                <div className="flex items-center justify-between w-full">
+                  <h3 className="text-[11px] font-black tracking-[0.08em] text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">
+                    {lang === 'ru' ? 'КЛАССИКА' : 'CLASSIC'}
+                  </h3>
+                </div>
+                <p className="text-[9.5px] font-medium text-white/50 leading-tight mt-2 line-clamp-2">
+                  {lang === 'ru' ? 'Проверенные сорта по низким ценам' : 'Verified strains at budget prices'}
+                </p>
+              </div>
+            </div>
+
+            {/* Правая половина - PREMIUM */}
+            <div 
+              onClick={() => {
+                triggerHaptic('medium');
+                setClosedGrades(p => p.filter(x => x !== 'premium'));
+                scrollToSection('buds-menu');
+              }}
+              className="relative flex-1 py-4 px-4 flex flex-col justify-between cursor-pointer transition-all duration-300 active:bg-black/20 group"
+            >
+              <div className="absolute inset-0 opacity-15 pointer-events-none transition-opacity group-hover:opacity-35" 
+                   style={{ background: `radial-gradient(circle at 80% 120%, #10B981, transparent 70%)` }} />
+              
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none z-0 opacity-[0.06] scale-[2.2] blur-[0.5px] transition-transform group-hover:scale-[2.4] duration-500">
+                <Crown style={{ color: '#10B981' }} strokeWidth={1.2} />
+              </div>
+
+              <div className="relative z-10 flex flex-col justify-between h-full min-w-0">
+                <div className="flex items-center justify-between w-full">
+                  <h3 className="text-[11px] font-black tracking-[0.08em] text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">
+                    {lang === 'ru' ? 'ПРЕМИУМ' : 'PREMIUM'}
+                  </h3>
+                </div>
+                <p className="text-[9.5px] font-medium text-white/50 leading-tight mt-2 line-clamp-2">
+                  {lang === 'ru' ? 'Хиты, призеры и лучшие генетики' : 'Best-sellers & iconic genetics'}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -343,10 +367,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               setClosedGrades(p => p.filter(x => !x.includes('exclusive') && x !== 'import'));
               scrollToSection('buds-menu');
             }}
-            className="relative rounded-2xl border p-3.5 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 bg-[#0D1F18] active:scale-[0.98] group col-span-1 h-[100px]"
-            style={{ borderColor: `${IMPORT_COLOR}35` }}
+            className="relative rounded-2xl border p-3.5 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 bg-[#112D21] active:scale-[0.98] group col-span-1 h-[100px]"
+            style={{ borderColor: `${IMPORT_COLOR}45` }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 pointer-events-none z-0" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
             <div className="absolute inset-0 opacity-20 pointer-events-none z-0 transition-opacity group-hover:opacity-45" 
                  style={{ background: `radial-gradient(circle at 50% 120%, ${IMPORT_COLOR}, transparent 70%)` }} />
 
@@ -355,7 +379,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             </div>
 
             <div className="relative z-10 flex flex-col justify-between w-full h-full min-w-0">
-              <h3 className="text-[10.5px] font-black tracking-wider text-white uppercase leading-none truncate">
+              <h3 className="text-[10.5px] font-black tracking-wider text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">
                 {lang === 'ru' ? 'ЭКСКЛЮЗИВ' : 'EXCLUSIVES'}
               </h3>
               <p className="text-[9.5px] font-medium text-white/40 leading-tight mt-auto group-hover:text-white/70 transition-colors line-clamp-2">
@@ -373,10 +397,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               });
               scrollToSection('concentrates-menu');
             }}
-            className="relative rounded-2xl border p-3.5 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 bg-[#0D1F18] active:scale-[0.98] group col-span-1 h-[100px]"
-            style={{ borderColor: '#34D39935' }}
+            className="relative rounded-2xl border p-3.5 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 bg-[#112D21] active:scale-[0.98] group col-span-1 h-[100px]"
+            style={{ borderColor: '#34D39945' }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 pointer-events-none z-0" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
             <div className="absolute inset-0 opacity-20 pointer-events-none z-0 transition-opacity group-hover:opacity-45" 
                  style={{ background: `radial-gradient(circle at 50% 120%, #34D399, transparent 70%)` }} />
 
@@ -385,7 +409,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             </div>
 
             <div className="relative z-10 flex flex-col justify-between w-full h-full min-w-0">
-              <h3 className="text-[10.5px] font-black tracking-wider text-white uppercase leading-none truncate">
+              <h3 className="text-[10.5px] font-black tracking-wider text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">
                 {lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES'}
               </h3>
               <p className="text-[9.5px] font-medium text-white/40 leading-tight mt-auto group-hover:text-white/70 transition-colors line-clamp-2">
@@ -404,10 +428,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               });
               scrollToSection('prerolls-menu');
             }}
-            className="relative rounded-2xl border p-3 flex flex-col justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-[#0D1F18] active:scale-[0.98] group col-span-1 h-[64px]"
-            style={{ borderColor: '#F472B635' }}
+            className="relative rounded-2xl border p-3 flex flex-col justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-[#112D21] active:scale-[0.98] group col-span-1 h-[64px]"
+            style={{ borderColor: '#F472B645' }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 pointer-events-none z-0" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
             <div className="absolute inset-0 opacity-15 pointer-events-none z-0 transition-opacity group-hover:opacity-35" 
                  style={{ background: `radial-gradient(circle at 50% 120%, #F472B6, transparent 70%)` }} />
 
@@ -416,7 +440,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             </div>
 
             <div className="relative z-10 flex items-center justify-center w-full min-w-0">
-              <h3 className="text-[11px] font-black tracking-widest text-white uppercase leading-none text-center">
+              <h3 className="text-[11px] font-black tracking-widest text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
                 {lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS'}
               </h3>
             </div>
@@ -431,10 +455,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               });
               scrollToSection('accessories-menu');
             }}
-            className="relative rounded-2xl border p-3 flex flex-col justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-[#0D1F18] active:scale-[0.98] group col-span-1 h-[64px]"
-            style={{ borderColor: '#EC489935' }}
+            className="relative rounded-2xl border p-3 flex flex-col justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-[#112D21] active:scale-[0.98] group col-span-1 h-[64px]"
+            style={{ borderColor: '#EC489945' }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 pointer-events-none z-0" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
             <div className="absolute inset-0 opacity-15 pointer-events-none z-0 transition-opacity group-hover:opacity-35" 
                  style={{ background: `radial-gradient(circle at 50% 120%, #EC4899, transparent 70%)` }} />
 
@@ -443,7 +467,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             </div>
 
             <div className="relative z-10 flex items-center justify-center w-full min-w-0">
-              <h3 className="text-[11px] font-black tracking-widest text-white uppercase leading-none text-center">
+              <h3 className="text-[11px] font-black tracking-widest text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
                 {lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES'}
               </h3>
             </div>
@@ -472,14 +496,15 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
              <span className="text-[16px] font-black uppercase tracking-[0.3em] text-white px-6 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md">{t.flowerMenu}</span>
              <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent via-emerald-500/50 to-emerald-500"></div>
           </div>
+          
           <div className="space-y-3">
             {gradeSections.map(({ grade, regularItems, saleItems, priceRef, salePriceRef, isClassic, isSelected, isPremium }) => {
               const isOpen = !closedGrades.includes(grade.id);
               return (
-                <div key={grade.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#1d4837]/40 backdrop-blur-xl`} style={{ borderColor: isOpen ? `${grade.color}80` : 'rgba(255,255,255,0.05)' }}>
-                  <button onClick={() => toggleSection(grade.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left">
+                <div key={grade.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${grade.color}A0` : 'rgba(255,255,255,0.08)' }}>
+                  <button onClick={() => toggleSection(grade.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group">
                     <div className="w-full flex items-center justify-between px-4">
-                      <div className="flex items-center gap-3"><grade.icon size={22} style={{ color: grade.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter" style={{ color: grade.color }}>{grade.title}</h2></div>
+                      <div className="flex items-center gap-3"><grade.icon size={22} style={{ color: grade.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: grade.color }}>{grade.title}</h2></div>
                       <div className="flex items-center gap-2">
                         <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
                           {isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
@@ -488,19 +513,14 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                       </div>
                     </div>
 
-                    {/* ЖЕСТКИЕ ЛОКАЛЬНЫЕ ПЕРЕВОДЫ ДЛЯ КЛАССИКА И ПРЕМИУМА ЧТОБЫ ИЗБЕЖАТЬ СМЕШИВАНИЯ */}
                     {isClassic && (
                       <p className="px-4 text-[11px] font-medium text-white/50 mt-1 leading-tight">
-                        {lang === 'ru' 
-                          ? 'Проверенные и доступные сорта по низким ценам' 
-                          : 'Verified and affordable strains at low prices'}
+                        {lang === 'ru' ? 'Проверенные и доступные сорта по низким ценам' : 'Verified and affordable strains at low prices'}
                       </p>
                     )}
                     {isPremium && (
                       <p className="px-4 text-[11px] font-medium text-white/50 mt-1 leading-tight">
-                        {lang === 'ru' 
-                          ? 'Хиты продаж, сорта-призеры, именитые фермы и лучшие генетики' 
-                          : 'Best-sellers, iconic genetics & renowned farms'}
+                        {lang === 'ru' ? 'Хиты продаж, сорта-призеры, именитые фермы и лучшие генетики' : 'Best-sellers, iconic genetics & renowned farms'}
                       </p>
                     )}
 
@@ -558,10 +578,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             {eliteSections.map(sec => {
               const isOpen = !closedGrades.includes(sec.id);
               return sec.items.length > 0 && (
-                <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#1d4837]/40 backdrop-blur-xl`} style={{ borderColor: isOpen ? `${sec.color}80` : 'rgba(255,255,255,0.05)' }}>
-                  <button onClick={() => toggleSection(sec.id)} className="w-full px-8 py-6 flex flex-col active:bg-white/5 transition-colors text-left">
+                <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}>
+                  <button onClick={() => toggleSection(sec.id)} className="w-full px-8 py-6 flex flex-col active:bg-white/5 transition-colors text-left group">
                     <div className="w-full flex items-center justify-between">
-                      <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter" style={{ color: sec.color }}>{sec.title}</h2></div>
+                      <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div>
                       <div className="flex items-center gap-2">
                         <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                       </div>
@@ -575,10 +595,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             })}
 
             {importLooseSection && (
-                <div key={importLooseSection.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#1d4837]/40 backdrop-blur-xl`} style={{ borderColor: !closedGrades.includes(importLooseSection.id) ? `${importLooseSection.color}80` : 'rgba(255,255,255,0.05)' }}>
-                  <button onClick={() => toggleSection(importLooseSection.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left">
+                <div key={importLooseSection.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: !closedGrades.includes(importLooseSection.id) ? `${importLooseSection.color}A0` : 'rgba(255,255,255,0.08)' }}>
+                  <button onClick={() => toggleSection(importLooseSection.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group">
                     <div className="w-full flex items-center justify-between px-4">
-                      <div className="flex items-center gap-3"><importLooseSection.icon size={22} style={{ color: importLooseSection.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter" style={{ color: importLooseSection.color }}>{importLooseSection.title}</h2></div>
+                      <div className="flex items-center gap-3"><importLooseSection.icon size={22} style={{ color: importLooseSection.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: importLooseSection.color }}>{importLooseSection.title}</h2></div>
                       <div className="flex items-center gap-2">
                         <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${!closedGrades.includes(importLooseSection.id) ? 'rotate-180' : ''}`} />
                       </div>
@@ -611,10 +631,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             {concentrateSections.map(sec => {
               const isOpen = closedGrades.includes(sec.id);
               return (
-                <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#1d4837]/40 backdrop-blur-xl`} style={{ borderColor: isOpen ? `${sec.color}80` : 'rgba(255,255,255,0.05)' }}>
-                  <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left">
+                <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}>
+                  <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group">
                     <div className="w-full flex items-center justify-between px-4">
-                      <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter" style={{ color: sec.color }}>{sec.title}</h2></div>
+                      <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div>
                       <div className="flex items-center gap-2">
                         <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                       </div>
@@ -650,10 +670,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               const isOpen = closedGrades.includes(sec.id);
               const priceRef = sec.items[0];
               return (
-                <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#1d4837]/40 backdrop-blur-xl`} style={{ borderColor: isOpen ? `${sec.color}80` : 'rgba(255,255,255,0.05)' }}>
-                  <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left">
+                <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}>
+                  <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group">
                     <div className="w-full flex items-center justify-between px-4">
-                      <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter" style={{ color: sec.color }}>{sec.title}</h2></div>
+                      <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div>
                       <div className="flex items-center gap-2">
                         <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                       </div>
@@ -689,10 +709,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 {accessoriesSections.map(sec => {
                   const isOpen = closedGrades.includes(sec.id);
                   return (
-                    <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#1d4837]/40 backdrop-blur-xl`} style={{ borderColor: isOpen ? `${sec.color}80` : 'rgba(255,255,255,0.05)' }}>
-                      <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left">
+                    <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}>
+                      <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group">
                         <div className="w-full flex items-center justify-between px-4">
-                          <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter" style={{ color: sec.color }}>{sec.title}</h2></div>
+                          <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div>
                           <div className="flex items-center gap-2">
                             <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                           </div>
