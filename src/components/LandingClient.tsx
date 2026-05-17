@@ -26,72 +26,6 @@ const GRADES = [
   { id: 'premium', title: 'Premium Grade', color: '#10B981', icon: Crown }
 ];
 
-const SHOWCASE_CARDS = [
-  {
-    id: 'classic-showcase',
-    targetId: 'buds-menu',
-    targetGradeId: 'classic',
-    bgGlow: 'radial-gradient(circle at 50% 120%, #F59E0B, transparent 70%)',
-    borderColor: '#F59E0B40',
-    icon: Leaf,
-    iconColor: '#F59E0B',
-    title: { ru: 'CLASSIC', en: 'CLASSIC' },
-    descKey: 'classic'
-  },
-  {
-    id: 'premium-showcase',
-    targetId: 'buds-menu',
-    targetGradeId: 'selected',
-    bgGlow: 'radial-gradient(circle at 50% 120%, #10B981, transparent 70%)',
-    borderColor: '#10B98135',
-    icon: Sparkles,
-    iconColor: '#10B981',
-    title: { ru: 'PREMIUM', en: 'PREMIUM' },
-    descKey: 'selected'
-  },
-  {
-    id: 'elite-showcase',
-    targetId: 'buds-menu',
-    targetGradeId: 'elite',
-    bgGlow: 'radial-gradient(circle at 50% 120%, #A855F7, transparent 70%)',
-    borderColor: '#A855F735',
-    icon: MapPin,
-    iconColor: '#A855F7',
-    title: { ru: 'IMPORT & LOCAL EXCLUSIVES', en: 'IMPORT & LOCAL EXCLUSIVES' },
-    descKey: 'import loose'
-  },
-  {
-    id: 'extracts-showcase',
-    targetId: 'concentrates-menu',
-    bgGlow: 'radial-gradient(circle at 50% 120%, #34D399, transparent 70%)',
-    borderColor: '#34D39935',
-    icon: Droplets,
-    iconColor: '#34D399',
-    title: { ru: 'CONCENTRATES', en: 'CONCENTRATES' },
-    descKey: 'fresh frozen premium'
-  },
-  {
-    id: 'prerolls-showcase',
-    targetId: 'prerolls-menu',
-    bgGlow: 'radial-gradient(circle at 50% 120%, #F472B6, transparent 70%)',
-    borderColor: '#F472B635',
-    icon: Cigarette,
-    iconColor: '#F472B6',
-    title: { ru: 'PREROLLS', en: 'PREROLLS' },
-    descKey: 'joints'
-  },
-  {
-    id: 'accessories-showcase',
-    targetId: 'accessories-menu',
-    bgGlow: 'radial-gradient(circle at 50% 120%, #EC4899, transparent 70%)',
-    borderColor: '#EC489935',
-    icon: Layers,
-    iconColor: '#EC4899',
-    title: { ru: 'ACCESSORIES', en: 'ACCESSORIES' },
-    descKey: 'accessories'
-  }
-];
-
 const InfoModal = ({ isOpen, onClose, title, children }: { isOpen: boolean, onClose: () => void, title: string, children: React.ReactNode }) => {
   if (!isOpen) return null;
   return (
@@ -323,6 +257,13 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
     }
   };
 
+  // Вычисляем общие описания для отображения в объединенном хабе меню
+  const descClassic = getDesc('classic');
+  const descSelected = getDesc('selected');
+  const combinedFlowerDesc = lang === 'ru' 
+    ? 'Основное меню соцветий: от выверенной классики до премиальных селекционных сортов.' 
+    : 'Main flower menu: from true time-tested classics to selected premium grades.';
+
   return (
     <div className="min-h-screen bg-[#193D2E] text-white p-4 pb-32 selection:bg-emerald-500/30 font-sans">
       <header className="max-w-xl mx-auto pt-0 mb-0">
@@ -371,59 +312,166 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
           </button>
         </div>
 
-        {/* ХАБ КАТЕГОРИЙ 3х2 */}
-        <div className="grid grid-cols-6 gap-2 px-2 mb-6 relative z-20">
-          {SHOWCASE_CARDS.map((card) => {
-            const Icon = card.icon;
-            const dynamicDesc = getDesc(card.descKey);
-            
-            return (
-              <div
-                key={card.id}
-                onClick={() => {
-                  triggerHaptic('medium');
-                  if (card.targetGradeId) {
-                    setClosedGrades(p => p.filter(x => x !== card.targetGradeId));
-                  }
-                  if (card.id === 'extracts-showcase') {
-                    concentrateSections.forEach(sec => {
-                      setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]);
-                    });
-                  }
-                  if (card.id === 'prerolls-showcase') {
-                    prerollSections.forEach(sec => {
-                      setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]);
-                    });
-                  }
-                  if (card.id === 'accessories-showcase') {
-                    accessoriesSections?.forEach(sec => {
-                      setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]);
-                    });
-                  }
-                  scrollToSection(card.targetId);
-                }}
-                className="relative rounded-2xl border py-3 px-3.5 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 bg-[#0D1F18] active:scale-[0.98] group col-span-2 h-[96px]"
-                style={{ borderColor: card.borderColor }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 pointer-events-none z-0" />
-                <div className="absolute inset-0 opacity-25 pointer-events-none z-0 transition-opacity group-hover:opacity-45" style={{ background: card.bgGlow }} />
+        {/* АДАПТИВНЫЙ СМЫСЛОВОЙ ХАБ МЕНЮ */}
+        <div className="grid grid-cols-2 gap-2 px-2 mb-6 relative z-20">
+          
+          {/* УРОВЕНЬ 1: ЦАРЬ-ПЛИТКА (ОСНОВНОЕ МЕНЮ ШИШЕК) — col-span-2 */}
+          <div
+            onClick={() => {
+              triggerHaptic('medium');
+              setClosedGrades(p => p.filter(x => x !== 'classic' && x !== 'selected'));
+              scrollToSection('buds-menu');
+            }}
+            className="relative rounded-2xl border py-4 px-4 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 bg-[#0D1F18] active:scale-[0.99] group col-span-2 h-[110px]"
+            style={{ borderColor: `${GOLDEN_COLOR}40` }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40 pointer-events-none z-0" />
+            <div className="absolute inset-0 opacity-20 pointer-events-none z-0 transition-opacity group-hover:opacity-35" 
+                 style={{ background: `linear-gradient(135deg, ${GOLDEN_COLOR} 0%, transparent 50%, #10B981 100%)` }} />
 
-                <div className="relative z-10 flex flex-col justify-between w-full h-full min-w-0">
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <Icon size={12} style={{ color: card.iconColor }} className="shrink-0" />
-                    <h3 className="text-[10.5px] font-black tracking-wider text-white uppercase leading-none truncate">
-                      {lang === 'ru' ? card.title.ru : card.title.en}
-                    </h3>
-                  </div>
-                  {dynamicDesc && (
-                    <p className="text-[9.5px] font-medium text-white/40 leading-tight mt-auto group-hover:text-white/70 transition-colors line-clamp-2 max-w-[140px]">
-                      {dynamicDesc}
-                    </p>
-                  )}
-                </div>
+            {/* Скрещенные водяные знаки по бокам внутри плитки */}
+            <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none z-0 opacity-[0.07] scale-[2.5] blur-[0.5px] transition-transform group-hover:scale-[2.7] duration-500">
+              <Leaf style={{ color: GOLDEN_COLOR }} strokeWidth={1.2} />
+            </div>
+            <div className="absolute inset-y-0 right-6 flex items-center pointer-events-none z-0 opacity-[0.07] scale-[2.5] blur-[0.5px] transition-transform group-hover:scale-[2.7] duration-500">
+              <Sparkles style={{ color: '#10B981' }} strokeWidth={1.2} />
+            </div>
+
+            <div className="relative z-10 flex flex-col justify-between w-full h-full min-w-0">
+              <div className="flex items-center justify-between w-full">
+                <h3 className="text-[13px] font-black tracking-[0.08em] text-white uppercase leading-none">
+                  {lang === 'ru' ? 'ОСНОВНОЕ МЕНЮ • FLOWERS' : 'MAIN MENU • FLOWERS'}
+                </h3>
+                <span className="text-[8px] font-black tracking-widest text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full uppercase">
+                  Classic & Premium
+                </span>
               </div>
-            );
-          })}
+              <p className="text-[10px] font-medium text-white/50 leading-tight mt-2 max-w-[90%] group-hover:text-white/80 transition-colors">
+                {combinedFlowerDesc}
+              </p>
+            </div>
+          </div>
+
+          {/* УРОВЕНЬ 2: ОСОБЫЙ ТЯЖЕЛЫЙ ПРОДУКТ (Квадраты 50/50) */}
+          {/* Эксклюзив & Импорт */}
+          <div
+            onClick={() => {
+              triggerHaptic('medium');
+              setClosedGrades(p => p.filter(x => !x.includes('exclusive') && x !== 'import'));
+              scrollToSection('buds-menu');
+            }}
+            className="relative rounded-2xl border p-3.5 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 bg-[#0D1F18] active:scale-[0.98] group col-span-1 h-[100px]"
+            style={{ borderColor: `${IMPORT_COLOR}35` }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 pointer-events-none z-0" />
+            <div className="absolute inset-0 opacity-20 pointer-events-none z-0 transition-opacity group-hover:opacity-45" 
+                 style={{ background: `radial-gradient(circle at 50% 120%, ${IMPORT_COLOR}, transparent 70%)` }} />
+
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.08] scale-[2.2] blur-[1px] transition-transform group-hover:scale-[2.4] duration-500">
+              <MapPin style={{ color: IMPORT_COLOR }} strokeWidth={1.5} />
+            </div>
+
+            <div className="relative z-10 flex flex-col justify-between w-full h-full min-w-0">
+              <h3 className="text-[10.5px] font-black tracking-wider text-white uppercase leading-none truncate">
+                {lang === 'ru' ? 'ЭКСКЛЮЗИВ' : 'EXCLUSIVES'}
+              </h3>
+              <p className="text-[9.5px] font-medium text-white/40 leading-tight mt-auto group-hover:text-white/70 transition-colors line-clamp-2">
+                {getDesc('import loose') || (lang === 'ru' ? 'Импорт и локальный эксклюзив' : 'Import & local tops')}
+              </p>
+            </div>
+          </div>
+
+          {/* Концентраты */}
+          <div
+            onClick={() => {
+              triggerHaptic('medium');
+              concentrateSections.forEach(sec => {
+                setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]);
+              });
+              scrollToSection('concentrates-menu');
+            }}
+            className="relative rounded-2xl border p-3.5 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 bg-[#0D1F18] active:scale-[0.98] group col-span-1 h-[100px]"
+            style={{ borderColor: '#34D39935' }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 pointer-events-none z-0" />
+            <div className="absolute inset-0 opacity-20 pointer-events-none z-0 transition-opacity group-hover:opacity-45" 
+                 style={{ background: `radial-gradient(circle at 50% 120%, #34D399, transparent 70%)` }} />
+
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.08] scale-[2.2] blur-[1px] transition-transform group-hover:scale-[2.4] duration-500">
+              <Droplets style={{ color: '#34D399' }} strokeWidth={1.5} />
+            </div>
+
+            <div className="relative z-10 flex flex-col justify-between w-full h-full min-w-0">
+              <h3 className="text-[10.5px] font-black tracking-wider text-white uppercase leading-none truncate">
+                {lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES'}
+              </h3>
+              <p className="text-[9.5px] font-medium text-white/40 leading-tight mt-auto group-hover:text-white/70 transition-colors line-clamp-2">
+                {getDesc('live rosin') || (lang === 'ru' ? 'Экстракты экстра-класса' : 'Premium fresh frozen extracts')}
+              </p>
+            </div>
+          </div>
+
+          {/* УРОВЕНЬ 3: ГОТОВЫЕ РЕШЕНИЯ И СОПУТКА (Компактные карточки 50/50) */}
+          {/* Прероллы */}
+          <div
+            onClick={() => {
+              triggerHaptic('medium');
+              prerollSections.forEach(sec => {
+                setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]);
+              });
+              scrollToSection('prerolls-menu');
+            }}
+            className="relative rounded-2xl border p-3 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 bg-[#0D1F18] active:scale-[0.98] group col-span-1 h-[86px]"
+            style={{ borderColor: '#F472B635' }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 pointer-events-none z-0" />
+            <div className="absolute inset-0 opacity-15 pointer-events-none z-0 transition-opacity group-hover:opacity-35" 
+                 style={{ background: `radial-gradient(circle at 50% 120%, #F472B6, transparent 70%)` }} />
+
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.06] scale-[2.0] blur-[1px] transition-transform group-hover:scale-[2.2] duration-500">
+              <Cigarette style={{ color: '#F472B6' }} strokeWidth={1.5} />
+            </div>
+
+            <div className="relative z-10 flex flex-col justify-between w-full h-full min-w-0">
+              <h3 className="text-[10px] font-black tracking-wider text-white uppercase leading-none truncate">
+                {lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS'}
+              </h3>
+              <p className="text-[9px] font-medium text-white/40 leading-tight mt-auto group-hover:text-white/70 transition-colors line-clamp-1">
+                {getDesc('prerolls') || (lang === 'ru' ? 'Готовые джоинты' : 'Ready joints')}
+              </p>
+            </div>
+          </div>
+
+          {/* Аксессуары */}
+          <div
+            onClick={() => {
+              triggerHaptic('medium');
+              accessoriesSections?.forEach(sec => {
+                setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]);
+              });
+              scrollToSection('accessories-menu');
+            }}
+            className="relative rounded-2xl border p-3 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 bg-[#0D1F18] active:scale-[0.98] group col-span-1 h-[86px]"
+            style={{ borderColor: '#EC489935' }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 pointer-events-none z-0" />
+            <div className="absolute inset-0 opacity-15 pointer-events-none z-0 transition-opacity group-hover:opacity-35" 
+                 style={{ background: `radial-gradient(circle at 50% 120%, #EC4899, transparent 70%)` }} />
+
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.06] scale-[2.0] blur-[1px] transition-transform group-hover:scale-[2.2] duration-500">
+              <Layers style={{ color: '#EC4899' }} strokeWidth={1.5} />
+            </div>
+
+            <div className="relative z-10 flex flex-col justify-between w-full h-full min-w-0">
+              <h3 className="text-[10px] font-black tracking-wider text-white uppercase leading-none truncate">
+                {lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES'}
+              </h3>
+              <p className="text-[9px] font-medium text-white/40 leading-tight mt-auto group-hover:text-white/70 transition-colors line-clamp-1">
+                {getDesc('accessories') || (lang === 'ru' ? 'Девайсы и сопутствующие товары' : 'Devices & essentials')}
+              </p>
+            </div>
+          </div>
+
         </div>
       </header>
 
