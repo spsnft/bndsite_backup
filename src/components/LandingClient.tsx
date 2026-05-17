@@ -20,6 +20,66 @@ import {
   TYPE_COLORS, GRADES, SELECTED_COLOR, IMPORT_COLOR, CONCENTRATES_COLOR, GOLDEN_COLOR 
 } from "@/lib/utils"
 
+// Конфигурация карточек презентационного хаба
+const SHOWCASE_CARDS = [
+  {
+    id: 'elite-showcase',
+    targetId: 'buds-menu',
+    bgGlow: 'radial-gradient(circle at 50% 120%, #10B981, transparent 70%)',
+    borderColor: '#10B98180',
+    icon: Crown,
+    iconColor: '#10B981',
+    fullWidth: true,
+    title: { ru: 'ELITE COUTURE', en: 'ELITE COUTURE' },
+    desc: { 
+      ru: 'Selected & Local Exclusives. Мастер-дропы от топовых гроверов Пхукета. Ограниченные партии для настоящих ценителей.', 
+      en: 'Selected & Local Exclusives. Master drops from top Phuket growers. Limited batches for true connoisseurs.' 
+    }
+  },
+  {
+    id: 'classic-showcase',
+    targetId: 'buds-menu',
+    bgGlow: 'radial-gradient(circle at 50% 120%, #F59E0B, transparent 70%)',
+    borderColor: '#F59E0B40',
+    icon: Leaf,
+    iconColor: '#F59E0B',
+    fullWidth: false,
+    title: { ru: 'CLASSIC LINE', en: 'CLASSIC LINE' },
+    desc: { 
+      ru: 'Стабильное качество и баланс на каждый день.', 
+      en: 'Time-tested quality and balance for your daily lifestyle.' 
+    }
+  },
+  {
+    id: 'extracts-showcase',
+    targetId: 'concentrates-menu',
+    bgGlow: 'radial-gradient(circle at 50% 120%, #A855F7, transparent 70%)',
+    borderColor: '#A855F750',
+    icon: Droplets,
+    iconColor: '#A855F7',
+    fullWidth: false,
+    title: { ru: 'CONCENTRATES', en: 'CONCENTRATES' },
+    desc: { 
+      ru: 'Fresh Frozen & Live Rosin. Чистая экстракция.', 
+      en: 'Fresh Frozen & Live Rosin. Pure and advanced tech.' 
+    }
+  },
+  {
+    id: 'ready-showcase',
+    targetId: 'prerolls-menu',
+    bgGlow: 'radial-gradient(circle at 50% 120%, #F472B6, transparent 70%)',
+    borderColor: '#F472B650',
+    icon: FlameKindling,
+    iconColor: '#F472B6',
+    fullWidth: true,
+    title: { ru: 'READY SOLUTIONS', en: 'READY SOLUTIONS' },
+    desc: { 
+      ru: 'Прероллы ручной работы и брендовые аксессуары для максимального комфорта.', 
+      en: 'Handcrafted prerolls and premium gear for your ultimate comfort.' 
+    }
+  }
+];
+
 const processProductData = (rawProducts: any[]) => {
   return rawProducts.map(p => {
     const prices: any = {};
@@ -297,23 +357,62 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 px-2 mt-[16px] mb-[16px] relative z-20">
-          <button onClick={() => scrollToSection('buds-menu')} className="w-full px-4 py-3 bg-emerald-500/20 rounded-2xl border-2 border-emerald-500/30 text-[10px] font-black uppercase tracking-widest text-white active:scale-95 transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)]">
-            {lang === 'ru' ? 'Основное меню' : 'Flowers'}
-          </button>
-          <div className="flex gap-3">
-            <button onClick={() => scrollToSection('concentrates-menu')} className="flex-1 min-w-[80px] px-4 py-3 bg-[#A855F7]/20 rounded-2xl border-2 border-[#A855F7]/30 text-[10px] font-black uppercase tracking-widest text-white active:scale-95 transition-all shadow-[0_0_20px_rgba(168,85,247,0.2)]">
-              {lang === 'ru' ? 'Экстракты' : 'Extracts'}
-            </button>
-            <button onClick={() => scrollToSection('prerolls-menu')} className="flex-1 min-w-[80px] px-4 py-3 bg-[#F59E0B]/20 rounded-2xl border-2 border-[#F59E0B]/30 text-[10px] font-black uppercase tracking-widest text-white active:scale-95 transition-all shadow-[0_0_20px_rgba(245,158,11,0.2)]">
-              {lang === 'ru' ? 'Прероллы' : 'Prerolls'}
-            </button>
-            {accessoriesSections && (
-              <button onClick={() => scrollToSection('accessories-menu')} className="flex-1 min-w-[80px] px-4 py-3 bg-[#F472B6]/20 rounded-2xl border-2 border-[#F472B6]/30 text-[10px] font-black uppercase tracking-widest text-white active:scale-95 transition-all shadow-[0_0_20px_rgba(244,114,182,0.2)]">
-                {lang === 'ru' ? 'Аксессуары' : 'Accessories'}
-              </button>
-            )}
-          </div>
+        {/* ПРЕЗЕНТАЦИОННЫЙ ХАБ КАТЕГОРИЙ (Вместо старых кнопок-ссылок) */}
+        <div className="grid grid-cols-2 gap-3 px-2 mt-6 mb-6 relative z-20">
+          {SHOWCASE_CARDS.map((card) => {
+            const Icon = card.icon;
+            return (
+              <div
+                key={card.id}
+                onClick={() => {
+                  triggerHaptic('medium');
+                  // Если нажали на Classic — убираем его из закрытых, чтобы он точно распахнулся
+                  if (card.id === 'classic-showcase') {
+                    setClosedGrades(p => p.filter(x => x !== 'classic'));
+                  }
+                  // Если нажали на концентраты/прероллы/аксессуары — принудительно открываем их разделы
+                  if (card.id === 'extracts-showcase') {
+                    concentrateSections.forEach(sec => {
+                      setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]);
+                    });
+                  }
+                  if (card.id === 'ready-showcase') {
+                    prerollSections.forEach(sec => {
+                      setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]);
+                    });
+                    if (accessoriesSections) {
+                      accessoriesSections.forEach(sec => {
+                        setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]);
+                      });
+                    }
+                  }
+                  scrollToSection(card.targetId);
+                }}
+                className={`relative rounded-[2rem] border p-5 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 bg-[#0D1F18] active:scale-[0.98] group ${
+                  card.fullWidth ? 'col-span-2 min-h-[120px]' : 'col-span-1 min-h-[155px]'
+                }`}
+                style={{ borderColor: card.borderColor }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 pointer-events-none z-0" />
+                <div className="absolute inset-0 opacity-25 pointer-events-none z-0 transition-opacity group-hover:opacity-45" style={{ background: card.bgGlow }} />
+
+                <div className="relative z-10 flex items-start justify-between gap-2">
+                  <h3 className="text-[13px] font-black tracking-wider text-white uppercase leading-none mt-1.5">
+                    {lang === 'ru' ? card.title.ru : card.title.en}
+                  </h3>
+                  <div className="p-2 bg-black/40 backdrop-blur-md rounded-xl border border-white/10 shadow-lg shrink-0">
+                    <Icon size={16} style={{ color: card.iconColor }} />
+                  </div>
+                </div>
+
+                <div className="relative z-10 mt-3">
+                  <p className="text-[11px] font-medium text-white/50 leading-relaxed max-w-[95%] group-hover:text-white/80 transition-colors">
+                    {lang === 'ru' ? card.desc.ru : card.desc.en}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </header>
 
@@ -339,7 +438,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
           </div>
           <div className="space-y-3">
             {gradeSections.map(({ grade, regularItems, saleItems, priceRef, salePriceRef, isClassic }) => {
-              // Открыто ВСЕГДА, если только юзер сам не нажал свернуть
               const isOpen = !closedGrades.includes(grade.id);
               return (
                 <div key={grade.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#1d4837]/40 backdrop-blur-xl`} style={{ borderColor: isOpen ? `${grade.color}80` : 'rgba(255,255,255,0.05)' }}>
@@ -406,7 +504,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             })}
             
             {eliteSections.map(sec => {
-              // Исключительно buds категорий, открыто изначально
               const isOpen = !closedGrades.includes(sec.id);
               return sec.items.length > 0 && (
                 <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#1d4837]/40 backdrop-blur-xl`} style={{ borderColor: isOpen ? `${sec.color}80` : 'rgba(255,255,255,0.05)' }}>
@@ -461,7 +558,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
           </div>
           <div className="space-y-3">
             {concentrateSections.map(sec => {
-              // Другие категории (не buds) изначально ЗАКРЫТЫ, поэтому проверяем на вхождение
               const isOpen = closedGrades.includes(sec.id);
               return (
                 <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#1d4837]/40 backdrop-blur-xl`} style={{ borderColor: isOpen ? `${sec.color}80` : 'rgba(255,255,255,0.05)' }}>
