@@ -379,7 +379,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
           </button>
         </div>
 
-        {/* ХАБ КАТЕГОРИЙ */}
+        {/* ХАБ КАТЕГОРИЙ (ИСПРАВЛЕННЫЙ БЛОК ИНТЕРВАЛОВ И ШРИФТОВ) */}
         <div className="grid grid-cols-6 gap-3 px-2 mb-6 relative z-20">
           {SHOWCASE_CARDS.map((card) => {
             const Icon = card.icon;
@@ -409,20 +409,23 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 pointer-events-none z-0" />
                 <div className="absolute inset-0 opacity-25 pointer-events-none z-0 transition-opacity group-hover:opacity-45" style={{ background: card.bgGlow }} />
 
-                <div className="relative z-10 flex items-start justify-between gap-1.5 w-full">
-                  <h3 className="text-[11px] font-black tracking-wider text-white uppercase leading-tight mt-1">
-                    {lang === 'ru' ? card.title.ru : card.title.en}
-                  </h3>
+                {/* Текст слева, Иконка справа — жестко упакованы в один верхний flex-ряд */}
+                <div className="relative z-10 flex items-start justify-between gap-3 w-full">
+                  <div className="flex flex-col min-w-0">
+                    <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-tight">
+                      {lang === 'ru' ? card.title.ru : card.title.en}
+                    </h3>
+                    <p className="text-[10px] font-medium text-white/40 leading-snug mt-1.5 group-hover:text-white/70 transition-colors line-clamp-2">
+                      {lang === 'ru' ? card.desc.ru : card.desc.en}
+                    </p>
+                  </div>
                   <div className="p-1.5 bg-black/40 backdrop-blur-md rounded-xl border border-white/10 shadow-lg shrink-0">
                     <Icon size={14} style={{ color: card.iconColor }} />
                   </div>
                 </div>
 
-                <div className="relative z-10 mt-2">
-                  <p className="text-[9.5px] font-medium text-white/40 leading-snug max-w-[98%] group-hover:text-white/70 transition-colors line-clamp-2">
-                    {lang === 'ru' ? card.desc.ru : card.desc.en}
-                  </p>
-                </div>
+                {/* Распорка для удержания контента вверху при фиксированной min-h */}
+                <div className="mt-auto" />
               </div>
             );
           })}
@@ -748,14 +751,18 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
           <Trophy size={18} className="text-emerald-400 shrink-0" />
           <div>
             <p className="text-[8px] font-black uppercase tracking-[0.15em] text-white/40 mb-1">{lang === 'ru' ? 'Опыт на рынке' : 'Market Experience'}</p>
-            <p className="text-[13px] font-bold text-white tracking-[0.1em]">{lang === 'ru' ? '3 года стабильной работы' : '3 years of solid experience'}</p>
+            <p className="text-[13px] font-bold text-white tracking-[0.1em]">
+              {lang === 'ru' ? '3 года стабильной работы' : '3 years of solid experience'}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-4">
           <Users size={18} className="text-emerald-400 shrink-0" />
           <div>
             <p className="text-[8px] font-black uppercase tracking-[0.15em] text-white/40 mb-1">{lang === 'ru' ? 'Репутация' : 'Reputation'}</p>
-            <p className="text-[13px] font-bold text-white tracking-[0.1em]">{lang === 'ru' ? 'Сотни довольных постоянных клиентов' : 'Hundreds of satisfied regular loyal clients'}</p>
+            <p className="text-[13px] font-bold text-white tracking-[0.1em]">
+              {lang === 'ru' ? 'Сотни довольных постоянных клиентов' : 'Hundreds of satisfied regular loyal clients'}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-4">
