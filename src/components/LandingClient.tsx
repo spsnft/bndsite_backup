@@ -42,64 +42,70 @@ const InfoModal = ({ isOpen, onClose, title, children }: { isOpen: boolean, onCl
   );
 };
 
+// Конфиг гридов: сетка 3х2, у всех col-span-2, высота h-[70px]
 const SHOWCASE_CARDS = [
   {
     id: 'classic-showcase',
     targetId: 'buds-menu',
     targetGradeId: 'classic',
     bgGlow: 'radial-gradient(circle at 50% 120%, #F59E0B, transparent 70%)',
-    borderColor: '#F59E0B50',
+    borderColor: '#F59E0B40',
     icon: Leaf,
     iconColor: '#F59E0B',
-    spanClass: 'col-span-2 min-h-[140px]',
     title: { ru: 'CLASSIC', en: 'CLASSIC' },
-    desc: { ru: 'Качество на каждый день.', en: 'Daily quality standard.' }
+    descKey: 'classic' // Ключ для динамического поиска описания из базы
   },
   {
     id: 'premium-showcase',
     targetId: 'buds-menu',
     targetGradeId: 'premium',
     bgGlow: 'radial-gradient(circle at 50% 120%, #10B981, transparent 70%)',
-    borderColor: '#10B98140',
+    borderColor: '#10B98135',
     icon: Sparkles,
     iconColor: '#10B981',
-    spanClass: 'col-span-2 min-h-[140px]',
     title: { ru: 'PREMIUM', en: 'PREMIUM' },
-    desc: { ru: 'Яркие вкусовые профили.', en: 'Rich terpene profiles.' }
+    descKey: 'premium'
   },
   {
     id: 'elite-showcase',
     targetId: 'buds-menu',
     targetGradeId: 'elite',
     bgGlow: 'radial-gradient(circle at 50% 120%, #A855F7, transparent 70%)',
-    borderColor: '#A855F740',
+    borderColor: '#A855F735',
     icon: Crown,
     iconColor: '#A855F7',
-    spanClass: 'col-span-2 min-h-[140px]',
     title: { ru: 'IMPORT', en: 'IMPORT' },
-    desc: { ru: 'Топовый импорт и эксклюзивы.', en: 'Top-shelf & exclusives.' }
+    descKey: 'import loose'
   },
   {
     id: 'extracts-showcase',
     targetId: 'concentrates-menu',
     bgGlow: 'radial-gradient(circle at 50% 120%, #34D399, transparent 70%)',
-    borderColor: '#34D39940',
+    borderColor: '#34D39935',
     icon: Droplets,
     iconColor: '#34D399',
-    spanClass: 'col-span-3 min-h-[130px]',
-    title: { ru: 'CONCENTRATES', en: 'CONCENTRATES' },
-    desc: { ru: 'Чистейшая экстракция высокого уровня.', en: 'Purest high-tier extractions.' }
+    title: { ru: 'EXTRACTS', en: 'EXTRACTS' },
+    descKey: 'fresh frozen premium' // Пример базового описания для концентратов
   },
   {
     id: 'prerolls-showcase',
     targetId: 'prerolls-menu',
     bgGlow: 'radial-gradient(circle at 50% 120%, #F472B6, transparent 70%)',
-    borderColor: '#F472B640',
+    borderColor: '#F472B635',
     icon: Cigarette,
     iconColor: '#F472B6',
-    spanClass: 'col-span-3 min-h-[130px]',
     title: { ru: 'PREROLLS', en: 'PREROLLS' },
-    desc: { ru: 'Готовые решения ручной работы.', en: 'Handcrafted ready solutions.' }
+    descKey: 'joints'
+  },
+  {
+    id: 'accessories-showcase',
+    targetId: 'accessories-menu',
+    bgGlow: 'radial-gradient(circle at 50% 120%, #EC4899, transparent 70%)',
+    borderColor: '#EC489935',
+    icon: Layers,
+    iconColor: '#EC4899',
+    title: { ru: 'ACCESSORIES', en: 'ACCESSORIES' },
+    descKey: 'accessories'
   }
 ];
 
@@ -212,7 +218,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = React.useState(false);
   
-  // Состояния для новых модальных окон
   const [isDeliveryModalOpen, setIsDeliveryModalOpen] = React.useState(false);
   const [isGuaranteesModalOpen, setIsGuaranteesModalOpen] = React.useState(false);
 
@@ -302,7 +307,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
       id: sub,
       title: sub || (lang === 'ru' ? 'Аксессуары' : 'Accessories'),
       items: allAccs.filter(p => p.subcategory === sub),
-      color: "#F472B6",
+      color: "#EC4899",
       icon: Layers
     }));
   }, [processedProducts, lang]);
@@ -356,7 +361,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
            </div>
         </div>
 
-        {/* ИНТЕРАКТИВНЫЙ БЛОК ИНФО-КНОПОК */}
         <div className="grid grid-cols-2 gap-2 px-2 mb-4 mt-2 relative z-20">
           <button 
             onClick={() => { triggerHaptic('light'); setIsDeliveryModalOpen(true); }}
@@ -379,10 +383,13 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
           </button>
         </div>
 
-        {/* ХАБ КАТЕГОРИЙ (ИСПРАВЛЕННЫЙ БЛОК ИНТЕРВАЛОВ И ШРИФТОВ) */}
-        <div className="grid grid-cols-6 gap-3 px-2 mb-6 relative z-20">
+        {/* ОБНОВЛЕННЫЙ ХАБ КАТЕГОРИЙ: СЕТКА 3х2, ВЫСОТА h-[70px] */}
+        <div className="grid grid-cols-6 gap-2 px-2 mb-6 relative z-20">
           {SHOWCASE_CARDS.map((card) => {
             const Icon = card.icon;
+            // Динамически вытягиваем описание из базы по ключу descKey
+            const dynamicDesc = getDesc(card.descKey);
+            
             return (
               <div
                 key={card.id}
@@ -401,31 +408,34 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                       setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]);
                     });
                   }
+                  if (card.id === 'accessories-showcase') {
+                    accessoriesSections?.forEach(sec => {
+                      setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]);
+                    });
+                  }
                   scrollToSection(card.targetId);
                 }}
-                className={`relative rounded-[2rem] border p-4 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 bg-[#0D1F18] active:scale-[0.98] group ${card.spanClass}`}
+                className="relative rounded-2xl border py-2 px-3 flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 bg-[#0D1F18] active:scale-[0.98] group col-span-2 h-[70px]"
                 style={{ borderColor: card.borderColor }}
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 pointer-events-none z-0" />
                 <div className="absolute inset-0 opacity-25 pointer-events-none z-0 transition-opacity group-hover:opacity-45" style={{ background: card.bgGlow }} />
 
-                {/* Текст слева, Иконка справа — жестко упакованы в один верхний flex-ряд */}
-                <div className="relative z-10 flex items-start justify-between gap-3 w-full">
-                  <div className="flex flex-col min-w-0">
-                    <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-tight">
+                <div className="relative z-10 flex items-start justify-between gap-2 w-full h-full">
+                  <div className="flex flex-col min-w-0 justify-center h-full">
+                    <h3 className="text-[11px] font-black tracking-wider text-white uppercase leading-none">
                       {lang === 'ru' ? card.title.ru : card.title.en}
                     </h3>
-                    <p className="text-[10px] font-medium text-white/40 leading-snug mt-1.5 group-hover:text-white/70 transition-colors line-clamp-2">
-                      {lang === 'ru' ? card.desc.ru : card.desc.en}
-                    </p>
+                    {dynamicDesc && (
+                      <p className="text-[8.5px] font-medium text-white/40 leading-tight mt-1 group-hover:text-white/70 transition-colors line-clamp-2 max-w-[105px]">
+                        {dynamicDesc}
+                      </p>
+                    )}
                   </div>
-                  <div className="p-1.5 bg-black/40 backdrop-blur-md rounded-xl border border-white/10 shadow-lg shrink-0">
-                    <Icon size={14} style={{ color: card.iconColor }} />
+                  <div className="p-1 bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 shadow-md shrink-0 mt-0.5">
+                    <Icon size={12} style={{ color: card.iconColor }} />
                   </div>
                 </div>
-
-                {/* Распорка для удержания контента вверху при фиксированной min-h */}
-                <div className="mt-auto" />
               </div>
             );
           })}
@@ -458,7 +468,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               return (
                 <div key={grade.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#1d4837]/40 backdrop-blur-xl`} style={{ borderColor: isOpen ? `${grade.color}80` : 'rgba(255,255,255,0.05)' }}>
                   <button onClick={() => toggleSection(grade.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left">
-                    <div className="w-full flex items-center justify-between mb-3 px-4">
+                    <div className="w-full flex items-center justify-between px-4">
                       <div className="flex items-center gap-3"><grade.icon size={22} style={{ color: grade.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter" style={{ color: grade.color }}>{grade.title}</h2></div>
                       <div className="flex items-center gap-2">
                         {(isClassic || isPremiumGrade) && (
@@ -469,8 +479,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                         <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                       </div>
                     </div>
-                    {getDesc(grade.id) && (<p className="px-4 mb-3 text-[14px] font-medium text-white leading-relaxed">{getDesc(grade.id)}</p>)}
-                    <div className="w-full grid grid-cols-4 gap-2 px-4">
+                    <div className="w-full grid grid-cols-4 gap-2 px-4 mt-3">
                        {[1, 5, 10, 20].map(w => {
                          const p = Math.round(Number(priceRef?.prices?.[w]) || 0);
                          return (
@@ -541,14 +550,13 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             {importLooseSection && (
                 <div key={importLooseSection.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#1d4837]/40 backdrop-blur-xl`} style={{ borderColor: !closedGrades.includes(importLooseSection.id) ? `${importLooseSection.color}80` : 'rgba(255,255,255,0.05)' }}>
                   <button onClick={() => toggleSection(importLooseSection.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left">
-                    <div className="w-full flex items-center justify-between mb-3 px-4">
+                    <div className="w-full flex items-center justify-between px-4">
                       <div className="flex items-center gap-3"><importLooseSection.icon size={22} style={{ color: importLooseSection.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter" style={{ color: importLooseSection.color }}>{importLooseSection.title}</h2></div>
                       <div className="flex items-center gap-2">
                         <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${!closedGrades.includes(importLooseSection.id) ? 'rotate-180' : ''}`} />
                       </div>
                     </div>
-                    {getDesc(importLooseSection.id) && (<p className="px-4 mb-3 text-[14px] font-medium text-white leading-relaxed">{getDesc(importLooseSection.id)}</p>)}
-                    <div className="w-full grid grid-cols-4 gap-2 px-4">
+                    <div className="w-full grid grid-cols-4 gap-2 px-4 mt-3">
                        {[1, 5, 10, 20].map(w => {
                          const p = Math.round(Number(importLooseSection.priceRef.prices?.[w]) || 0);
                          return (
@@ -578,15 +586,14 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               return (
                 <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#1d4837]/40 backdrop-blur-xl`} style={{ borderColor: isOpen ? `${sec.color}80` : 'rgba(255,255,255,0.05)' }}>
                   <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left">
-                    <div className="w-full flex items-center justify-between mb-3 px-4">
+                    <div className="w-full flex items-center justify-between px-4">
                       <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter" style={{ color: sec.color }}>{sec.title}</h2></div>
                       <div className="flex items-center gap-2">
                         <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                       </div>
                     </div>
-                    {getDesc(sec.id) && (<p className="px-4 mb-3 text-[14px] font-medium text-white leading-relaxed">{getDesc(sec.id)}</p>)}
                     
-                    <div className="w-full grid grid-cols-4 gap-2 px-4">
+                    <div className="w-full grid grid-cols-4 gap-2 px-4 mt-3">
                        {[1, 5, 10, 20].map(w => {
                          const p = Math.round(Number(sec.priceRef?.prices?.[w]) || 0);
                          return (
@@ -618,13 +625,13 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               return (
                 <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#1d4837]/40 backdrop-blur-xl`} style={{ borderColor: isOpen ? `${sec.color}80` : 'rgba(255,255,255,0.05)' }}>
                   <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left">
-                    <div className="w-full flex items-center justify-between mb-3 px-4">
+                    <div className="w-full flex items-center justify-between px-4">
                       <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter" style={{ color: sec.color }}>{sec.title}</h2></div>
                       <div className="flex items-center gap-2">
                         <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                       </div>
                     </div>
-                    <div className="w-full grid grid-cols-4 gap-2 px-4">
+                    <div className="w-full grid grid-cols-4 gap-2 px-4 mt-3">
                        {[ {w:1, l:'1pcs'}, {w:5, l:'3pcs'}, {w:10, l:'5pcs'}, {w:20, l:'10pcs'} ].map(unit => {
                          const p = Math.round(Number(priceRef?.prices?.[unit.w]) || 0);
                          return (
@@ -647,9 +654,9 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
           {accessoriesSections && (
             <div id="accessories-menu" className="pt-4">
               <div className="flex items-center gap-4 pt-6 pb-6 relative">
-                 <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-[#F472B6]/50 to-[#F472B6]"></div>
-                 <span className="text-[16px] font-black uppercase tracking-[0.3em] px-6 py-2 rounded-full border border-[#F472B6]/30 bg-[#F472B6]/10 backdrop-blur-md" style={{ color: '#F472B6' }}>{lang === 'ru' ? 'Аксессуары' : 'Accessories'}</span>
-                 <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent via-[#F472B6]/50 to-[#F472B6]"></div>
+                 <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-[#EC4899]/50 to-[#EC4899]"></div>
+                 <span className="text-[16px] font-black uppercase tracking-[0.3em] px-6 py-2 rounded-full border border-[#EC4899]/30 bg-[#EC4899]/10 backdrop-blur-md" style={{ color: '#EC4899' }}>{lang === 'ru' ? 'Аксессуары' : 'Accessories'}</span>
+                 <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent via-[#EC4899]/50 to-[#EC4899]"></div>
               </div>
               <div className="space-y-3">
                 {accessoriesSections.map(sec => {
