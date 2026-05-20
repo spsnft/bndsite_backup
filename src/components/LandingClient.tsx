@@ -341,12 +341,9 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 setClosedGrades(p => p.filter(x => x !== 'classic'));
                 scrollToSection('buds-menu');
               }}
-              className="relative flex-1 py-3 px-4 flex items-center justify-center cursor-pointer transition-all duration-300 active:bg-black/20 group border-r border-white/15"
+              // ИСПРАВЛЕНО: Равномерная фоновая подсветка по всей площади кнопки на ховер
+              className="relative flex-1 py-3 px-4 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-emerald-500/10 active:bg-emerald-500/20 group border-r border-white/15"
             >
-              <div className="absolute inset-0 opacity-25 pointer-events-none transition-opacity group-hover:opacity-40" 
-                   style={{ background: `radial-gradient(circle at 50% 50%, #10B981, transparent 70%)` }} />
-              
-              {/* Исправлено 1: Размер иконки Leaf увеличен на 20% (scale-[2.2] / hover:scale-[2.5]) */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[2.2] transition-transform group-hover:scale-[2.5] duration-500">
                 <Leaf style={{ color: '#FFF' }} strokeWidth={1.5} />
               </div>
@@ -371,12 +368,9 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 setClosedGrades(p => p.filter(x => x !== 'premium'));
                 scrollToSection('buds-menu');
               }}
-              className="relative flex-1 py-3 px-4 flex items-center justify-center cursor-pointer transition-all duration-300 active:bg-black/20 group"
+              // ИСПРАВЛЕНО: Равномерная фоновая подсветка по всей площади кнопки на ховер
+              className="relative flex-1 py-3 px-4 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-purple-500/10 active:bg-purple-500/20 group"
             >
-              <div className="absolute inset-0 opacity-25 pointer-events-none transition-opacity group-hover:opacity-40" 
-                   style={{ background: `radial-gradient(circle at 50% 50%, #A855F7, transparent 70%)` }} />
-              
-              {/* Исправлено 1: Размер иконки Crown увеличен на 20% (scale-[2.2] / hover:scale-[2.5]) */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[2.2] transition-transform group-hover:scale-[2.5] duration-500">
                 <Crown style={{ color: '#FFF' }} strokeWidth={1.5} />
               </div>
@@ -397,10 +391,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
 
           {/* НИЖНИЕ СЕКЦИОННЫЕ КНОПКИ */}
           {[
-            { id: 'import', isImport: true, color: IMPORT_COLOR, icon: MapPin, scroll: 'buds-menu', bgLight: '#60A5FA' },
-            { id: 'concentrates', title: lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES', color: '#34D399', icon: Droplets, scroll: 'concentrates-menu', bgLight: '#34D399' },
-            { id: 'prerolls', title: lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS', color: '#F472B6', icon: Cigarette, scroll: 'prerolls-menu', bgLight: '#34D399' }, // Исправлено 2: зеленая подсветка
-            { id: 'accessories', title: lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES', color: '#EC4899', icon: Layers, scroll: 'accessories-menu', bgLight: '#34D399' }  // Исправлено 2: зеленая подсветка
+            { id: 'import', isImport: true, color: IMPORT_COLOR, icon: MapPin, scroll: 'buds-menu', hoverBg: 'hover:bg-blue-500/10 active:bg-blue-500/20' },
+            { id: 'concentrates', title: lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES', color: '#34D399', icon: Droplets, scroll: 'concentrates-menu', hoverBg: 'hover:bg-emerald-500/10 active:bg-emerald-500/20' },
+            { id: 'prerolls', title: lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS', color: '#F472B6', icon: Cigarette, scroll: 'prerolls-menu', hoverBg: 'hover:bg-emerald-500/10 active:bg-emerald-500/20' },
+            { id: 'accessories', title: lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES', color: '#EC4899', icon: Layers, scroll: 'accessories-menu', hoverBg: 'hover:bg-emerald-500/10 active:bg-emerald-500/20' }
           ].map((btn) => (
             <div 
               key={btn.id} 
@@ -417,11 +411,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 }
                 scrollToSection(btn.scroll);
               }} 
-              // ИСПРАВЛЕНО: Убран динамический hover цвета бордера. Теперь у всех кнопок одинаковый, чистый border-white/15 в любых состояниях.
-              className="relative rounded-2xl border border-white/15 flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-white/5 backdrop-blur-md active:scale-[0.98] group col-span-1 h-[52px]"
+              // ИСПРАВЛЕНО: Заменили радиальный градиент ("вспышку") на равномерное фоновое свечение (hoverBg) по всей площади
+              className={`relative rounded-2xl border border-white/15 flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-white/5 backdrop-blur-sm active:scale-[0.98] group col-span-1 h-[52px] ${btn.hoverBg}`}
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
-              <div className="absolute inset-0 opacity-20 pointer-events-none z-0 transition-opacity group-hover:opacity-40" style={{ background: `radial-gradient(circle at 50% 50%, ${btn.bgLight}, transparent 70%)` }} />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 pointer-events-none z-0" />
               
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.0] duration-500">
                 <btn.icon style={{ color: '#FFF' }} strokeWidth={1.5} />
@@ -506,7 +499,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                   </button>
                   <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}>
                     <div className="divide-y divide-white/10 bg-white/5">
-                        {regularItems.map((p: any) => Parsed => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
+                        {regularItems.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
                         
                         {saleItems.length > 0 && (
                             <>
