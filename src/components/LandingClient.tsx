@@ -365,111 +365,44 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             </div>
           </div>
 
-          {/* ИМПОРТ И ЛОКАЛЬНЫЕ ЭКСКЛЮЗИВЫ */}
-          <div
-            onClick={() => {
-              triggerHaptic('medium');
-              setClosedGrades(p => p.filter(x => !x.includes('exclusive') && x !== 'import'));
-              scrollToSection('buds-menu');
-            }}
-            className="relative rounded-xl border flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-[#112D21] active:scale-[0.98] group col-span-1 h-[52px]"
-            style={{ borderColor: `${IMPORT_COLOR}45` }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
-            <div className="absolute inset-0 opacity-15 pointer-events-none z-0 transition-opacity group-hover:opacity-35" 
-                 style={{ background: `radial-gradient(circle at 50% 120%, ${IMPORT_COLOR}, transparent 70%)` }} />
-
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.06] scale-[1.8] blur-[1px] transition-transform group-hover:scale-[2.0] duration-500">
-              <MapPin style={{ color: IMPORT_COLOR }} strokeWidth={1.5} />
+          {/* НАЧАЛО ПРАВКИ: ОБНОВЛЕННЫЙ ДИЗАЙН СЛЕДУЮЩИХ ДВУХ РЯДОВ КНОПОК */}
+          {[
+            { id: 'import', title: lang === 'ru' ? 'ИМПОРТ И ЭКСКЛЮЗИВ' : 'IMPORT & EXCLUSIVE', color: IMPORT_COLOR, icon: MapPin, scroll: 'buds-menu' },
+            { id: 'concentrates', title: lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES', color: '#34D399', icon: Droplets, scroll: 'concentrates-menu' },
+            { id: 'prerolls', title: lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS', color: '#F472B6', icon: Cigarette, scroll: 'prerolls-menu' },
+            { id: 'accessories', title: lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES', color: '#EC4899', icon: Layers, scroll: 'accessories-menu' }
+          ].map((btn) => (
+            <div 
+              key={btn.id} 
+              onClick={() => {
+                triggerHaptic('medium');
+                if (btn.id === 'concentrates') {
+                  concentrateSections.forEach(sec => setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]));
+                } else if (btn.id === 'prerolls') {
+                  prerollSections.forEach(sec => setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]));
+                } else if (btn.id === 'accessories') {
+                  accessoriesSections?.forEach(sec => setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]));
+                } else if (btn.id === 'import') {
+                  setClosedGrades(p => p.filter(x => !x.includes('exclusive') && x !== 'import'));
+                }
+                scrollToSection(btn.scroll);
+              }} 
+              className="relative rounded-xl border flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-[#112D21] active:scale-[0.98] group col-span-1 h-[52px]" 
+              style={{ borderColor: `${btn.color}45` }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
+              <div className="absolute inset-0 opacity-20 pointer-events-none z-0 transition-opacity group-hover:opacity-40" style={{ background: `radial-gradient(circle at 50% 120%, ${btn.color}, transparent 70%)` }} />
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.08] scale-[1.8] blur-[0.5px] transition-transform group-hover:scale-[2.0] duration-500">
+                <btn.icon style={{ color: btn.color }} strokeWidth={1.5} />
+              </div>
+              <div className="relative z-10 flex items-center justify-center w-full min-w-0 px-2 text-center">
+                <h3 className="text-[10px] font-black tracking-wider text-white uppercase leading-tight group-hover:text-emerald-300 transition-colors break-words">
+                  {btn.title}
+                </h3>
+              </div>
             </div>
-
-            <div className="relative z-10 flex items-center justify-center w-full min-w-0 px-3 text-center">
-              <h3 className="text-[10px] font-black tracking-wider text-white uppercase leading-tight group-hover:text-emerald-300 transition-colors break-words">
-                {lang === 'ru' ? 'ИМПОРТНЫЕ ТОВАРЫ И ЛОКАЛЬНЫЕ ЭКСКЛЮЗИВЫ' : 'IMPORTED GOODS & LOCAL EXCLUSIVES'}
-              </h3>
-            </div>
-          </div>
-
-          {/* КОНЦЕНТРАТЫ */}
-          <div
-            onClick={() => {
-              triggerHaptic('medium');
-              concentrateSections.forEach(sec => {
-                setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]);
-              });
-              scrollToSection('concentrates-menu');
-            }}
-            className="relative rounded-xl border flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-[#112D21] active:scale-[0.98] group col-span-1 h-[52px]"
-            style={{ borderColor: '#34D39945' }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
-            <div className="absolute inset-0 opacity-15 pointer-events-none z-0 transition-opacity group-hover:opacity-35" 
-                 style={{ background: `radial-gradient(circle at 50% 120%, #34D399, transparent 70%)` }} />
-
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.06] scale-[1.8] blur-[1px] transition-transform group-hover:scale-[2.0] duration-500">
-              <Droplets style={{ color: '#34D399' }} strokeWidth={1.5} />
-            </div>
-
-            <div className="relative z-10 flex items-center justify-center w-full min-w-0">
-              <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
-                {lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES'}
-              </h3>
-            </div>
-          </div>
-
-          {/* ПРЕРОЛЛЫ */}
-          <div
-            onClick={() => {
-              triggerHaptic('medium');
-              prerollSections.forEach(sec => {
-                setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]);
-              });
-              scrollToSection('prerolls-menu');
-            }}
-            className="relative rounded-xl border flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-[#112D21] active:scale-[0.98] group col-span-1 h-[52px]"
-            style={{ borderColor: '#F472B645' }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
-            <div className="absolute inset-0 opacity-15 pointer-events-none z-0 transition-opacity group-hover:opacity-35" 
-                 style={{ background: `radial-gradient(circle at 50% 120%, #F472B6, transparent 70%)` }} />
-
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.06] scale-[1.8] blur-[1px] transition-transform group-hover:scale-[2.0] duration-500">
-              <Cigarette style={{ color: '#F472B6' }} strokeWidth={1.5} />
-            </div>
-
-            <div className="relative z-10 flex items-center justify-center w-full min-w-0">
-              <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
-                {lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS'}
-              </h3>
-            </div>
-          </div>
-
-          {/* АКСЕССУАРЫ */}
-          <div
-            onClick={() => {
-              triggerHaptic('medium');
-              accessoriesSections?.forEach(sec => {
-                setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]);
-              });
-              scrollToSection('accessories-menu');
-            }}
-            className="relative rounded-xl border flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-[#112D21] active:scale-[0.98] group col-span-1 h-[52px]"
-            style={{ borderColor: '#EC489945' }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
-            <div className="absolute inset-0 opacity-15 pointer-events-none z-0 transition-opacity group-hover:opacity-35" 
-                 style={{ background: `radial-gradient(circle at 50% 120%, #EC4899, transparent 70%)` }} />
-
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.06] scale-[1.8] blur-[1px] transition-transform group-hover:scale-[2.0] duration-500">
-              <Layers style={{ color: '#EC4899' }} strokeWidth={1.5} />
-            </div>
-
-            <div className="relative z-10 flex items-center justify-center w-full min-w-0">
-              <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
-                {lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES'}
-              </h3>
-            </div>
-          </div>
+          ))}
+          {/* КОНЕЦ ПРАВКИ */}
 
         </div>
       </header>
@@ -536,7 +469,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                   </button>
                   <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}>
                     <div className="divide-y divide-white/10 bg-white/5">
-                        {regularItems.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
+                        {regularItems.map((p: any) => ParsedRow && <ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />)}
                         
                         {saleItems.length > 0 && (
                             <div className="bg-emerald-500/5 pt-6 pb-2">
