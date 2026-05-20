@@ -304,126 +304,55 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
            </div>
         </div>
 
-        {/* НАВИГАЦИОННЫЕ КНОПКИ */}
         <div className="flex flex-wrap sm:flex-nowrap gap-2 px-2 mb-4 mt-2 relative z-20">
-          <button 
-            onClick={() => { triggerHaptic('light'); setIsDeliveryModalOpen(true); }}
-            className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-2xl border border-white/15 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden"
-          >
+          <button onClick={() => { triggerHaptic('light'); setIsDeliveryModalOpen(true); }} className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-2xl border border-white/15 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden">
             <Bike size={15} className="text-emerald-400 shrink-0" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-white/90 truncate">
-              {lang === 'ru' ? 'Доставка и оплата' : 'Delivery & Payment'}
-            </span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-white/90 truncate">{lang === 'ru' ? 'Доставка и оплата' : 'Delivery & Payment'}</span>
           </button>
-
-          <button 
-            onClick={() => { triggerHaptic('light'); setIsGuaranteesModalOpen(true); }}
-            className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-2xl border border-white/15 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden"
-          >
+          <button onClick={() => { triggerHaptic('light'); setIsGuaranteesModalOpen(true); }} className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-2xl border border-white/15 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden">
             <ShieldCheck size={15} className="text-emerald-400 shrink-0" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-white/90 truncate">
-              {lang === 'ru' ? 'О нас и Гарантии' : 'Our Guarantees'}
-            </span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-white/90 truncate">{lang === 'ru' ? 'О нас и Гарантии' : 'Our Guarantees'}</span>
           </button>
         </div>
 
-        {/* СМЫСЛОВОЙ ХАБ СО SPLIT CARD (РАЗДЕЛ КАТЕГОРИЙ) */}
         <div className="grid grid-cols-2 gap-2 px-2 mb-6 relative z-20">
-          
-          {/* SPLIT CARD (FLOWERS) */}
-          <div className="relative rounded-2xl border border-white/15 flex overflow-hidden col-span-2 bg-[#112D21] transition-all duration-300">
-            {/* Левая половина - CLASSIC */}
-            <div 
-              onClick={() => {
-                triggerHaptic('medium');
-                setClosedGrades(p => p.filter(x => x !== 'classic'));
-                scrollToSection('buds-menu');
-              }}
-              // ИСПРАВЛЕНО: Добавлен фоновый цвет bg-emerald-500/10 для "спокойного" состояния
-              className="relative flex-1 py-3 px-4 flex items-center justify-center cursor-pointer transition-all duration-300 bg-emerald-500/10 hover:bg-emerald-500/20 active:bg-emerald-500/30 group border-r border-white/15"
-            >
+          <div className="relative rounded-[2rem] border border-white/15 flex overflow-hidden col-span-2 bg-[#112D21] transition-all duration-300">
+            <div onClick={() => { triggerHaptic('medium'); setClosedGrades(p => p.filter(x => x !== 'classic')); scrollToSection('buds-menu'); }} className="relative flex-1 py-3 px-4 flex items-center justify-center cursor-pointer transition-all duration-300 bg-emerald-500/10 hover:bg-emerald-500/20 active:bg-emerald-500/30 group border-r border-white/15">
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[2.2] transition-transform group-hover:scale-[2.5] duration-500">
                 <Leaf style={{ color: '#FFF' }} strokeWidth={1.5} />
               </div>
-
               <div className="relative z-10 flex flex-col items-center text-center gap-1 min-w-0">
-                <span className="text-[8px] font-black tracking-[0.2em] text-white/50 uppercase leading-none">
-                  {lang === 'ru' ? 'БОШКИ' : 'FLOWERS'}
-                </span>
-                <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">
-                  {lang === 'ru' ? 'КЛАССИКА' : 'CLASSIC'}
-                </h3>
-                <p className="text-[10.5px] font-medium text-white/50 leading-tight pt-0.5 line-clamp-2 max-w-[150px]">
-                  {lang === 'ru' ? 'сорта с проверенных ферм по низким ценам' : 'strains from verified farms at budget prices'}
-                </p>
+                <span className="text-[8px] font-black tracking-[0.2em] text-white/50 uppercase leading-none">{lang === 'ru' ? 'БОШКИ' : 'FLOWERS'}</span>
+                <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">{lang === 'ru' ? 'КЛАССИКА' : 'CLASSIC'}</h3>
               </div>
             </div>
-
-            {/* Правая половина - PREMIUM */}
-            <div 
-              onClick={() => {
-                triggerHaptic('medium');
-                setClosedGrades(p => p.filter(x => x !== 'premium'));
-                scrollToSection('buds-menu');
-              }}
-              // ИСПРАВЛЕНО: Добавлен фоновый цвет bg-purple-500/10 для "спокойного" состояния
-              className="relative flex-1 py-3 px-4 flex items-center justify-center cursor-pointer transition-all duration-300 bg-purple-500/10 hover:bg-purple-500/20 active:bg-purple-500/30 group"
-            >
+            <div onClick={() => { triggerHaptic('medium'); setClosedGrades(p => p.filter(x => x !== 'premium')); scrollToSection('buds-menu'); }} className="relative flex-1 py-3 px-4 flex items-center justify-center cursor-pointer transition-all duration-300 bg-purple-500/10 hover:bg-purple-500/20 active:bg-purple-500/30 group">
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[2.2] transition-transform group-hover:scale-[2.5] duration-500">
                 <Crown style={{ color: '#FFF' }} strokeWidth={1.5} />
               </div>
-
               <div className="relative z-10 flex flex-col items-center text-center gap-1 min-w-0">
-                <span className="text-[8px] font-black tracking-[0.2em] text-white/50 uppercase leading-none">
-                  {lang === 'ru' ? 'БОШКИ' : 'FLOWERS'}
-                </span>
-                <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">
-                  {lang === 'ru' ? 'ПРЕМИУМ' : 'PREMIUM'}
-                </h3>
-                <p className="text-[10.5px] font-medium text-white/50 leading-tight pt-0.5 line-clamp-2 max-w-[150px]">
-                  {lang === 'ru' ? 'сорта-призеры, хиты продаж, лучшие фермы и генетики' : 'award-winning strains, top sellers, best farms & genetics'}
-                </p>
+                <span className="text-[8px] font-black tracking-[0.2em] text-white/50 uppercase leading-none">{lang === 'ru' ? 'БОШКИ' : 'FLOWERS'}</span>
+                <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">{lang === 'ru' ? 'ПРЕМИУМ' : 'PREMIUM'}</h3>
               </div>
             </div>
           </div>
 
-          {/* НИЖНИЕ СЕКЦИОННЫЕ КНОПКИ */}
           {[
             { id: 'import', title: lang === 'ru' ? 'ИМПОРТ И ЭКСКЛЮЗИВЫ' : 'IMPORT & EXCLUSIVES', icon: MapPin, scroll: 'buds-menu', bgClass: 'bg-blue-500/10 hover:bg-blue-500/20' },
             { id: 'concentrates', title: lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES', icon: Droplets, scroll: 'concentrates-menu', bgClass: 'bg-emerald-500/10 hover:bg-emerald-500/20' },
             { id: 'prerolls', title: lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS', icon: Cigarette, scroll: 'prerolls-menu', bgClass: 'bg-emerald-500/10 hover:bg-emerald-500/20' },
             { id: 'accessories', title: lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES', icon: Layers, scroll: 'accessories-menu', bgClass: 'bg-emerald-500/10 hover:bg-emerald-500/20' }
           ].map((btn) => (
-            <div 
-              key={btn.id} 
-              onClick={() => {
-                triggerHaptic('medium');
-                if (btn.id === 'concentrates') {
-                  concentrateSections.forEach(sec => setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]));
-                } else if (btn.id === 'prerolls') {
-                  prerollSections.forEach(sec => setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]));
-                } else if (btn.id === 'accessories') {
-                  accessoriesSections?.forEach(sec => setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]));
-                } else if (btn.id === 'import') {
-                  setClosedGrades(p => p.filter(x => x !== 'import_exclusive_combined'));
-                }
-                scrollToSection(btn.scroll);
-              }} 
-              // ИСПРАВЛЕНО: Добавлен bgClass для равномерной подсветки всей площади
-              className={`relative rounded-2xl border border-white/15 flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 backdrop-blur-sm active:scale-[0.98] group col-span-1 h-[52px] ${btn.bgClass}`}
-            >
+            <div key={btn.id} onClick={() => { triggerHaptic('medium'); if(btn.id==='concentrates') concentrateSections.forEach(s=>setClosedGrades(p=>p.includes(s.id)?p:[...p,s.id])); else if(btn.id==='prerolls') prerollSections.forEach(s=>setClosedGrades(p=>p.includes(s.id)?p:[...p,s.id])); else if(btn.id==='accessories') accessoriesSections?.forEach(s=>setClosedGrades(p=>p.includes(s.id)?p:[...p,s.id])); else if(btn.id==='import') setClosedGrades(p=>p.filter(x=>x!=='import_exclusive_combined')); scrollToSection(btn.scroll); }} className={`relative rounded-2xl border border-white/15 flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 backdrop-blur-sm active:scale-[0.98] group col-span-1 h-[52px] ${btn.bgClass}`}>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 pointer-events-none z-0" />
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.0] duration-500">
                 <btn.icon style={{ color: '#FFF' }} strokeWidth={1.5} />
               </div>
-              
               <div className="relative z-10 flex items-center justify-center w-full min-w-0 px-2 text-center">
-                <h3 className="font-black text-[10px] tracking-wider text-white uppercase group-hover:text-emerald-300 transition-colors whitespace-nowrap overflow-hidden text-ellipsis truncate max-w-full">
-                  {btn.title}
-                </h3>
+                <h3 className="font-black text-[10px] tracking-wider text-white uppercase group-hover:text-emerald-300 transition-colors whitespace-nowrap overflow-hidden text-ellipsis truncate max-w-full">{btn.title}</h3>
               </div>
             </div>
           ))}
-
         </div>
       </header>
 
@@ -463,18 +392,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                         <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                       </div>
                     </div>
-
-                    {isClassic && (
-                      <p className="px-4 text-[11px] font-medium text-white/50 mt-1 leading-tight">
-                        {lang === 'ru' ? 'сорта с проверенных ферм по низким ценам' : 'strains from verified farms at budget prices'}
-                      </p>
-                    )}
-                    {isPremium && (
-                      <p className="px-4 text-[11px] font-medium text-white/50 mt-1 leading-tight">
-                        {lang === 'ru' ? 'Сорта-призеры, хиты продаж, лучшие фермы и генетики' : 'Award-winning strains, top sellers, best farms & genetics'}
-                      </p>
-                    )}
-
                     <div className="w-full grid grid-cols-4 gap-2 px-4 mt-3">
                        {[1, 5, 10, 20].map(w => {
                          const p = Math.round(Number(priceRef?.prices?.[w]) || 0);
@@ -490,17 +407,13 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                   <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}>
                     <div className="divide-y divide-white/10 bg-white/5">
                         {regularItems.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
-                        
                         {saleItems.length > 0 && (
                             <>
                                 <div className="border-t border-b border-amber-500/20 bg-amber-500/[0.02] py-4 px-8 flex flex-col gap-3">
                                     <div className="flex items-center gap-2 opacity-90 text-amber-400">
                                         <Tag size={14} className="text-amber-400 fill-amber-400/10" />
-                                        <span className="text-[11px] font-black uppercase tracking-[0.1em]">
-                                            {lang === 'ru' ? 'Сорта со скидкой' : 'Strains on Sale'}
-                                        </span>
+                                        <span className="text-[11px] font-black uppercase tracking-[0.1em]">{lang === 'ru' ? 'Сорта со скидкой' : 'Strains on Sale'}</span>
                                     </div>
-                                    
                                     <div className="grid grid-cols-4 gap-2">
                                         {[1, 5, 10, 20].map(w => {
                                             const p = Math.round(Number(salePriceRef?.prices?.[w]) || 0);
@@ -513,9 +426,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                                         })}
                                     </div>
                                 </div>
-                                {saleItems.map((p: any) => (
-                                    <ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />
-                                ))}
+                                {saleItems.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
                             </>
                         )}
                     </div>
@@ -524,114 +435,38 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               );
             })}
             
-            {/* ОБЪЕДИНЕННАЯ СЕКЦИЯ ИМПОРТА И ЭКСКЛЮЗИВОВ */}
             {combinedEliteSection && (
               <div key={combinedEliteSection.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: !closedGrades.includes(combinedEliteSection.id) ? `${combinedEliteSection.color}A0` : 'rgba(255,255,255,0.08)' }}>
                 <button onClick={() => toggleSection(combinedEliteSection.id)} className="w-full px-8 py-6 flex flex-col active:bg-white/5 transition-colors text-left group">
                   <div className="w-full flex items-center justify-between">
                     <div className="flex items-center gap-3"><combinedEliteSection.icon size={22} style={{ color: combinedEliteSection.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: combinedEliteSection.color }}>{combinedEliteSection.title}</h2></div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
-                        {!closedGrades.includes(combinedEliteSection.id) ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
-                      </span>
+                      <span className="text-[9px] font-black uppercase tracking-widest opacity-40">{!closedGrades.includes(combinedEliteSection.id) ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}</span>
                       <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${!closedGrades.includes(combinedEliteSection.id) ? 'rotate-180' : ''}`} />
                     </div>
                   </div>
                 </button>
                 <div className={`overflow-hidden transition-all duration-500 ${!closedGrades.includes(combinedEliteSection.id) ? 'max-h-[3000px]' : 'max-h-0'}`}>
-                  <div className="p-6 grid grid-cols-2 gap-4 bg-white/5">
-                    {combinedEliteSection.items.map(p => (<HighlightCard key={p.id} item={p} onClick={() => setSelectedProduct(p)} showSubcategory={false} />))}
-                  </div>
+                  <div className="p-6 grid grid-cols-2 gap-4 bg-white/5">{combinedEliteSection.items.map(p => (<HighlightCard key={p.id} item={p} onClick={() => setSelectedProduct(p)} showSubcategory={false} />))}</div>
                 </div>
               </div>
             )}
           </div>
 
-          {/* КОНЦЕНТРАТЫ */}
           <div id="concentrates-menu" className="flex items-center gap-4 pt-6 pb-6 mt-4 relative">
              <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-emerald-500/50 to-emerald-500"></div>
              <span className="text-[16px] font-black uppercase tracking-[0.3em] text-white px-6 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md" style={{ color: '#10B981', borderColor: '#10B98130' }}>{lang === 'ru' ? 'Концентраты' : 'Concentrates'}</span>
              <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent via-emerald-500/50 to-emerald-500"></div>
           </div>
-          <div className="space-y-3">
-            {concentrateSections.map(sec => {
-              const isOpen = !closedGrades.includes(sec.id);
-              return (
-                <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}>
-                  <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group">
-                    <div className="w-full flex items-center justify-between px-4">
-                      <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
-                          {isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
-                        </span>
-                        <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
-                      </div>
-                    </div>
-                    
-                    <div className="w-full grid grid-cols-4 gap-2 px-4 mt-3">
-                       {[1, 5, 10, 20].map(w => {
-                         const p = Math.round(Number(sec.priceRef?.prices?.[w]) || 0);
-                         return (
-                          <div key={w} className="flex flex-col items-center gap-0 bg-white/5 py-1.5 rounded-2xl border border-white/5">
-                            <span className="text-[11px] font-black opacity-60 uppercase leading-none mb-[1px]">{w}g</span>
-                            <span className="text-[18px] font-black text-white leading-none">{p > 0 ? (<>{p}<BahtSymbol /></>) : '—'}</span>
-                          </div>
-                         )
-                       })}
-                    </div>
-                  </button>
-                  <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}>
-                    <div className="divide-y divide-white/10 bg-white/5">{sec.items.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <div className="space-y-3">{concentrateSections.map(sec => { const isOpen = !closedGrades.includes(sec.id); return ( <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}> <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group"> <div className="w-full flex items-center justify-between px-4"> <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div> <div className="flex items-center gap-2"> <span className="text-[9px] font-black uppercase tracking-widest opacity-40">{isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}</span> <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} /> </div> </div> <div className="w-full grid grid-cols-4 gap-2 px-4 mt-3"> {[1, 5, 10, 20].map(w => { const p = Math.round(Number(sec.priceRef?.prices?.[w]) || 0); return ( <div key={w} className="flex flex-col items-center gap-0 bg-white/5 py-1.5 rounded-2xl border border-white/5"> <span className="text-[11px] font-black opacity-60 uppercase leading-none mb-[1px]">{w}g</span> <span className="text-[18px] font-black text-white leading-none">{p > 0 ? (<>{p}<BahtSymbol /></>) : '—'}</span> </div> ) })} </div> </button> <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}> <div className="divide-y divide-white/10 bg-white/5">{sec.items.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}</div> </div> </div> ); })} </div>
 
-          {/* ПРЕРОЛЛЫ */}
           <div id="prerolls-menu" className="flex items-center gap-4 pt-6 pb-6 mt-4 relative">
              <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-[#F59E0B]/50 to-[#F59E0B]"></div>
              <span className="text-[16px] font-black uppercase tracking-[0.3em] text-white px-6 py-2 rounded-full border border-[#F59E0B]/30 bg-[#F59E0B]/10 backdrop-blur-md" style={{ borderColor: `${GOLDEN_COLOR}4d`, color: GOLDEN_COLOR }}>{lang === 'ru' ? 'Прероллы' : 'Prerolls'}</span>
              <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent via-[#F59E0B]/50 to-[#F59E0B]"></div>
           </div>
-          <div className="space-y-3">
-            {prerollSections.map(sec => {
-              const isOpen = !closedGrades.includes(sec.id);
-              const priceRef = sec.items[0];
-              return (
-                <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}>
-                  <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group">
-                    <div className="w-full flex items-center justify-between px-4">
-                      <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
-                          {isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
-                        </span>
-                        <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
-                      </div>
-                    </div>
-                    <div className="w-full grid grid-cols-4 gap-2 px-4 mt-3">
-                       {[ {w:1, l:'1pcs'}, {w:5, l:'3pcs'}, {w:10, l:'5pcs'}, {w:20, l:'10pcs'} ].map(unit => {
-                         const p = Math.round(Number(priceRef?.prices?.[unit.w]) || 0);
-                         return (
-                          <div key={unit.w} className="flex flex-col items-center gap-0 bg-white/5 py-1.5 rounded-2xl border border-white/5">
-                            <span className="text-[10px] font-black opacity-60 uppercase leading-none mb-[1px]">{unit.l}</span>
-                            <span className="text-[18px] font-black text-white leading-none">{p > 0 ? (<>{p}<BahtSymbol /></>) : '—'}</span>
-                          </div>
-                         )
-                       })}
-                    </div>
-                  </button>
-                  <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}>
-                    <div className="divide-y divide-white/10 bg-white/5">{sec.items.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <div className="space-y-3">{prerollSections.map(sec => { const isOpen = !closedGrades.includes(sec.id); const priceRef = sec.items[0]; return ( <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}> <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group"> <div className="w-full flex items-center justify-between px-4"> <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div> <div className="flex items-center gap-2"> <span className="text-[9px] font-black uppercase tracking-widest opacity-40">{isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}</span> <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} /> </div> </div> <div className="w-full grid grid-cols-4 gap-2 px-4 mt-3"> {[ {w:1, l:'1pcs'}, {w:5, l:'3pcs'}, {w:10, l:'5pcs'}, {w:20, l:'10pcs'} ].map(unit => { const p = Math.round(Number(priceRef?.prices?.[unit.w]) || 0); return ( <div key={unit.w} className="flex flex-col items-center gap-0 bg-white/5 py-1.5 rounded-2xl border border-white/5"> <span className="text-[10px] font-black opacity-60 uppercase leading-none mb-[1px]">{unit.l}</span> <span className="text-[18px] font-black text-white leading-none">{p > 0 ? (<>{p}<BahtSymbol /></>) : '—'}</span> </div> ) })} </div> </button> <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}> <div className="divide-y divide-white/10 bg-white/5">{sec.items.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}</div> </div> </div> ); })} </div>
 
-          {/* АКСЕССУАРЫ */}
           {accessoriesSections && (
             <div id="accessories-menu" className="pt-4">
               <div className="flex items-center gap-4 pt-6 pb-6 relative">
@@ -639,31 +474,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                  <span className="text-[16px] font-black uppercase tracking-[0.3em] px-6 py-2 rounded-full border border-[#EC4899]/30 bg-[#EC4899]/10 backdrop-blur-md" style={{ color: '#EC4899' }}>{lang === 'ru' ? 'Аксессуары' : 'Accessories'}</span>
                  <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent via-[#EC4899]/50 to-[#EC4899]"></div>
               </div>
-              <div className="space-y-3">
-                {accessoriesSections.map(sec => {
-                  const isOpen = !closedGrades.includes(sec.id);
-                  return (
-                    <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}>
-                      <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group">
-                        <div className="w-full flex items-center justify-between px-4">
-                          <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
-                              {isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
-                            </span>
-                            <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
-                          </div>
-                        </div>
-                      </button>
-                      <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}>
-                        <div className="divide-y divide-white/10 bg-white/5">
-                          {sec.items.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              <div className="space-y-3">{accessoriesSections.map(sec => { const isOpen = !closedGrades.includes(sec.id); return ( <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}> <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group"> <div className="w-full flex items-center justify-between px-4"> <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div> <div className="flex items-center gap-2"> <span className="text-[9px] font-black uppercase tracking-widest opacity-40">{isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}</span> <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} /> </div> </div> </button> <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}> <div className="divide-y divide-white/10 bg-white/5">{sec.items.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}</div> </div> </div> ); })} </div>
             </div>
           )}
         </div>
