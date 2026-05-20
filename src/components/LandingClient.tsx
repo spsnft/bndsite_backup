@@ -314,8 +314,9 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               <div className="absolute inset-0 opacity-25 pointer-events-none transition-opacity group-hover:opacity-40" 
                    style={{ background: `radial-gradient(circle at 20% 120%, #10B981, transparent 70%)` }} />
               
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none z-0 opacity-[0.1] scale-[2.2] blur-[0.5px] transition-transform group-hover:scale-[2.4] duration-500">
-                <Leaf style={{ color: '#10B981' }} strokeWidth={1.2} />
+              {/* Исправлено: иконка сделана четкой и заметной (opacity-15, без размытия) */}
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none z-0 opacity-[0.15] scale-[2.2] transition-transform group-hover:scale-[2.4] duration-500">
+                <Leaf style={{ color: '#10B981' }} strokeWidth={1.5} />
               </div>
 
               <div className="relative z-10 flex flex-col gap-1 min-w-0">
@@ -327,8 +328,9 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                   {lang === 'ru' ? 'КЛАССИКА' : 'CLASSIC'}
                 </h3>
                 
+                {/* Исправлено: новый подзаголовок в две строки */}
                 <p className="text-[9.5px] font-medium text-white/50 leading-tight pt-0.5 line-clamp-2">
-                  {lang === 'ru' ? 'Проверенные сорта по низким ценам' : 'Verified strains at budget prices'}
+                  {lang === 'ru' ? 'Качественные сорта с проверенных ферм по низким ценам' : 'High-quality strains from verified farms at budget prices'}
                 </p>
               </div>
             </div>
@@ -345,8 +347,9 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               <div className="absolute inset-0 opacity-25 pointer-events-none transition-opacity group-hover:opacity-40" 
                    style={{ background: `radial-gradient(circle at 80% 120%, #A855F7, transparent 70%)` }} />
               
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none z-0 opacity-[0.1] scale-[2.2] blur-[0.5px] transition-transform group-hover:scale-[2.4] duration-500">
-                <Crown style={{ color: '#A855F7' }} strokeWidth={1.2} />
+              {/* Исправлено: иконка сделана четкой и заметной (opacity-15, без размытия) */}
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none z-0 opacity-[0.15] scale-[2.2] transition-transform group-hover:scale-[2.4] duration-500">
+                <Crown style={{ color: '#A855F7' }} strokeWidth={1.5} />
               </div>
 
               <div className="relative z-10 flex flex-col gap-1 min-w-0">
@@ -358,16 +361,17 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                   {lang === 'ru' ? 'ПРЕМИУМ' : 'PREMIUM'}
                 </h3>
                 
+                {/* Исправлено: новый подзаголовок в две строки */}
                 <p className="text-[9.5px] font-medium text-white/50 leading-tight pt-0.5 line-clamp-2">
-                  {lang === 'ru' ? 'Хиты, сорта-призеры, лучшие генетики' : 'Best-sellers, iconic genetics & top farms'}
+                  {lang === 'ru' ? 'Сорта-призеры, хиты продаж, лучшие фермы и генетики' : 'Award-winning strains, top sellers, best farms & genetics'}
                 </p>
               </div>
             </div>
           </div>
 
-          {/* ИСПРАВЛЕННЫЙ БЛОК: СТИЛЬ ПРИВЕДЕН К ВЕРХНЕМУ РЯДУ, ИКОНКИ СТАЛИ ЧЕТКИМИ И ВИДИМЫМИ */}
+          {/* НИЖНИЕ СЕКЦИОННЫЕ КНОПКИ: СТИЛЬ ОДИН В ОДИН С ВЕРХНИМ РЯДОМ */}
           {[
-            { id: 'import', title: lang === 'ru' ? 'ИМПОРТ И ЭКСКЛЮЗИВ' : 'IMPORT & EXCLUSIVE', color: IMPORT_COLOR, icon: MapPin, scroll: 'buds-menu' },
+            { id: 'import', isImport: true, color: IMPORT_COLOR, icon: MapPin, scroll: 'buds-menu' },
             { id: 'concentrates', title: lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES', color: '#34D399', icon: Droplets, scroll: 'concentrates-menu' },
             { id: 'prerolls', title: lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS', color: '#F472B6', icon: Cigarette, scroll: 'prerolls-menu' },
             { id: 'accessories', title: lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES', color: '#EC4899', icon: Layers, scroll: 'accessories-menu' }
@@ -387,21 +391,26 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 }
                 scrollToSection(btn.scroll);
               }} 
-              // СТИЛИ КАК У ВЕРХНЕГО РЯДА: bg-white/5, backdrop-blur-md, спокойный border
               className="relative rounded-xl border flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-white/5 backdrop-blur-md active:scale-[0.98] group col-span-1 h-[52px]" 
               style={{ borderColor: `${btn.color}40` }}
             >
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
-              {/* Яркость градиента как у верхнего ряда (20% -> 40%) */}
               <div className="absolute inset-0 opacity-20 pointer-events-none z-0 transition-opacity group-hover:opacity-40" style={{ background: `radial-gradient(circle at 50% 120%, ${btn.color}, transparent 70%)` }} />
-              {/* ИКОНКИ СТАЛИ ВИДИМЫМИ: opacity поднято до 15%, убран blur */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.0] duration-500">
                 <btn.icon style={{ color: btn.color }} strokeWidth={1.5} />
               </div>
               <div className="relative z-10 flex items-center justify-center w-full min-w-0 px-2 text-center">
-                <h3 className="text-[10px] font-black tracking-wider text-white uppercase leading-tight group-hover:text-emerald-300 transition-colors break-words">
-                  {btn.title}
-                </h3>
+                {btn.isImport ? (
+                  /* Исправлено: новое кастомное название в 2 строки с уменьшением шрифта для второй строки */
+                  <h3 className="font-black tracking-wider text-white uppercase leading-tight group-hover:text-emerald-300 transition-colors flex flex-col items-center">
+                    <span className="text-[10px]">{lang === 'ru' ? 'ИМПОРТНЫЕ ТОВАРЫ' : 'IMPORTED GOODS'}</span>
+                    <span className="text-[8px] opacity-80 font-bold mt-[1px]">{lang === 'ru' ? 'И ЛОКАЛЬНЫЕ ЭКСКЛЮЗИВЫ' : '& LOCAL EXCLUSIVES'}</span>
+                  </h3>
+                ) : (
+                  <h3 className="text-[10px] font-black tracking-wider text-white uppercase leading-tight group-hover:text-emerald-300 transition-colors break-words">
+                    {btn.title}
+                  </h3>
+                )}
               </div>
             </div>
           ))}
@@ -529,9 +538,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
 
             {importLooseSection && (
                 <div key={importLooseSection.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: !closedGrades.includes(importLooseSection.id) ? `${importLooseSection.color}A0` : 'rgba(255,255,255,0.08)' }}>
-                  <button onClick={() => toggleSection(importLooseSection.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group```
-```tsx
- group text-left">
+                  <button onClick={() => toggleSection(importLooseSection.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group">
                     <div className="w-full flex items-center justify-between px-4">
                       <div className="flex items-center gap-3"><importLooseSection.icon size={22} style={{ color: importLooseSection.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: importLooseSection.color }}>{importLooseSection.title}</h2></div>
                       <div className="flex items-center gap-2">
