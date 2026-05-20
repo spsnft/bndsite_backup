@@ -346,7 +346,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               <div className="absolute inset-0 opacity-25 pointer-events-none transition-opacity group-hover:opacity-40" 
                    style={{ background: `radial-gradient(circle at 50% 50%, #10B981, transparent 70%)` }} />
               
-              {/* Исправлено 2: иконка переведена в белый цвет */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.4] duration-500">
                 <Leaf style={{ color: '#FFF' }} strokeWidth={1.5} />
               </div>
@@ -376,7 +375,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               <div className="absolute inset-0 opacity-25 pointer-events-none transition-opacity group-hover:opacity-40" 
                    style={{ background: `radial-gradient(circle at 50% 50%, #A855F7, transparent 70%)` }} />
               
-              {/* Исправлено 2: иконка переведена в белый цвет */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.4] duration-500">
                 <Crown style={{ color: '#FFF' }} strokeWidth={1.5} />
               </div>
@@ -395,7 +393,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             </div>
           </div>
 
-          {/* НИЖНИЕ СЕКЦИОННЫЕ КНОПКИ */}
+          {/* НИЖНИЕ СЕКЦИОННЫЕ КНОПКИ — ИСПРАВЛЕНО: Скругления изменены с rounded-xl на rounded-2xl для 100% сходства с верхней плитой */}
           {[
             { id: 'import', isImport: true, color: IMPORT_COLOR, icon: MapPin, scroll: 'buds-menu', hoverBorder: 'group-hover:border-[#60A5FA]', bgLight: '#60A5FA' },
             { id: 'concentrates', title: lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES', color: '#34D399', icon: Droplets, scroll: 'concentrates-menu', hoverBorder: 'group-hover:border-[#34D399]', bgLight: '#34D399' },
@@ -417,21 +415,19 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 }
                 scrollToSection(btn.scroll);
               }} 
-              // Исправлено 3: Все бордеры в дефолтном состоянии строго border-white/15 (как у верхних кнопок). Окрашиваются только при ховере.
-              className={`relative rounded-xl border flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-white/5 backdrop-blur-md active:scale-[0.98] group col-span-1 h-[52px] border-white/15 ${btn.hoverBorder}`}
+              // ИСПРАВЛЕНО: Теперь здесь стоит строго rounded-2xl и чистый border border-white/15 как на верхних плитах
+              className={`relative rounded-2xl border border-white/15 flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-white/5 backdrop-blur-md active:scale-[0.98] group col-span-1 h-[52px] ${btn.hoverBorder}`}
             >
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
               <div className="absolute inset-0 opacity-20 pointer-events-none z-0 transition-opacity group-hover:opacity-40" style={{ background: `radial-gradient(circle at 50% 50%, ${btn.bgLight}, transparent 70%)` }} />
               
-              {/* Исправлено 2: фоновые иконки всех кнопок стали белыми */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.0] duration-500">
                 <btn.icon style={{ color: '#FFF' }} strokeWidth={1.5} />
               </div>
               
               <div className="relative z-10 flex items-center justify-center w-full min-w-0 px-2 text-center">
                 {btn.isImport ? (
-                  /* Исправлено 1: убрано слово "локальные" в RU версии заголовка */
-                  <h3 className="font-black text-[9px] tracking-wider text-white uppercase group-hover:text-emerald-300 transition-colors whitespace-nowrap overflow-hidden text-ellipsis truncate max-w-full">
+                  <h3 className="font-black text-[10px] tracking-wider text-white uppercase group-hover:text-emerald-300 transition-colors whitespace-nowrap overflow-hidden text-ellipsis truncate max-w-full">
                     {lang === 'ru' ? 'ИМПОРТ И ЭКСКЛЮЗИВЫ' : 'IMPORT & EXCLUSIVES'}
                   </h3>
                 ) : (
