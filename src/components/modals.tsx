@@ -1,6 +1,6 @@
 "use client"
 import * as React from "react"
-import { X, Plus, Trash2, SendHorizontal, Sparkles, Wind, MapPin, Beaker, Info, Layers } from "lucide-react"
+import { X, Plus, Trash2, SendHorizontal, Sparkles, Wind, MapPin, Beaker, Info, Layers, ShoppingBag } from "lucide-react"
 import { BlurImage } from "@/components/blur-image"
 import { useCart } from "@/lib/cart-store"
 import { 
@@ -53,8 +53,6 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
   };
 
   const isExclusiveOrImport = product.subcategory?.toLowerCase().includes('exclusive') || product.subcategory?.toLowerCase().includes('import');
-
-  // Логика проверки наличия данных в поле
   const hasValue = (val: any) => val && val !== "" && val !== "-";
 
   return (
@@ -108,7 +106,6 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
             )}
           </div>
 
-          {/* Дополнительные поля характеристик */}
           <div className="space-y-2.5">
             {hasValue(product.description) && (
               <div className="p-3 bg-white/5 rounded-2xl border border-white/5">
@@ -162,6 +159,79 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
             className={`w-full py-2.5 rounded-2xl font-black uppercase text-[12px] tracking-[0.2em] transition-all active:scale-95 ${isAdded ? 'bg-emerald-400 text-black' : 'bg-white text-[#193D2E]'}`}
           >
             {isAdded ? t.added : t.addToOrder}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+{/* ЭКСПОРТ ДЛЯ КОРЗИНЫ — ИСПРАВЛЕНО: Полностью восстановлен CheckoutModal для предотвращения падения рантайма */}
+export function CheckoutModal({ items, total, t, lang, onClose, onEditItem }: { items: any[], total: number, t: any, lang: string, onClose: () => void, onEditItem: (p: any) => void }) {
+  const removeItem = useCart((s: any) => s.removeItem);
+  const clearCart = useCart((s: any) => s.clearCart);
+
+  const handleCheckout = () => {
+    triggerHaptic('success');
+    let message = lang === 'ru' ? `*Новый заказ на BND Delivery*\n\n` : `*New Order on BND Delivery*\n\n`;
+    items.forEach(item => {
+      message += `• *${item.name}* (${item.weight}) — ${item.price}฿\n`;
+    });
+    message += `\n*${lang === 'ru' ? 'Итого' : 'Total'}:* ${total}฿`;
+    
+    const encoded = encodeURIComponent(message);
+    window.open(`https://t.me/bshk_phuket?text=${encoded}`, '_blank');
+    clearCart();
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/40 backdrop-blur-lg" onClick={onClose}>
+      <div className="relative w-full max-w-[400px] bg-[#193D2E] rounded-[2.5rem] border border-white/10 overflow-hidden shadow-2xl max-h-[85vh] flex flex-col animate-fade-in" onClick={e => e.stopPropagation()}>
+        <div className="p-6 border-b border-white/5 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-3">
+            <ShoppingBag className="text-emerald-400" size={20} />
+            <h2 className="text-[16px] font-black uppercase tracking-wider text-white">{lang === 'ru' ? 'Ваш заказ' : 'Your Order'}</h2>
+          </div>
+          <button onClick={onClose} className="p-1.5 bg-white/5 hover:bg-white/10 active:scale-90 rounded-full text-white/60 transition-all">
+            <X size={16} />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-6 space-y-3 no-scrollbar">
+          {items.map((item, idx) => (
+            <div key={`${item.id}-${idx}`} className="flex items-center justify-between gap-4 p-3 bg-white/5 rounded-2xl border border-white/5 group">
+              <div className="w-12 h-12 bg-black/10 rounded-xl overflow-hidden p-1 shrink-0">
+                <BlurImage src={item.image} width={50} height={50} className="w-full h-full object-contain" alt={item.name} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-[13px] font-black uppercase text-white tracking-tight truncate leading-tight">{item.name}</h4>
+                <p className="text-[10px] font-bold text-white/40 mt-0.5 uppercase tracking-wider">{item.weight}</p>
+              </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <span className="text-[14px] font-black text-white">{item.price}<Baht className="opacity-40" /></span>
+                <button 
+                  onClick={() => { triggerHaptic('medium'); removeItem(idx); }}
+                  className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl border border-red-500/10 transition-colors"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="p-6 border-t border-white/5 bg-black/10 space-y-4 shrink-0">
+          <div className="flex justify-between items-end">
+            <span className="text-[11px] font-black uppercase tracking-widest text-white/40">{lang === 'ru' ? 'ИТОГО К ОПЛАТЕ' : 'TOTAL AMOUNT'}</span>
+            <span className="text-[26px] font-black tracking-tighter text-white leading-none">{total}<Baht className="opacity-40" /></span>
+          </div>
+          <button 
+            onClick={handleCheckout}
+            className="w-full bg-white text-[#193D2E] h-[50px] rounded-2xl flex items-center justify-center gap-3 font-black uppercase text-[12px] tracking-[0.15em] transition-all active:scale-[0.98] hover:bg-emerald-400 hover:text-black shadow-lg"
+          >
+            <span>{lang === 'ru' ? 'Подтвердить в Telegram' : 'Confirm in Telegram'}</span>
+            <SendHorizontal size={15} />
           </button>
         </div>
       </div>
