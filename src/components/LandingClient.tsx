@@ -331,9 +331,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
         <div className="grid grid-cols-2 gap-2 px-2 mb-6 relative z-20">
           
           {/* SPLIT CARD (FLOWERS) */}
-          <div 
-            className="relative rounded-2xl border border-white/15 flex overflow-hidden col-span-2 bg-[#112D21] transition-all duration-300"
-          >
+          <div className="relative rounded-2xl border border-white/15 flex overflow-hidden col-span-2 bg-[#112D21] transition-all duration-300">
             {/* Левая половина - CLASSIC */}
             <div 
               onClick={() => {
@@ -341,8 +339,8 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 setClosedGrades(p => p.filter(x => x !== 'classic'));
                 scrollToSection('buds-menu');
               }}
-              // ИСПРАВЛЕНО: Равномерная фоновая подсветка по всей площади кнопки на ховер
-              className="relative flex-1 py-3 px-4 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-emerald-500/10 active:bg-emerald-500/20 group border-r border-white/15"
+              // ИСПРАВЛЕНО: Добавлен фоновый цвет bg-emerald-500/10 для "спокойного" состояния
+              className="relative flex-1 py-3 px-4 flex items-center justify-center cursor-pointer transition-all duration-300 bg-emerald-500/10 hover:bg-emerald-500/20 active:bg-emerald-500/30 group border-r border-white/15"
             >
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[2.2] transition-transform group-hover:scale-[2.5] duration-500">
                 <Leaf style={{ color: '#FFF' }} strokeWidth={1.5} />
@@ -368,8 +366,8 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 setClosedGrades(p => p.filter(x => x !== 'premium'));
                 scrollToSection('buds-menu');
               }}
-              // ИСПРАВЛЕНО: Равномерная фоновая подсветка по всей площади кнопки на ховер
-              className="relative flex-1 py-3 px-4 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-purple-500/10 active:bg-purple-500/20 group"
+              // ИСПРАВЛЕНО: Добавлен фоновый цвет bg-purple-500/10 для "спокойного" состояния
+              className="relative flex-1 py-3 px-4 flex items-center justify-center cursor-pointer transition-all duration-300 bg-purple-500/10 hover:bg-purple-500/20 active:bg-purple-500/30 group"
             >
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[2.2] transition-transform group-hover:scale-[2.5] duration-500">
                 <Crown style={{ color: '#FFF' }} strokeWidth={1.5} />
@@ -391,10 +389,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
 
           {/* НИЖНИЕ СЕКЦИОННЫЕ КНОПКИ */}
           {[
-            { id: 'import', isImport: true, color: IMPORT_COLOR, icon: MapPin, scroll: 'buds-menu', hoverBg: 'hover:bg-blue-500/10 active:bg-blue-500/20' },
-            { id: 'concentrates', title: lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES', color: '#34D399', icon: Droplets, scroll: 'concentrates-menu', hoverBg: 'hover:bg-emerald-500/10 active:bg-emerald-500/20' },
-            { id: 'prerolls', title: lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS', color: '#F472B6', icon: Cigarette, scroll: 'prerolls-menu', hoverBg: 'hover:bg-emerald-500/10 active:bg-emerald-500/20' },
-            { id: 'accessories', title: lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES', color: '#EC4899', icon: Layers, scroll: 'accessories-menu', hoverBg: 'hover:bg-emerald-500/10 active:bg-emerald-500/20' }
+            { id: 'import', title: lang === 'ru' ? 'ИМПОРТ И ЭКСКЛЮЗИВЫ' : 'IMPORT & EXCLUSIVES', icon: MapPin, scroll: 'buds-menu', bgClass: 'bg-blue-500/10 hover:bg-blue-500/20' },
+            { id: 'concentrates', title: lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES', icon: Droplets, scroll: 'concentrates-menu', bgClass: 'bg-emerald-500/10 hover:bg-emerald-500/20' },
+            { id: 'prerolls', title: lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS', icon: Cigarette, scroll: 'prerolls-menu', bgClass: 'bg-emerald-500/10 hover:bg-emerald-500/20' },
+            { id: 'accessories', title: lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES', icon: Layers, scroll: 'accessories-menu', bgClass: 'bg-emerald-500/10 hover:bg-emerald-500/20' }
           ].map((btn) => (
             <div 
               key={btn.id} 
@@ -411,25 +409,17 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 }
                 scrollToSection(btn.scroll);
               }} 
-              // ИСПРАВЛЕНО: Заменили радиальный градиент ("вспышку") на равномерное фоновое свечение (hoverBg) по всей площади
-              className={`relative rounded-2xl border border-white/15 flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-white/5 backdrop-blur-sm active:scale-[0.98] group col-span-1 h-[52px] ${btn.hoverBg}`}
+              // ИСПРАВЛЕНО: Добавлен bgClass для равномерной подсветки всей площади
+              className={`relative rounded-2xl border border-white/15 flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 backdrop-blur-sm active:scale-[0.98] group col-span-1 h-[52px] ${btn.bgClass}`}
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 pointer-events-none z-0" />
-              
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.0] duration-500">
                 <btn.icon style={{ color: '#FFF' }} strokeWidth={1.5} />
               </div>
               
               <div className="relative z-10 flex items-center justify-center w-full min-w-0 px-2 text-center">
-                {btn.isImport ? (
-                  <h3 className="font-black text-[10px] tracking-wider text-white uppercase group-hover:text-emerald-300 transition-colors whitespace-nowrap overflow-hidden text-ellipsis truncate max-w-full">
-                    {lang === 'ru' ? 'ИМПОРТ И ЭКСКЛЮЗИВЫ' : 'IMPORT & EXCLUSIVES'}
-                  </h3>
-                ) : (
-                  <h3 className="text-[10px] font-black tracking-wider text-white uppercase leading-tight group-hover:text-emerald-300 transition-colors break-words">
-                    {btn.title}
-                  </h3>
-                )}
+                <h3 className="font-black text-[10px] tracking-wider text-white uppercase group-hover:text-emerald-300 transition-colors whitespace-nowrap overflow-hidden text-ellipsis truncate max-w-full">
+                  {btn.title}
+                </h3>
               </div>
             </div>
           ))}
