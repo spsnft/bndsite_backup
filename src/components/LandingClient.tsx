@@ -223,7 +223,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
     if (items.length === 0) return null;
     return {
       id: 'import_exclusive_combined',
-      title: lang === 'ru' ? 'Импорт и локальные эксклюзивы' : 'Import & Local Exclusives',
+      title: lang === 'ru' ? 'Импорт и эксклюзивы' : 'Import & Exclusives',
       items,
       color: IMPORT_COLOR,
       icon: MapPin
@@ -346,8 +346,9 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               <div className="absolute inset-0 opacity-25 pointer-events-none transition-opacity group-hover:opacity-40" 
                    style={{ background: `radial-gradient(circle at 50% 50%, #10B981, transparent 70%)` }} />
               
+              {/* Исправлено 2: иконка переведена в белый цвет */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.4] duration-500">
-                <Leaf style={{ color: '#10B981' }} strokeWidth={1.5} />
+                <Leaf style={{ color: '#FFF' }} strokeWidth={1.5} />
               </div>
 
               <div className="relative z-10 flex flex-col items-center text-center gap-1 min-w-0">
@@ -375,8 +376,9 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               <div className="absolute inset-0 opacity-25 pointer-events-none transition-opacity group-hover:opacity-40" 
                    style={{ background: `radial-gradient(circle at 50% 50%, #A855F7, transparent 70%)` }} />
               
+              {/* Исправлено 2: иконка переведена в белый цвет */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.4] duration-500">
-                <Crown style={{ color: '#A855F7' }} strokeWidth={1.5} />
+                <Crown style={{ color: '#FFF' }} strokeWidth={1.5} />
               </div>
 
               <div className="relative z-10 flex flex-col items-center text-center gap-1 min-w-0">
@@ -395,10 +397,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
 
           {/* НИЖНИЕ СЕКЦИОННЫЕ КНОПКИ */}
           {[
-            { id: 'import', isImport: true, color: IMPORT_COLOR, icon: MapPin, scroll: 'buds-menu', hoverBorder: 'group-hover:border-[#60A5FA]' },
-            { id: 'concentrates', title: lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES', color: '#34D399', icon: Droplets, scroll: 'concentrates-menu', hoverBorder: 'group-hover:border-[#34D399]' },
-            { id: 'prerolls', title: lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS', color: '#F472B6', icon: Cigarette, scroll: 'prerolls-menu', hoverBorder: 'group-hover:border-[#34D399]' },
-            { id: 'accessories', title: lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES', color: '#EC4899', icon: Layers, scroll: 'accessories-menu', hoverBorder: 'group-hover:border-[#34D399]' }
+            { id: 'import', isImport: true, color: IMPORT_COLOR, icon: MapPin, scroll: 'buds-menu', hoverBorder: 'group-hover:border-[#60A5FA]', bgLight: '#60A5FA' },
+            { id: 'concentrates', title: lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES', color: '#34D399', icon: Droplets, scroll: 'concentrates-menu', hoverBorder: 'group-hover:border-[#34D399]', bgLight: '#34D399' },
+            { id: 'prerolls', title: lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS', color: '#F472B6', icon: Cigarette, scroll: 'prerolls-menu', hoverBorder: 'group-hover:border-[#F472B6]', bgLight: '#F472B6' },
+            { id: 'accessories', title: lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES', color: '#EC4899', icon: Layers, scroll: 'accessories-menu', hoverBorder: 'group-hover:border-[#EC4899]', bgLight: '#EC4899' }
           ].map((btn) => (
             <div 
               key={btn.id} 
@@ -415,20 +417,22 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 }
                 scrollToSection(btn.scroll);
               }} 
-              // ИСПРАВЛЕНО 1: Для кнопки импорта возвращен индивидуальный синий ховер рамки. У остальных — зеленый.
-              className={`relative rounded-xl border flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-white/5 backdrop-blur-md active:scale-[0.98] group col-span-1 h-[52px] border-white/15 ${btn.isImport ? btn.hoverBorder : 'group-hover:border-[#34D399]'}`}
+              // Исправлено 3: Все бордеры в дефолтном состоянии строго border-white/15 (как у верхних кнопок). Окрашиваются только при ховере.
+              className={`relative rounded-xl border flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-white/5 backdrop-blur-md active:scale-[0.98] group col-span-1 h-[52px] border-white/15 ${btn.hoverBorder}`}
             >
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
-              {/* ИСПРАВЛЕНО 1: Для кнопки импорта возвращена оригинальная синяя подсветка, для остальных кнопок — зеленая */}
-              <div className="absolute inset-0 opacity-20 pointer-events-none z-0 transition-opacity group-hover:opacity-40" style={{ background: `radial-gradient(circle at 50% 50%, ${btn.isImport ? btn.color : '#34D399'}, transparent 70%)` }} />
+              <div className="absolute inset-0 opacity-20 pointer-events-none z-0 transition-opacity group-hover:opacity-40" style={{ background: `radial-gradient(circle at 50% 50%, ${btn.bgLight}, transparent 70%)` }} />
+              
+              {/* Исправлено 2: фоновые иконки всех кнопок стали белыми */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.0] duration-500">
-                <btn.icon style={{ color: btn.color }} strokeWidth={1.5} />
+                <btn.icon style={{ color: '#FFF' }} strokeWidth={1.5} />
               </div>
+              
               <div className="relative z-10 flex items-center justify-center w-full min-w-0 px-2 text-center">
                 {btn.isImport ? (
-                  /* ИСПРАВЛЕНО 4: Текст идет в одну строку, шрифт ужат до text-[8.5px] c tracking-tight, чтобы 100% поместиться */
-                  <h3 className="font-black text-[8.5px] tracking-tight text-white uppercase group-hover:text-emerald-300 transition-colors whitespace-nowrap overflow-hidden text-ellipsis truncate max-w-full">
-                    {lang === 'ru' ? 'ИМПОРТ И ЛОКАЛЬНЫЕ ЭКСКЛЮЗИВЫ' : 'IMPORT & LOCAL EXCLUSIVES'}
+                  /* Исправлено 1: убрано слово "локальные" в RU версии заголовка */
+                  <h3 className="font-black text-[9px] tracking-wider text-white uppercase group-hover:text-emerald-300 transition-colors whitespace-nowrap overflow-hidden text-ellipsis truncate max-w-full">
+                    {lang === 'ru' ? 'ИМПОРТ И ЭКСКЛЮЗИВЫ' : 'IMPORT & EXCLUSIVES'}
                   </h3>
                 ) : (
                   <h3 className="text-[10px] font-black tracking-wider text-white uppercase leading-tight group-hover:text-emerald-300 transition-colors break-words">
@@ -546,7 +550,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                   <div className="w-full flex items-center justify-between">
                     <div className="flex items-center gap-3"><combinedEliteSection.icon size={22} style={{ color: combinedEliteSection.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: combinedEliteSection.color }}>{combinedEliteSection.title}</h2></div>
                     <div className="flex items-center gap-2">
-                      {/* ИСПРАВЛЕНО 3: Добавлена подсказка свернуть/развернуть */}
                       <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
                         {!closedGrades.includes(combinedEliteSection.id) ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
                       </span>
@@ -578,7 +581,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                     <div className="w-full flex items-center justify-between px-4">
                       <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div>
                       <div className="flex items-center gap-2">
-                        {/* ИСПРАВЛЕНО 3: Добавлена подсказка свернуть/развернуть */}
                         <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
                           {isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
                         </span>
@@ -622,7 +624,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                     <div className="w-full flex items-center justify-between px-4">
                       <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div>
                       <div className="flex items-center gap-2">
-                        {/* ИСПРАВЛЕНО 3: Добавлена подсказка свернуть/развернуть */}
                         <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
                           {isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
                         </span>
@@ -666,7 +667,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                         <div className="w-full flex items-center justify-between px-4">
                           <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div>
                           <div className="flex items-center gap-2">
-                            {/* ИСПРАВЛЕНО 3: Добавлена подсказка свернуть/развернуть */}
                             <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
                               {isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
                             </span>
