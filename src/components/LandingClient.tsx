@@ -88,7 +88,7 @@ const HighlightCard = React.memo(({ item, onClick, priority, hideBadge, isMini, 
   
   const accentColor = item.category === 'concentrates' 
     ? (sub?.includes('fresh frozen premium') ? "#34D399" : sub?.includes('fresh frozen') ? "#FEC107" : SELECTED_COLOR)
-    : (isPrerolls ? GOLDEN_COLOR : (isElite(item) ? (sub?.includes('exclusive') ? SELECTED_COLOR : IMPORT_COLOR) : (sub === 'classic' ? GOLDEN_COLOR : (sub === 'selected' ? SELECTED_COLOR : '#10B981'))));
+    : (isPrerolls ? GOLDEN_COLOR : (isElite(item) ? (sub?.includes('exclusive') ? SELECTED_COLOR : IMPORT_COLOR) : (sub === 'classic' ? '#10B981' : (sub === 'selected' ? SELECTED_COLOR : '#A855F7'))));
   
   const { price: currentPrice, weight: firstWeight } = getFirstAvailablePrice(item);
   const oldPriceRaw = item.old_prices ? getInterpolatedPrice(firstWeight, item.old_prices, isElite(item)) : 0;
@@ -168,16 +168,14 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
     return [...sales].sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0));
   }, [processedProducts]);
   
-  // Новое разделение по логике каталога: Классика и Премиум (где Selected — регулярные, Premium — акционные)
+  // Разделение каталога: Классика и Премиум
   const gradeSections = React.useMemo(() => {
     const buds = processedProducts.filter(p => p.category === 'buds' && !isElite(p));
     
-    // 1. Секция Классика
     const classicItems = buds.filter(p => p.subcategory?.toLowerCase() === 'classic');
     const classicRegular = classicItems.filter(p => p.badge?.toUpperCase() !== 'SALE');
     const classicSale = classicItems.filter(p => p.badge?.toUpperCase() === 'SALE');
     
-    // 2. Секция Премиум (Selected становится основными, Premium становится акционными)
     const premiumRegular = buds.filter(p => p.subcategory?.toLowerCase() === 'selected');
     const premiumSale = buds.filter(p => p.subcategory?.toLowerCase() === 'premium');
 
@@ -187,7 +185,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
       sections.push({
         id: 'classic',
         title: 'Classic Grade',
-        color: GOLDEN_COLOR,
+        color: '#10B981', // Изменено на зеленый
         icon: Leaf,
         regularItems: classicRegular,
         saleItems: classicSale,
@@ -202,7 +200,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
       sections.push({
         id: 'premium',
         title: 'Premium Grade',
-        color: '#10B981',
+        color: '#A855F7', // Изменено на фиолетовый
         icon: Crown,
         regularItems: premiumRegular,
         saleItems: premiumSale,
@@ -216,17 +214,23 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
     return sections;
   }, [processedProducts]);
 
-  const eliteSections = [
-    { id: 'local exclusive', title: 'Local Exclusives', items: processedProducts.filter(p => p.category === 'buds' && p.subcategory?.toLowerCase().includes('exclusive')), color: '#10B981', icon: MapPin },
-    { id: 'import', title: 'Import', items: processedProducts.filter(p => p.category === 'buds' && p.subcategory?.toLowerCase().includes('import') && !p.subcategory?.toLowerCase().includes('loose')), color: IMPORT_COLOR, icon: Star }
-  ];
-
-  const importLooseSection = React.useMemo(() => {
-    const items = processedProducts.filter(p => p.category === 'import loose' || p.subcategory?.toLowerCase() === 'import loose');
+  // Группировка: local exclusive + import + import loose в одну общую категорию
+  const combinedEliteSection = React.useMemo(() => {
+    const items = processedProducts.filter(p => 
+      (p.category === 'buds' && p.subcategory?.toLowerCase().includes('exclusive')) ||
+      (p.category === 'buds' && p.subcategory?.toLowerCase().includes('import') && !p.subcategory?.toLowerCase().includes('loose')) ||
+      (p.category === 'import loose' || p.subcategory?.toLowerCase() === 'import loose')
+    );
+    
     if (items.length === 0) return null;
-    const priceRef = items.find(p => p.badge?.toUpperCase() !== 'SALE') || items[0];
-    return { id: 'import loose', title: 'Import Loose', items, priceRef, color: IMPORT_COLOR, icon: Star };
-  }, [processedProducts]);
+    return {
+      id: 'import_exclusive_combined',
+      title: lang === 'ru' ? 'Импорт и локальные эксклюзивы' : 'Import & Local Exclusives',
+      items,
+      color: IMPORT_COLOR,
+      icon: MapPin
+    };
+  }, [processedProducts, lang]);
 
   const concentrateSections = React.useMemo(() => {
     const allConcs = processedProducts.filter(p => p.category === 'concentrates');
@@ -342,12 +346,12 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               }}
               className="relative flex-1 py-3 px-4 flex items-center justify-center cursor-pointer transition-all duration-300 active:bg-black/20 group border-r border-white/5"
             >
+              {/* Изменено на зеленый по центру */}
               <div className="absolute inset-0 opacity-25 pointer-events-none transition-opacity group-hover:opacity-40" 
-                   style={{ background: `radial-gradient(circle at 50% 50%, ${GOLDEN_COLOR}, transparent 70%)` }} />
+                   style={{ background: `radial-gradient(circle at 50% 50%, #10B981, transparent 70%)` }} />
               
-              {/* Выравнивание иконки строго по центру и её видимость */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.0] duration-500">
-                <Leaf style={{ color: GOLDEN_COLOR }} strokeWidth={1.5} />
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.4] duration-500">
+                <Leaf style={{ color: '#10B981' }} strokeWidth={1.5} />
               </div>
 
               <div className="relative z-10 flex flex-col items-center text-center gap-1 min-w-0">
@@ -357,8 +361,9 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">
                   {lang === 'ru' ? 'КЛАССИКА' : 'CLASSIC'}
                 </h3>
+                {/* Исправлено: текст с маленькой буквы */}
                 <p className="text-[9.5px] font-medium text-white/50 leading-tight pt-0.5 line-clamp-2 max-w-[150px]">
-                  {lang === 'ru' ? 'Качественные сорта с проверенных ферм по низким ценам' : 'High-quality strains from verified farms at budget prices'}
+                  {lang === 'ru' ? 'качественные сорта с проверенных ферм по низким ценам' : 'high-quality strains from verified farms at budget prices'}
                 </p>
               </div>
             </div>
@@ -372,12 +377,12 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               }}
               className="relative flex-1 py-3 px-4 flex items-center justify-center cursor-pointer transition-all duration-300 active:bg-black/20 group"
             >
+              {/* Изменено на фиолетовый по центру */}
               <div className="absolute inset-0 opacity-25 pointer-events-none transition-opacity group-hover:opacity-40" 
-                   style={{ background: `radial-gradient(circle at 50% 50%, #10B981, transparent 70%)` }} />
+                   style={{ background: `radial-gradient(circle at 50% 50%, #A855F7, transparent 70%)` }} />
               
-              {/* Выравнивание иконки строго по центру и её видимость */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.0] duration-500">
-                <Crown style={{ color: '#10B981' }} strokeWidth={1.5} />
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.4] duration-500">
+                <Crown style={{ color: '#A855F7' }} strokeWidth={1.5} />
               </div>
 
               <div className="relative z-10 flex flex-col items-center text-center gap-1 min-w-0">
@@ -387,14 +392,15 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">
                   {lang === 'ru' ? 'ПРЕМИУМ' : 'PREMIUM'}
                 </h3>
+                {/* Исправлено: текст с маленькой буквы */}
                 <p className="text-[9.5px] font-medium text-white/50 leading-tight pt-0.5 line-clamp-2 max-w-[150px]">
-                  {lang === 'ru' ? 'Сорта-призеры, хиты продаж, лучшие фермы и генетики' : 'Award-winning strains, top sellers, best farms & genetics'}
+                  {lang === 'ru' ? 'сорта-призеры, хиты продаж, лучшие фермы и генетики' : 'award-winning strains, top sellers, best farms & genetics'}
                 </p>
               </div>
             </div>
           </div>
 
-          {/* КАТЕГОРИИ ПРИВЕДЕНЫ К СТИЛЮ ВЕРХНЕГО РЯДА С АБСОЛЮТНО ОДИНАКОВОЙ ПОДСВЕТКОЙ */}
+          {/* НИЖНИЕ КАТЕГОРИИ С ЕДИНЫМ СТИЛЕМ И ПОДСВЕТКОЙ */}
           {[
             { id: 'import', isImport: true, color: IMPORT_COLOR, icon: MapPin, scroll: 'buds-menu' },
             { id: 'concentrates', title: lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES', color: '#34D399', icon: Droplets, scroll: 'concentrates-menu' },
@@ -412,7 +418,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 } else if (btn.id === 'accessories') {
                   accessoriesSections?.forEach(sec => setClosedGrades(p => p.includes(sec.id) ? p : [...p, sec.id]));
                 } else if (btn.id === 'import') {
-                  setClosedGrades(p => p.filter(x => !x.includes('exclusive') && x !== 'import'));
+                  setClosedGrades(p => p.filter(x => x !== 'import_exclusive_combined'));
                 }
                 scrollToSection(btn.scroll);
               }} 
@@ -464,7 +470,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
           </div>
           
           <div className="space-y-3">
-            {gradeSections.map(({ grade, id, title, color, icon: Icon, regularItems, saleItems, priceRef, salePriceRef, isClassic, isPremium }) => {
+            {gradeSections.map(({ id, title, color, icon: Icon, regularItems, saleItems, priceRef, salePriceRef, isClassic, isPremium }) => {
               const isOpen = !closedGrades.includes(id);
               return (
                 <div key={id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${color}A0` : 'rgba(255,255,255,0.08)' }}>
@@ -511,12 +517,9 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                                 <div className="px-8 flex flex-col gap-4">
                                     <div className="flex items-center gap-2 opacity-90">
                                         <Tag size={14} style={{ color: color }} />
+                                        {/* Исправлено: универсальный заголовок "Сорта со скидкой" */}
                                         <span className="text-[11px] font-black uppercase tracking-[0.1em]" style={{ color: color }}>
-                                            {isClassic 
-                                              ? (lang === 'ru' ? 'Аксессуары со скидкой' : 'Special Sale Offers')
-                                              // Для Премиума плашка теперь указывает на Premium-акционные товары
-                                              : (lang === 'ru' ? 'Премиум сорта со скидкой' : 'Premium Exclusive Offers')
-                                            }
+                                            {lang === 'ru' ? 'Сорта со скидкой' : 'Strains on Sale'}
                                         </span>
                                     </div>
                                     
@@ -545,50 +548,23 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               );
             })}
             
-            {eliteSections.map(sec => {
-              const isOpen = !closedGrades.includes(sec.id);
-              return sec.items.length > 0 && (
-                <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}>
-                  <button onClick={() => toggleSection(sec.id)} className="w-full px-8 py-6 flex flex-col active:bg-white/5 transition-colors text-left group">
-                    <div className="w-full flex items-center justify-between">
-                      <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div>
-                      <div className="flex items-center gap-2">
-                        <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
-                      </div>
+            {/* НОВАЯ ОБЪЕДИНЕННАЯ СЕКЦИЯ: ИМПОРТ И ЛОКАЛЬНЫЕ ЭКСКЛЮЗИВЫ */}
+            {combinedEliteSection && (
+              <div key={combinedEliteSection.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: !closedGrades.includes(combinedEliteSection.id) ? `${combinedEliteSection.color}A0` : 'rgba(255,255,255,0.08)' }}>
+                <button onClick={() => toggleSection(combinedEliteSection.id)} className="w-full px-8 py-6 flex flex-col active:bg-white/5 transition-colors text-left group">
+                  <div className="w-full flex items-center justify-between">
+                    <div className="flex items-center gap-3"><combinedEliteSection.icon size={22} style={{ color: combinedEliteSection.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: combinedEliteSection.color }}>{combinedEliteSection.title}</h2></div>
+                    <div className="flex items-center gap-2">
+                      <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${!closedGrades.includes(combinedEliteSection.id) ? 'rotate-180' : ''}`} />
                     </div>
-                  </button>
-                  <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}>
-                    <div className="p-6 grid grid-cols-2 gap-4 bg-white/5">{sec.items.map(p => (<HighlightCard key={p.id} item={p} onClick={() => setSelectedProduct(p)} showSubcategory={false} />))}</div>
+                  </div>
+                </button>
+                <div className={`overflow-hidden transition-all duration-500 ${!closedGrades.includes(combinedEliteSection.id) ? 'max-h-[3000px]' : 'max-h-0'}`}>
+                  <div className="p-6 grid grid-cols-2 gap-4 bg-white/5">
+                    {combinedEliteSection.items.map(p => (<HighlightCard key={p.id} item={p} onClick={() => setSelectedProduct(p)} showSubcategory={false} />))}
                   </div>
                 </div>
-              );
-            })}
-
-            {importLooseSection && (
-                <div key={importLooseSection.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: !closedGrades.includes(importLooseSection.id) ? `${importLooseSection.color}A0` : 'rgba(255,255,255,0.08)' }}>
-                  <button onClick={() => toggleSection(importLooseSection.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group text-left">
-                    <div className="w-full flex items-center justify-between px-4">
-                      <div className="flex items-center gap-3"><importLooseSection.icon size={22} style={{ color: importLooseSection.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: importLooseSection.color }}>{importLooseSection.title}</h2></div>
-                      <div className="flex items-center gap-2">
-                        <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${!closedGrades.includes(importLooseSection.id) ? 'rotate-180' : ''}`} />
-                      </div>
-                    </div>
-                    <div className="w-full grid grid-cols-4 gap-2 px-4 mt-3">
-                       {[1, 5, 10, 20].map(w => {
-                         const p = Math.round(Number(importLooseSection.priceRef.prices?.[w]) || 0);
-                         return (
-                          <div key={w} className="flex flex-col items-center gap-0 bg-white/5 py-1.5 rounded-2xl border border-white/5">
-                            <span className="text-[11px] font-black opacity-60 uppercase leading-none mb-[1px]">{w}g</span>
-                            <span className="text-[18px] font-black text-white leading-none">{p > 0 ? (<>{p}<BahtSymbol /></>) : '—'}</span>
-                          </div>
-                         )
-                       })}
-                    </div>
-                  </button>
-                  <div className={`overflow-hidden transition-all duration-500 ${!closedGrades.includes(importLooseSection.id) ? 'max-h-[3000px]' : 'max-h-0'}`}>
-                    <div className="divide-y divide-white/10 bg-white/5">{importLooseSection.items.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}</div>
-                  </div>
-                </div>
+              </div>
             )}
           </div>
 
@@ -816,7 +792,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               ? { color: concentrateSections.find(s => s.id === selectedProduct.subcategory)?.color || '#10B981' } 
               : (selectedProduct.category === 'joints' ? { color: GOLDEN_COLOR } 
               : (isElite(selectedProduct) ? {color: selectedProduct.subcategory?.toLowerCase().includes('exclusive') ? '#10B981' : IMPORT_COLOR} 
-              : (selectedProduct.subcategory?.toLowerCase() === 'classic' ? { color: GOLDEN_COLOR } : { color: '#10B981' })))
+              : (selectedProduct.subcategory?.toLowerCase() === 'classic' ? { color: '#10B981' } : { color: '#A855F7' })))
           } 
           onClose={() => setSelectedProduct(null)} 
         />
