@@ -1,6 +1,6 @@
 "use client"
 import * as React from "react"
-import { X, Plus, Trash2, SendHorizontal, Sparkles, Wind, MapPin, Beaker, Info, Layers, ShoppingBag, CheckCircle2, MessageCircle, Phone } from "lucide-react"
+import { X, Plus, Minus, Trash2, SendHorizontal, Sparkles, Wind, MapPin, Beaker, Info, Layers, ShoppingBag, CheckCircle2, MessageCircle, Phone } from "lucide-react"
 import { BlurImage } from "@/components/blur-image"
 import { useCart } from "@/lib/cart-store"
 import { 
@@ -166,7 +166,8 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
   );
 }
 
-export function CheckoutModal({ items, total, t, lang, onClose, onEditItem }: { items: any[], total: number, t: any, lang: string, onClose: () => void, onEditItem: (p: any) => void }) {
+export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, onClose, onEditItem }: { items: any[], total: number, t: any, lang: string, onClose: () => void, onEditItem: (p: any) => void }) {
+  const updateItemWeight = useCart((s: any) => s.updateItemWeight || ((idx: number, w: string, p: number) => {})); 
   const removeItem = useCart((s: any) => s.removeItem);
   const clearCart = useCart((s: any) => s.clearCart);
 
@@ -176,42 +177,111 @@ export function CheckoutModal({ items, total, t, lang, onClose, onEditItem }: { 
   const [address, setAddress] = React.useState<string>('');
   const [showSuccessPopup, setShowSuccessPopup] = React.useState<boolean>(false);
 
-  // Находим суммарный вес цветов в корзине
-  const totalBudsWeight = React.useMemo(() => {
-    return items.reduce((acc, item) => {
+  // Сквозная группировка веса по подкатегориям
+  const categoryWeights = React.useMemo(() => {
+    const weights: Record<string, number> = {};
+    rawItems.forEach(item => {
       if (item.category === 'buds') {
-        const numericW = parseFloat(item.weight);
-        if (!isNaN(numericW)) return acc + numericW;
+        const sub = item.subcategory || 'default';
+        const numW = parseFloat(item.weight);
+        if (!isNaN(numW)) {
+          weights[sub] = (weights[sub] || 0) + numW;
+        }
       }
-      return acc;
-    }, 0);
-  }, [items]);
+    });
+    return weights;
+  }, [rawItems]);
 
-  // ПРАВКА ПУНКТА 1 и 2: Расчет динамического апсейла с подстановкой subcategory и цены за 1г
+  // Расчет стоимости позиций на основе общего скомбинированного веса микса
+  const processedItems = React.useMemo(() => {
+    return rawItems.map(item => {
+      const numericW = parseFloat(item.weight) || 1;
+      if (item.category !== 'buds') {
+        return { 
+          ...item, 
+          singlePrice: Math.round(item.price / (parseFloat(item.weight) || 1)), 
+          finalPrice: item.price, 
+          numericWeight: numericW 
+        };
+      }
+
+      const sub = item.subcategory || 'default';
+      const totalSubWeight = categoryWeights[sub] || numericW;
+      const isEliteProduct = isElite(item) && item.subcategory?.toLowerCase() !== 'import loose';
+
+      const totalPriceForTier = getInterpolatedPrice(totalSubWeight, item.prices, isEliteProduct);
+      const singleGramPrice = totalSubWeight > 0 ? Math.round(totalPriceForTier / totalSubWeight) : 0;
+      
+      return {
+        ...item,
+        singlePrice: singleGramPrice,
+        finalPrice: Math.round(singleGramPrice * numericW),
+        numericWeight: numericW
+      };
+    });
+  }, [rawItems, categoryWeights]);
+
+  const finalCalculatedTotal = React.useMemo(() => {
+    return processedItems.reduce((acc, item) => acc + item.finalPrice, 0);
+  }, [processedItems]);
+
   const cartPromoInfo = React.useMemo(() => {
-    if (totalBudsWeight <= 0) return null;
-    
-    // Ищем первый попавшийся сорт цветов в корзине, чтобы узнать его subcategory и коэффициенты
-    const baseBudItem = items.find(item => item.category === 'buds');
-    if (!baseBudItem) return null;
+    const firstBud = processedItems.find(item => item.category === 'buds');
+    if (!firstBud) return null;
 
-    const isEliteProduct = isElite(baseBudItem) && baseBudItem.subcategory?.toLowerCase() !== 'import loose';
+    const sub = firstBud.subcategory || 'default';
+    const totalSubWeight = categoryWeights[sub] || 0;
+    const isEliteProduct = isElite(firstBud) && firstBud.subcategory?.toLowerCase() !== 'import loose';
     const standardSteps = isEliteProduct ? [3.5, 7, 14, 28] : [1, 5, 10, 20];
-    const weightToKey: Record<number, number> = isEliteProduct ? { 3.5: 1, 7: 5, 14: 10, 28: 20 } : { 1: 1, 5: 5, 10: 10, 20: 20 };
     
-    const nextStep = standardSteps.find(s => s > totalBudsWeight);
+    const nextStep = standardSteps.find(s => s > totalSubWeight);
     if (!nextStep) return null;
 
-    // Считаем цену за 1г на следующем оптовом шаге
-    const targetPriceTotal = Math.round(getInterpolatedPrice(nextStep, baseBudItem.prices, isEliteProduct));
+    const targetPriceTotal = Math.round(getInterpolatedPrice(nextStep, firstBud.prices, isEliteProduct));
     const pricePerGramAtNextStep = nextStep > 0 ? Math.round(targetPriceTotal / nextStep) : 0;
 
     return {
-      diff: (nextStep - totalBudsWeight).toFixed(1).replace('.0', ''),
-      subcategoryName: baseBudItem.subcategory || (lang === 'ru' ? 'цветов' : 'buds'),
+      diff: (nextStep - totalSubWeight).toFixed(1).replace('.0', ''),
+      subcategoryName: firstBud.subcategory || (lang === 'ru' ? 'цветов' : 'buds'),
       pricePerGram: pricePerGramAtNextStep
     };
-  }, [totalBudsWeight, items, lang]);
+  }, [processedItems, categoryWeights, lang]);
+
+  // ИСПРАВЛЕНО: Логика инкремента и декремента с шагом СТРОГО в 1г (или 1pcs)
+  const changeItemWeight = (itemIndex: number, action: 'inc' | 'dec') => {
+    triggerHaptic('light');
+    const targetItem = processedItems[itemIndex];
+    if (!targetItem) return;
+
+    let currentW = targetItem.numericWeight;
+    let targetW = currentW;
+
+    if (action === 'inc') {
+      targetW = currentW + 1;
+    } else {
+      // Предотвращаем уход в 0 или отрицательные значения
+      if (currentW > 1) {
+        targetW = currentW - 1;
+      }
+    }
+
+    if (targetW === currentW) return;
+
+    const getNewLabel = (v: number) => {
+      return targetItem.category === 'joints' ? `${v}PCS` : `${v}G`;
+    };
+
+    const isEliteProduct = isElite(targetItem) && targetItem.subcategory?.toLowerCase() !== 'import loose';
+    // Находим базовую цену одиночного шага для Zustand хранилища
+    const nextBasePrice = Math.round(getInterpolatedPrice(targetW, targetItem.prices, isEliteProduct));
+    
+    const stateCart = useCart.getState() as any;
+    if (stateCart.items && stateCart.items[itemIndex]) {
+      stateCart.items[itemIndex].weight = getNewLabel(targetW);
+      stateCart.items[itemIndex].price = nextBasePrice;
+      useCart.setState({ items: [...stateCart.items] });
+    }
+  };
 
   const isFormValid = phone.trim().length > 0 && contactMethod !== '';
 
@@ -234,11 +304,11 @@ export function CheckoutModal({ items, total, t, lang, onClose, onEditItem }: { 
 
     let message = lang === 'ru' ? `*⚡️ НОВЫЙ ЗАКАЗ НА СТЕНДЕ*\n\n` : `*⚡️ NEW WEB ORDER*\n\n`;
     
-    items.forEach(item => {
-      message += `• *${item.name}* (${item.weight}) — ${item.price}฿\n`;
+    processedItems.forEach(item => {
+      message += `• *${item.name}* (${item.weight}) — ${item.finalPrice}฿\n`;
     });
     
-    message += `\n*${lang === 'ru' ? 'Итого' : 'Total'}:* ${total}฿\n`;
+    message += `\n*${lang === 'ru' ? 'Итого' : 'Total'}:* ${finalCalculatedTotal}฿\n`;
     message += `-----------------------\n`;
     message += `*${lang === 'ru' ? 'Способ связи' : 'Contact via'}:* ${contactMethod.toUpperCase()}\n`;
     message += `*${lang === 'ru' ? 'Контакт / Номер' : 'Username / Phone'}:* ${phone}\n`;
@@ -271,30 +341,46 @@ export function CheckoutModal({ items, total, t, lang, onClose, onEditItem }: { 
           
           {/* СПИСОК ТОВАРОВ В КОРЗИНЕ */}
           <div className="space-y-2">
-            {items.map((item, idx) => {
-              // ПРАВКА ПУНКТА 5: Вычисление базовой цены за 1 единицу веса/штуки
-              const unitCount = parseFloat(item.weight);
-              const singleUnitPrice = !isNaN(unitCount) && unitCount > 0 ? Math.round(item.price / unitCount) : item.price;
+            {processedItems.map((item, idx) => {
               const unitLabel = item.category === 'accessories' ? 'pcs' : 'g';
-
               return (
-                <div key={`${item.id}-${idx}`} className="flex items-center justify-between gap-3 p-2.5 bg-white/5 rounded-2xl border border-white/5 group">
+                <div key={`${item.id}-${idx}`} className="flex items-center justify-between gap-3 p-2.5 bg-white/5 rounded-2xl border border-white/5 group animate-fade-in">
                   <div className="w-10 h-10 bg-black/10 rounded-xl overflow-hidden p-1 shrink-0">
                     <BlurImage src={item.image} width={50} height={50} className="w-full h-full object-contain" alt={item.name} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h4 className="text-[12px] font-black uppercase text-white tracking-tight truncate leading-tight">{item.name}</h4>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-[9px] font-bold text-white/40 uppercase tracking-wider">{item.weight}</span>
-                      {/* Отображаем штучную/граммовую цену */}
-                      <span className="text-[8px] font-black text-emerald-400/50 uppercase tracking-widest">{singleUnitPrice}฿ / {unitLabel}</span>
+                    
+                    <div className="flex items-center gap-3 mt-1">
+                      {/* СЕЛЕКТОР С ШАГОМ В 1Г */}
+                      <div className="flex items-center bg-black/20 rounded-lg border border-white/5 p-0.5">
+                        <button 
+                          type="button" 
+                          onClick={() => changeItemWeight(idx, 'dec')}
+                          className="w-5 h-5 flex items-center justify-center text-white/40 hover:text-white active:scale-70 transition-all disabled:opacity-20 disabled:pointer-events-none"
+                          disabled={item.numericWeight <= 1}
+                        >
+                          <Minus size={10} strokeWidth={3} />
+                        </button>
+                        <span className="text-[10px] font-black text-white px-2 min-w-[32px] text-center uppercase tracking-tighter">{item.weight}</span>
+                        <button 
+                          type="button" 
+                          onClick={() => changeItemWeight(idx, 'inc')}
+                          className="w-5 h-5 flex items-center justify-center text-white/40 hover:text-white active:scale-70 transition-all"
+                        >
+                          <Plus size={10} strokeWidth={3} />
+                        </button>
+                      </div>
+                      <span className="text-[9px] font-black text-emerald-400/60 uppercase tracking-widest">{item.singlePrice}฿ / {unitLabel}</span>
                     </div>
                   </div>
+                  
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-[13px] font-black text-white">{item.price}<Baht className="opacity-40" /></span>
+                    <span className="text-[13px] font-black text-white">{item.finalPrice}<Baht className="opacity-40" /></span>
                     <button 
+                      type="button"
                       onClick={() => { triggerHaptic('medium'); removeItem(idx); }}
-                      className="p-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl border border-red-500/10 transition-colors"
+                      className="p-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl border border-red-500/10 transition-all active:scale-90"
                     >
                       <Trash2 size={13} />
                     </button>
@@ -304,7 +390,7 @@ export function CheckoutModal({ items, total, t, lang, onClose, onEditItem }: { 
             })}
           </div>
 
-          {/* УМНЫЙ АПСЕЙЛ-БАННЕР С ОБНОВЛЕННЫМИ ТЕКСТАМИ ПО КАТЕГОРИЯМ */}
+          {/* УМНЫЙ АПСЕЙЛ-БАННЕР */}
           {cartPromoInfo && (
             <div className="py-2.5 px-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center gap-2">
               <Sparkles size={14} className="text-amber-400 shrink-0" />
@@ -336,7 +422,6 @@ export function CheckoutModal({ items, total, t, lang, onClose, onEditItem }: { 
               </div>
             </div>
 
-            {/* ПРАВКА ПУНКТА 3: Обновленный плейсхолдер для всех языковых версий */}
             <div className="space-y-1.5">
               <label className="text-[9px] font-black uppercase tracking-widest text-white/40 block">
                 {lang === 'ru' ? 'Номер телефона или Username *' : 'Phone Number or Username *'}
@@ -353,7 +438,6 @@ export function CheckoutModal({ items, total, t, lang, onClose, onEditItem }: { 
               </div>
             </div>
 
-            {/* ПРАВКА ПУНКТОВ 4, 6 и 7: Способы оплаты в один уменьшенный ряд, crypto и рубли переименованы */}
             <div className="space-y-1.5">
               <label className="text-[9px] font-black uppercase tracking-widest text-white/40 block">
                 {lang === 'ru' ? 'Способ оплаты' : 'Payment Method'}
@@ -394,7 +478,7 @@ export function CheckoutModal({ items, total, t, lang, onClose, onEditItem }: { 
                 </button>
               </div>
               <textarea
-                placeholder={lang === 'ru' ? 'Название отеля, номер комнаты, ссылка на гугл карту или Plus Code...' : 'Hotel name, room number, google maps link or plus code...'}
+                placeholder={lang === 'ru' ? 'Hotel name, google maps link or plus code...' : 'Hotel name, google maps link or plus code...'}
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 rows={2}
@@ -407,20 +491,19 @@ export function CheckoutModal({ items, total, t, lang, onClose, onEditItem }: { 
         <div className="p-6 border-t border-white/5 bg-black/10 space-y-3 shrink-0">
           <div className="flex justify-between items-end">
             <span className="text-[11px] font-black uppercase tracking-widest text-white/40">{lang === 'ru' ? 'ИТОГО К ОПЛАТЕ' : 'TOTAL AMOUNT'}</span>
-            <span className="text-[26px] font-black tracking-tighter text-white leading-none">{total}<Baht className="opacity-40" /></span>
+            <span className="text-[26px] font-black tracking-tighter text-white leading-none">{finalCalculatedTotal}<Baht className="opacity-40" /></span>
           </div>
           <button 
             disabled={!isFormValid}
             onClick={handleOpenSuccessPopup}
             className={`w-full h-[50px] rounded-2xl flex items-center justify-center gap-3 font-black uppercase text-[12px] tracking-[0.15em] transition-all shadow-lg ${isFormValid ? 'bg-white text-[#193D2E] active:scale-[0.98] hover:bg-emerald-400 hover:text-black' : 'bg-white/10 text-white/20 cursor-not-allowed'}`}
           >
-            {/* Название кнопки изменено на «Подтвердить заказ» */}
             <span>{lang === 'ru' ? 'Подтвердить заказ' : 'Confirm Order'}</span>
             <SendHorizontal size={14} />
           </button>
         </div>
 
-        {/* ДВУХЭТАПНЫЙ ПОП-АП ПОДТВЕРЖДЕНИЯ С ОПЕРАТОРОМ */}
+        {/* ДВУХЭТАПНЫЙ ПОП-АП С ОПЕРАТОРОМ */}
         {showSuccessPopup && (
           <div className="absolute inset-0 bg-[#112D21] z-50 flex flex-col items-center justify-center p-6 text-center animate-fade-in">
             <div className="p-4 bg-emerald-500/10 rounded-full text-emerald-400 mb-4">
