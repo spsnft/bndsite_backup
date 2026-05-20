@@ -302,7 +302,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             className="relative rounded-2xl border flex overflow-hidden col-span-2 bg-[#112D21]"
             style={{ borderColor: `rgba(255,255,255,0.15)` }}
           >
-            {/* Левая половина - CLASSIC (Теперь ЗЕЛЕНЫЙ) */}
+            {/* Левая половина - CLASSIC */}
             <div 
               onClick={() => {
                 triggerHaptic('medium');
@@ -333,7 +333,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               </div>
             </div>
 
-            {/* Правая половина - PREMIUM (Теперь ФИОЛЕТОВЫЙ) */}
+            {/* Правая половина - PREMIUM */}
             <div 
               onClick={() => {
                 triggerHaptic('medium');
@@ -365,7 +365,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             </div>
           </div>
 
-          {/* НАЧАЛО ПРАВКИ: ОБНОВЛЕННЫЙ ДИЗАЙН СЛЕДУЮЩИХ ДВУХ РЯДОВ КНОПОК */}
+          {/* НОВЫЕ СЕКЦИОННЫЕ КНОПКИ С КРАСИВЫМИ ПОДСВЕТКАМИ И ИКОНКАМИ НА ФОНЕ */}
           {[
             { id: 'import', title: lang === 'ru' ? 'ИМПОРТ И ЭКСКЛЮЗИВ' : 'IMPORT & EXCLUSIVE', color: IMPORT_COLOR, icon: MapPin, scroll: 'buds-menu' },
             { id: 'concentrates', title: lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES', color: '#34D399', icon: Droplets, scroll: 'concentrates-menu' },
@@ -402,7 +402,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               </div>
             </div>
           ))}
-          {/* КОНЕЦ ПРАВКИ */}
 
         </div>
       </header>
@@ -469,7 +468,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                   </button>
                   <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}>
                     <div className="divide-y divide-white/10 bg-white/5">
-                        {regularItems.map((p: any) => ParsedRow && <ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />)}
+                        {regularItems.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
                         
                         {saleItems.length > 0 && (
                             <div className="bg-emerald-500/5 pt-6 pb-2">
