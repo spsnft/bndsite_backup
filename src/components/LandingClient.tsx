@@ -42,7 +42,9 @@ const InfoModal = ({ isOpen, onClose, title, children }: { isOpen: boolean, onCl
 };
 
 const processProductData = (rawProducts: any[]) => {
+  if (!Array.isArray(rawProducts)) return [];
   return rawProducts.map(p => {
+    if (!p) return p;
     const prices: any = {};
     const oldPrices: any = {};
     Object.keys(p).forEach(key => {
@@ -65,6 +67,7 @@ const processProductData = (rawProducts: any[]) => {
 };
 
 const BadgeIcon = React.memo(({ type, isSmall }: { type: string, isSmall?: boolean }) => {
+  if (!type) return null;
   const iconSize = isSmall ? 13 : 18;
   const colorClass = { NEW: "text-blue-400", SALE: "text-emerald-400", HIT: "text-orange-400" }[type.toUpperCase()] || "text-white";
   const iconWrapper = (icon: React.ReactNode) => (
@@ -83,16 +86,26 @@ const BahtSymbol = React.memo(() => (
 ));
 
 const HighlightCard = React.memo(({ item, onClick, priority, hideBadge, isMini, showSubcategory }: { item: any, onClick: () => void, priority?: boolean, hideBadge?: boolean, isMini?: boolean, showSubcategory?: boolean }) => {
+  if (!item) return null;
   const isPrerolls = item.category === 'joints';
-  const sub = item.subcategory?.toLowerCase();
+  const sub = item.subcategory?.toLowerCase() || "";
   
   const accentColor = item.category === 'concentrates' 
     ? (sub?.includes('fresh frozen premium') ? "#34D399" : sub?.includes('fresh frozen') ? "#FEC107" : SELECTED_COLOR)
     : (isPrerolls ? GOLDEN_COLOR : (isElite(item) ? (sub?.includes('exclusive') ? SELECTED_COLOR : IMPORT_COLOR) : (sub === 'classic' ? '#10B981' : (sub === 'selected' ? SELECTED_COLOR : '#A855F7'))));
   
-  const { price: currentPrice, weight: firstWeight } = getFirstAvailablePrice(item);
-  const oldPriceRaw = item.old_prices ? getInterpolatedPrice(firstWeight, item.old_prices, isElite(item)) : 0;
-  const oldPrice = Math.round(oldPriceRaw);
+  const priceInfo = getFirstAvailablePrice(item) || { price: 0, weight: 0 };
+  const currentPrice = priceInfo.price || 0;
+  const firstWeight = priceInfo.weight || 0;
+  
+  let oldPrice = 0;
+  if (item.old_prices && firstWeight > 0) {
+    try {
+      oldPrice = Math.round(getInterpolatedPrice(firstWeight, item.old_prices, isElite(item))) || 0;
+    } catch(e) {}
+  }
+
+  const typeKey = item.type?.toLowerCase() || "";
 
   return (
     <div 
@@ -127,7 +140,9 @@ const HighlightCard = React.memo(({ item, onClick, priority, hideBadge, isMini, 
 });
 
 const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => void }) => {
+  if (!p) return null;
   const isAccessory = p.category === 'accessories';
+  const typeKey = p.type?.toLowerCase() || "";
   return (
     <div onClick={() => { triggerHaptic('light'); onClick(); }} className="flex items-center justify-between gap-3 px-4 py-4 text-white border-b border-white/10 last:border-b-0 active:bg-white/5 hover:bg-white/5 transition-colors cursor-pointer group">
         <div className="flex items-center gap-4 truncate flex-1">
@@ -140,13 +155,13 @@ const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => void }) 
           ) : (
             p.farm && p.farm !== "-" && <span className="text-[9px] font-bold text-white/50 uppercase tracking-widest truncate max-w-[90px]">{p.farm}</span>
           )}
-          <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: TYPE_COLORS[p.type?.toLowerCase()] || '#10B981' }}>{p.type}</span>
+          <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: TYPE_COLORS[typeKey] || '#10B981' }}>{p.type}</span>
         </div>
     </div>
   );
 });
 
-export default function LandingClient({ initialProducts, initialDescriptions = [] }: { initialProducts: any[], initialDescriptions?: any[] }) {
+export default function LandingClient({ initialProducts = [], initialDescriptions = [] }: { initialProducts: any[], initialDescriptions?: any[] }) {
   const processedProducts = React.useMemo(() => processProductData(initialProducts), [initialProducts]);
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = React.useState(false);
@@ -159,12 +174,12 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
   const t = translations[lang as keyof typeof translations];
 
   const recentUpdates = React.useMemo(() => {
-    const news = processedProducts.filter(p => p.badge?.toUpperCase() === 'NEW');
+    const news = processedProducts.filter(p => p && p.badge?.toUpperCase() === 'NEW');
     return [...news].sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0));
   }, [processedProducts]);
 
   const flashSales = React.useMemo(() => {
-    const sales = processedProducts.filter(p => p.badge?.toUpperCase() === 'SALE');
+    const sales = processedProducts.filter(p => p && p.badge?.toUpperCase() === 'SALE');
     return [...sales].sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0));
   }, [processedProducts]);
   
@@ -231,8 +246,8 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
   }, [processedProducts, lang]);
 
   const concentrateSections = React.useMemo(() => {
-    const allConcs = processedProducts.filter(p => p.category === 'concentrates');
-    const subs = Array.from(new Set(allConcs.map(p => p.subcategory)));
+    const allConcs = processedProducts.filter(p => p && p.category === 'concentrates');
+    const subs = Array.from(new Set(allConcs.map(p => p.subcategory).filter(Boolean)));
     return subs.map(sub => {
       let color = '#10B981'; let icon = Droplets; const subLower = sub?.toLowerCase() || "";
       if (subLower.includes('old school')) { color = "#C1C1C1"; icon = Box; }
@@ -243,9 +258,9 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
   }, [processedProducts]);
 
   const accessoriesSections = React.useMemo(() => {
-    const allAccs = processedProducts.filter(p => p.category === 'accessories');
+    const allAccs = processedProducts.filter(p => p && p.category === 'accessories');
     if (allAccs.length === 0) return null;
-    const subs = Array.from(new Set(allAccs.map(p => p.subcategory)));
+    const subs = Array.from(new Set(allAccs.map(p => p.subcategory).filter(Boolean)));
     return subs.map(sub => ({
       id: sub,
       title: sub || (lang === 'ru' ? 'Аксессуары' : 'Accessories'),
@@ -256,8 +271,8 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
   }, [processedProducts, lang]);
 
   const prerollSections = React.useMemo(() => {
-    const allJoints = processedProducts.filter(p => p.category === 'joints');
-    const subs = Array.from(new Set(allJoints.map(p => p.subcategory)));
+    const allJoints = processedProducts.filter(p => p && p.category === 'joints');
+    const subs = Array.from(new Set(allJoints.map(p => p.subcategory).filter(Boolean)));
     return subs.map(sub => ({ id: sub, title: sub || "Prerolls", items: allJoints.filter(p => p.subcategory === sub), color: GOLDEN_COLOR, icon: Cigarette }));
   }, [processedProducts]);
 
@@ -412,21 +427,21 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
       <div className="max-w-xl mx-auto space-y-0">
         {recentUpdates.length > 0 && (
           <section className="mt-[12px] mb-[12px] space-y-3 overflow-hidden">
-            <div className="flex items-center gap-2 px-2"><BadgeIcon type="NEW" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-white/80">{t.updates}</h2></div>
-            <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar mx-[-1rem] px-4 snap-x">{recentUpdates.map((p, idx) => (<div key={p.id} className="w-[170px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} hideBadge={true} isMini={false} showSubcategory={true} /></div>))}</div>
+            <div className="flex items-center gap-2 px-2"><BadgeIcon type="NEW" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-white/80">{t.updates || 'New'}</h2></div>
+            <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar mx-[-1rem] px-4 snap-x">{recentUpdates.map((p, idx) => (<div key={p?.id || idx} className="w-[170px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} hideBadge={true} isMini={false} showSubcategory={true} /></div>))}</div>
           </section>
         )}
         {flashSales.length > 0 && (
           <section className="mt-[12px] mb-[12px] space-y-3 overflow-hidden">
-            <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-white/80">{t.sales}</h2></div>
-            <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar mx-[-1rem] px-4 snap-x">{flashSales.map((p, idx) => (<div key={p.id} className="w-[170px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} hideBadge={true} isMini={false} showSubcategory={true} /></div>))}</div>
+            <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-white/80">{t.sales || 'Sales'}</h2></div>
+            <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar mx-[-1rem] px-4 snap-x">{flashSales.map((p, idx) => (<div key={p?.id || idx} className="w-[170px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} hideBadge={true} isMini={false} showSubcategory={true} /></div>))}</div>
           </section>
         )}
         
         <div className="space-y-1">
           <div id="buds-menu" className="flex items-center gap-4 pt-6 pb-6 relative">
              <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-emerald-500/50 to-emerald-500"></div>
-             <span className="text-[16px] font-black uppercase tracking-[0.3em] text-white px-6 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md">{t.flowerMenu}</span>
+             <span className="text-[16px] font-black uppercase tracking-[0.3em] text-white px-6 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md">{t.flowerMenu || 'Menu'}</span>
              <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent via-emerald-500/50 to-emerald-500"></div>
           </div>
           
@@ -533,18 +548,18 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
         </div>
       </div>
 
-      {items.length > 0 && (
+      {(items || []).length > 0 && (
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] w-full max-w-sm px-6">
           <button onClick={() => { triggerHaptic('medium'); setIsCheckoutOpen(true); }} className="w-full bg-white/10 backdrop-blur-2xl text-white py-3 px-7 rounded-[2.5rem] border border-white/20 shadow-2xl flex justify-between items-center active:scale-95 transition-all">
             <div className="flex items-center gap-4 relative z-10">
               <div className="p-2 bg-emerald-400/20 rounded-xl"><ShoppingBag size={20} className="text-emerald-400"/></div>
               <div className="text-left">
-                <div className="font-black uppercase text-[18px] leading-none mb-0.5">{getTotal()}<BahtSymbol /></div>
-                <span className="font-black uppercase text-[9px] text-emerald-400 leading-none">{items.length} {t.items}</span>
+                <div className="font-black uppercase text-[18px] leading-none mb-0.5">{typeof getTotal === 'function' ? getTotal() : 0}<BahtSymbol /></div>
+                <span className="font-black uppercase text-[9px] text-emerald-400 leading-none">{(items || []).length} {t.items || 'items'}</span>
               </div>
             </div>
             <div className="flex items-center gap-3 text-white opacity-70">
-              <span className="text-[12px] font-black uppercase">{t.basket}</span>
+              <span className="text-[12px] font-black uppercase">{t.basket || 'Basket'}</span>
               <span className="p-2 bg-white/10 rounded-full animate-pulse"><Send size={18}/></span>
             </div>
           </button>
