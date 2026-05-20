@@ -167,7 +167,6 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
 }
 
 export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, onClose, onEditItem }: { items: any[], total: number, t: any, lang: string, onClose: () => void, onEditItem: (p: any) => void }) {
-  const updateItemWeight = useCart((s: any) => s.updateItemWeight || ((idx: number, w: string, p: number) => {})); 
   const removeItem = useCart((s: any) => s.removeItem);
   const clearCart = useCart((s: any) => s.clearCart);
 
@@ -192,16 +191,17 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     return weights;
   }, [rawItems]);
 
-  // Расчет стоимости позиций на основе общего скомбинированного веса микса
+  // Расчет стоимости позиций на основе общего скомбинированного веса микса сортов одной линейки
   const processedItems = React.useMemo(() => {
-    return rawItems.map(item => {
+    return rawItems.map((item, originalIndex) => {
       const numericW = parseFloat(item.weight) || 1;
       if (item.category !== 'buds') {
         return { 
           ...item, 
           singlePrice: Math.round(item.price / (parseFloat(item.weight) || 1)), 
           finalPrice: item.price, 
-          numericWeight: numericW 
+          numericWeight: numericW,
+          originalIndex
         };
       }
 
@@ -216,7 +216,8 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
         ...item,
         singlePrice: singleGramPrice,
         finalPrice: Math.round(singleGramPrice * numericW),
-        numericWeight: numericW
+        numericWeight: numericW,
+        originalIndex
       };
     });
   }, [rawItems, categoryWeights]);
@@ -247,7 +248,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     };
   }, [processedItems, categoryWeights, lang]);
 
-  // ИСПРАВЛЕНО: Логика инкремента и декремента с шагом СТРОГО в 1г (или 1pcs)
   const changeItemWeight = (itemIndex: number, action: 'inc' | 'dec') => {
     triggerHaptic('light');
     const targetItem = processedItems[itemIndex];
@@ -259,7 +259,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     if (action === 'inc') {
       targetW = currentW + 1;
     } else {
-      // Предотвращаем уход в 0 или отрицательные значения
       if (currentW > 1) {
         targetW = currentW - 1;
       }
@@ -272,13 +271,13 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     };
 
     const isEliteProduct = isElite(targetItem) && targetItem.subcategory?.toLowerCase() !== 'import loose';
-    // Находим базовую цену одиночного шага для Zustand хранилища
     const nextBasePrice = Math.round(getInterpolatedPrice(targetW, targetItem.prices, isEliteProduct));
     
     const stateCart = useCart.getState() as any;
-    if (stateCart.items && stateCart.items[itemIndex]) {
-      stateCart.items[itemIndex].weight = getNewLabel(targetW);
-      stateCart.items[itemIndex].price = nextBasePrice;
+    const origIdx = targetItem.originalIndex;
+    if (stateCart.items && stateCart.items[origIdx]) {
+      stateCart.items[origIdx].weight = getNewLabel(targetW);
+      stateCart.items[origIdx].price = nextBasePrice;
       useCart.setState({ items: [...stateCart.items] });
     }
   };
@@ -327,7 +326,8 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/40 backdrop-blur-lg" onClick={onClose}>
       <div className="relative w-full max-w-[420px] bg-[#193D2E] rounded-[2.5rem] border border-white/10 overflow-hidden shadow-2xl max-h-[90vh] flex flex-col animate-fade-in" onClick={e => e.stopPropagation()}>
         
-        <div className="p-6 border-b border-white/5 flex items-center justify-between shrink-0">
+        {/* ФИОЛЕТОВАЯ ПРАВКА ОТСТУПОВ: pt-2 px-6 pb-6 вместо p-6 убирает лишний разрыв сверху */}
+        <div className="pt-2 px-6 pb-6 border-b border-white/5 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <ShoppingBag className="text-emerald-400" size={20} />
             <h2 className="text-[16px] font-black uppercase tracking-wider text-white">{lang === 'ru' ? 'Ваш заказ' : 'Your Order'}</h2>
@@ -339,7 +339,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
 
         <div className="flex-1 overflow-y-auto p-6 space-y-5 no-scrollbar">
           
-          {/* СПИСОК ТОВАРОВ В КОРЗИНЕ */}
           <div className="space-y-2">
             {processedItems.map((item, idx) => {
               const unitLabel = item.category === 'accessories' ? 'pcs' : 'g';
@@ -352,7 +351,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
                     <h4 className="text-[12px] font-black uppercase text-white tracking-tight truncate leading-tight">{item.name}</h4>
                     
                     <div className="flex items-center gap-3 mt-1">
-                      {/* СЕЛЕКТОР С ШАГОМ В 1Г */}
                       <div className="flex items-center bg-black/20 rounded-lg border border-white/5 p-0.5">
                         <button 
                           type="button" 
@@ -375,11 +373,12 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
                     </div>
                   </div>
                   
+                  {/* ПРАВКА ПУНКТА 1: Удаление по исходному originalIndex — теперь работает стабильно */}
                   <div className="flex items-center gap-2 shrink-0">
                     <span className="text-[13px] font-black text-white">{item.finalPrice}<Baht className="opacity-40" /></span>
                     <button 
                       type="button"
-                      onClick={() => { triggerHaptic('medium'); removeItem(idx); }}
+                      onClick={() => { triggerHaptic('medium'); removeItem(item.originalIndex); }}
                       className="p-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl border border-red-500/10 transition-all active:scale-90"
                     >
                       <Trash2 size={13} />
@@ -390,7 +389,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
             })}
           </div>
 
-          {/* УМНЫЙ АПСЕЙЛ-БАННЕР */}
           {cartPromoInfo && (
             <div className="py-2.5 px-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center gap-2">
               <Sparkles size={14} className="text-amber-400 shrink-0" />
@@ -488,7 +486,8 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
           </form>
         </div>
 
-        <div className="p-6 border-t border-white/5 bg-black/10 space-y-3 shrink-0">
+        {/* ФИОЛЕТОВАЯ ПРАВКА ОТСТУПОВ: py-3 px-6 вместо p-6 делает нижнюю зону компактной */}
+        <div className="py-3 px-6 border-t border-white/5 bg-black/10 space-y-3 shrink-0">
           <div className="flex justify-between items-end">
             <span className="text-[11px] font-black uppercase tracking-widest text-white/40">{lang === 'ru' ? 'ИТОГО К ОПЛАТЕ' : 'TOTAL AMOUNT'}</span>
             <span className="text-[26px] font-black tracking-tighter text-white leading-none">{finalCalculatedTotal}<Baht className="opacity-40" /></span>
