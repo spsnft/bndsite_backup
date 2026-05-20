@@ -411,7 +411,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             </div>
           </div>
 
-          {/* ПРЕРОЛЛЫ */}
+          {/* ПРЕРОЛЛЫ (Твой вариант: 8px отступы, 12px шрифт) */}
           <div
             onClick={() => {
               triggerHaptic('medium');
@@ -420,25 +420,25 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               });
               scrollToSection('prerolls-menu');
             }}
-            className="relative rounded-2xl border p-3 flex flex-col justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-[#112D21] active:scale-[0.98] group col-span-1 h-[64px]"
+            className="relative rounded-xl border p-2 flex flex-col justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-[#112D21] active:scale-[0.98] group col-span-1 h-[52px]"
             style={{ borderColor: '#F472B645' }}
           >
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
             <div className="absolute inset-0 opacity-15 pointer-events-none z-0 transition-opacity group-hover:opacity-35" 
                  style={{ background: `radial-gradient(circle at 50% 120%, #F472B6, transparent 70%)` }} />
 
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.06] scale-[2.0] blur-[1px] transition-transform group-hover:scale-[2.2] duration-500">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.06] scale-[1.8] blur-[1px] transition-transform group-hover:scale-[2.0] duration-500">
               <Cigarette style={{ color: '#F472B6' }} strokeWidth={1.5} />
             </div>
 
             <div className="relative z-10 flex items-center justify-center w-full min-w-0">
-              <h3 className="text-[11px] font-black tracking-widest text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
+              <h3 className="text-[12px] font-black tracking-wide text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
                 {lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS'}
               </h3>
             </div>
           </div>
 
-          {/* АКСЕССУАРЫ */}
+          {/* АКСЕССУАРЫ (Мой вариант: 10px отступы, 11px шрифт) */}
           <div
             onClick={() => {
               triggerHaptic('medium');
@@ -447,19 +447,19 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               });
               scrollToSection('accessories-menu');
             }}
-            className="relative rounded-2xl border p-3 flex flex-col justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-[#112D21] active:scale-[0.98] group col-span-1 h-[64px]"
+            className="relative rounded-2xl border p-2.5 flex flex-col justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-[#112D21] active:scale-[0.98] group col-span-1 h-[58px]"
             style={{ borderColor: '#EC489945' }}
           >
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
             <div className="absolute inset-0 opacity-15 pointer-events-none z-0 transition-opacity group-hover:opacity-35" 
                  style={{ background: `radial-gradient(circle at 50% 120%, #EC4899, transparent 70%)` }} />
 
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.06] scale-[2.0] blur-[1px] transition-transform group-hover:scale-[2.2] duration-500">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.06] scale-[1.8] blur-[1px] transition-transform group-hover:scale-[2.0] duration-500">
               <Layers style={{ color: '#EC4899' }} strokeWidth={1.5} />
             </div>
 
             <div className="relative z-10 flex items-center justify-center w-full min-w-0">
-              <h3 className="text-[11px] font-black tracking-widest text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
+              <h3 className="text-[11px] font-black tracking-wider text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
                 {lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES'}
               </h3>
             </div>
