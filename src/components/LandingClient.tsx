@@ -124,7 +124,7 @@ const HighlightCard = React.memo(({ item, onClick, priority, hideBadge, isMini, 
       <div className="relative z-10 flex justify-between items-end px-4 pb-4 mt-auto">
         <span className={`${isMini ? 'text-[8px]' : 'text-[9px]'} font-black uppercase tracking-widest brightness-125`} style={{ color: TYPE_COLORS[item.type?.toLowerCase()] || "#FFF" }}>{item.type}</span>
         <div className="flex flex-col items-end">
-          {oldPrice > currentPrice && <span className={`${isMini ? 'text-[9px]' : 'text-[11px]'} font-bold line-through opacity-40 text-white leading-none mb-0.5`}>{oldPrice}<BahtSymbol /></span>}
+          {oldPrice > currentPrice && <span className={`${isMini ? 'text-[9px]' : 'text-[11px]'} font-bold line-through opacity-40 text-white canvas-leading-none mb-0.5`}>{oldPrice}<BahtSymbol /></span>}
           <p className={`${isMini ? 'text-[15px]' : 'text-[19px]'} font-black tracking-tighter leading-none text-white`}>{currentPrice > 0 ? (<>{currentPrice}<BahtSymbol /></>) : '—'}</p>
         </div>
       </div>
@@ -320,7 +320,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
 
               <div className="relative z-10 flex flex-col justify-between h-full min-w-0">
                 <div className="flex items-center justify-between w-full">
-                  <h3 className="text-[11px] font-black tracking-[0.08em] text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">
+                  <h3 className="text-[11px] font-black tracking-wider text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">
                     {lang === 'ru' ? 'КЛАССИКА' : 'CLASSIC'}
                   </h3>
                 </div>
@@ -348,7 +348,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
 
               <div className="relative z-10 flex flex-col justify-between h-full min-w-0">
                 <div className="flex items-center justify-between w-full">
-                  <h3 className="text-[11px] font-black tracking-[0.08em] text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">
+                  <h3 className="text-[11px] font-black tracking-wider text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">
                     {lang === 'ru' ? 'ПРЕМИУМ' : 'PREMIUM'}
                   </h3>
                 </div>
@@ -378,16 +378,16 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             </div>
 
             <div className="relative z-10 flex flex-col items-center justify-center w-full min-w-0 px-1 text-center">
-              <h3 className="text-[10px] font-black tracking-wide text-white uppercase leading-tight group-hover:text-emerald-300 transition-colors">
+              <h3 className="text-[10px] font-black text-white uppercase leading-[1.1] group-hover:text-emerald-300 transition-colors">
                 {lang === 'ru' ? (
                   <>
-                    ИМПОРТНЫЕ ПРОДУКТЫ<br />
-                    <span className="text-[9px] opacity-90 font-black">И ЛОКАЛЬНЫЕ ЭКСКЛЮЗИВЫ</span>
+                    <span className="tracking-wide">ИМПОРТНЫЕ ПРОДУКТЫ</span><br />
+                    <span className="text-[9px] opacity-90 font-black tracking-wider">И ЛОКАЛЬНЫЕ ЭКСКЛЮЗИВЫ</span>
                   </>
                 ) : (
                   <>
-                    IMPORTED PRODUCTS<br />
-                    <span className="text-[9px] opacity-90 font-black">& LOCAL EXCLUSIVES</span>
+                    <span className="tracking-wide">IMPORTED PRODUCTS</span><br />
+                    <span className="text-[9px] opacity-90 font-black tracking-wider">& LOCAL EXCLUSIVES</span>
                   </>
                 )}
               </h3>
@@ -415,7 +415,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             </div>
 
             <div className="relative z-10 flex items-center justify-center w-full min-w-0">
-              <h3 className="text-[12px] font-black tracking-wide text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
+              <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
                 {lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES'}
               </h3>
             </div>
@@ -442,7 +442,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             </div>
 
             <div className="relative z-10 flex items-center justify-center w-full min-w-0">
-              <h3 className="text-[12px] font-black tracking-wide text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
+              <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
                 {lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS'}
               </h3>
             </div>
@@ -469,7 +469,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             </div>
 
             <div className="relative z-10 flex items-center justify-center w-full min-w-0">
-              <h3 className="text-[12px] font-black tracking-wide text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
+              <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-none text-center group-hover:text-emerald-300 transition-colors">
                 {lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES'}
               </h3>
             </div>
