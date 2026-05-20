@@ -346,7 +346,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               <div className="absolute inset-0 opacity-25 pointer-events-none transition-opacity group-hover:opacity-40" 
                    style={{ background: `radial-gradient(circle at 50% 50%, #10B981, transparent 70%)` }} />
               
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.0] duration-500">
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.4] duration-500">
                 <Leaf style={{ color: '#10B981' }} strokeWidth={1.5} />
               </div>
 
@@ -357,9 +357,8 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">
                   {lang === 'ru' ? 'КЛАССИКА' : 'CLASSIC'}
                 </h3>
-                {/* Исправлено: размер шрифта увеличен на 1px (text-[10.5px]) */}
                 <p className="text-[10.5px] font-medium text-white/50 leading-tight pt-0.5 line-clamp-2 max-w-[150px]">
-                  {lang === 'ru' ? 'качественные сорта с проверенных ферм по низким ценам' : 'high-quality strains from verified farms at budget prices'}
+                  {lang === 'ru' ? 'сорта с проверенных ферм по низким ценам' : 'strains from verified farms at budget prices'}
                 </p>
               </div>
             </div>
@@ -376,7 +375,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               <div className="absolute inset-0 opacity-25 pointer-events-none transition-opacity group-hover:opacity-40" 
                    style={{ background: `radial-gradient(circle at 50% 50%, #A855F7, transparent 70%)` }} />
               
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.0] duration-500">
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.4] duration-500">
                 <Crown style={{ color: '#A855F7' }} strokeWidth={1.5} />
               </div>
 
@@ -387,7 +386,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 <h3 className="text-[12px] font-black tracking-wider text-white uppercase leading-none truncate group-hover:text-emerald-300 transition-colors">
                   {lang === 'ru' ? 'ПРЕМИУМ' : 'PREMIUM'}
                 </h3>
-                {/* Исправлено: размер шрифта увеличен на 1px (text-[10.5px]) */}
                 <p className="text-[10.5px] font-medium text-white/50 leading-tight pt-0.5 line-clamp-2 max-w-[150px]">
                   {lang === 'ru' ? 'сорта-призеры, хиты продаж, лучшие фермы и генетики' : 'award-winning strains, top sellers, best farms & genetics'}
                 </p>
@@ -399,8 +397,8 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
           {[
             { id: 'import', isImport: true, color: IMPORT_COLOR, icon: MapPin, scroll: 'buds-menu', hoverBorder: 'group-hover:border-[#60A5FA]' },
             { id: 'concentrates', title: lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES', color: '#34D399', icon: Droplets, scroll: 'concentrates-menu', hoverBorder: 'group-hover:border-[#34D399]' },
-            { id: 'prerolls', title: lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS', color: '#F472B6', icon: Cigarette, scroll: 'prerolls-menu', hoverBorder: 'group-hover:border-[#F472B6]' },
-            { id: 'accessories', title: lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES', color: '#EC4899', icon: Layers, scroll: 'accessories-menu', hoverBorder: 'group-hover:border-[#EC4899]' }
+            { id: 'prerolls', title: lang === 'ru' ? 'ПРЕРОЛЛЫ' : 'PREROLLS', color: '#F472B6', icon: Cigarette, scroll: 'prerolls-menu', hoverBorder: 'group-hover:border-[#34D399]' },
+            { id: 'accessories', title: lang === 'ru' ? 'АКСЕССУАРЫ' : 'ACCESSORIES', color: '#EC4899', icon: Layers, scroll: 'accessories-menu', hoverBorder: 'group-hover:border-[#34D399]' }
           ].map((btn) => (
             <div 
               key={btn.id} 
@@ -417,18 +415,20 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                 }
                 scrollToSection(btn.scroll);
               }} 
-              className={`relative rounded-xl border flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-white/5 backdrop-blur-md active:scale-[0.98] group col-span-1 h-[52px] border-white/15 ${btn.hoverBorder}`}
+              // ИСПРАВЛЕНО 1: Для кнопки импорта возвращен индивидуальный синий ховер рамки. У остальных — зеленый.
+              className={`relative rounded-xl border flex items-center justify-center overflow-hidden cursor-pointer transition-all duration-300 bg-white/5 backdrop-blur-md active:scale-[0.98] group col-span-1 h-[52px] border-white/15 ${btn.isImport ? btn.hoverBorder : 'group-hover:border-[#34D399]'}`}
             >
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none z-0" />
-              <div className="absolute inset-0 opacity-20 pointer-events-none z-0 transition-opacity group-hover:opacity-40" style={{ background: `radial-gradient(circle at 50% 50%, ${btn.color}, transparent 70%)` }} />
+              {/* ИСПРАВЛЕНО 1: Для кнопки импорта возвращена оригинальная синяя подсветка, для остальных кнопок — зеленая */}
+              <div className="absolute inset-0 opacity-20 pointer-events-none z-0 transition-opacity group-hover:opacity-40" style={{ background: `radial-gradient(circle at 50% 50%, ${btn.isImport ? btn.color : '#34D399'}, transparent 70%)` }} />
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.15] scale-[1.8] transition-transform group-hover:scale-[2.0] duration-500">
                 <btn.icon style={{ color: btn.color }} strokeWidth={1.5} />
               </div>
               <div className="relative z-10 flex items-center justify-center w-full min-w-0 px-2 text-center">
                 {btn.isImport ? (
-                  <h3 className="font-black tracking-wider text-white uppercase leading-tight group-hover:text-emerald-300 transition-colors flex flex-col items-center">
-                    <span className="text-[10px]">{lang === 'ru' ? 'ИМПОРТНЫЕ ТОВАРЫ' : 'IMPORTED GOODS'}</span>
-                    <span className="text-[8px] opacity-80 font-bold mt-[1px]">{lang === 'ru' ? 'И ЛОКАЛЬНЫЕ ЭКСКЛЮЗИВЫ' : '& LOCAL EXCLUSIVES'}</span>
+                  /* ИСПРАВЛЕНО 4: Текст идет в одну строку, шрифт ужат до text-[8.5px] c tracking-tight, чтобы 100% поместиться */
+                  <h3 className="font-black text-[8.5px] tracking-tight text-white uppercase group-hover:text-emerald-300 transition-colors whitespace-nowrap overflow-hidden text-ellipsis truncate max-w-full">
+                    {lang === 'ru' ? 'ИМПОРТ И ЛОКАЛЬНЫЕ ЭКСКЛЮЗИВЫ' : 'IMPORT & LOCAL EXCLUSIVES'}
                   </h3>
                 ) : (
                   <h3 className="text-[10px] font-black tracking-wider text-white uppercase leading-tight group-hover:text-emerald-300 transition-colors break-words">
@@ -481,7 +481,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
 
                     {isClassic && (
                       <p className="px-4 text-[11px] font-medium text-white/50 mt-1 leading-tight">
-                        {lang === 'ru' ? 'Качественные сорта с проверенных ферм по низким ценам' : 'High-quality strains from verified farms at budget prices'}
+                        {lang === 'ru' ? 'сорта с проверенных ферм по низким ценам' : 'strains from verified farms at budget prices'}
                       </p>
                     )}
                     {isPremium && (
@@ -503,22 +503,19 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                     </div>
                   </button>
                   <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}>
-                    {/* Исправлено: Обычные и акционные сорта теперь идут единым монолитным списком, без разрывов дизайна */}
                     <div className="divide-y divide-white/10 bg-white/5">
                         {regularItems.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
                         
                         {saleItems.length > 0 && (
                             <>
-                                {/* Акционная плашка-разделитель — оформлена в ярком акцентном стиле text-amber-400 */}
                                 <div className="border-t border-b border-amber-500/20 bg-amber-500/[0.02] py-4 px-8 flex flex-col gap-3">
-                                    <div className="flex items-center gap-2 opacity-95 text-amber-400">
+                                    <div className="flex items-center gap-2 opacity-90 text-amber-400">
                                         <Tag size={14} className="text-amber-400 fill-amber-400/10" />
                                         <span className="text-[11px] font-black uppercase tracking-[0.1em]">
                                             {lang === 'ru' ? 'Сорта со скидкой' : 'Strains on Sale'}
                                         </span>
                                     </div>
                                     
-                                    {/* Ценники акционных товаров также подсвечены в text-amber-400 */}
                                     <div className="grid grid-cols-4 gap-2">
                                         {[1, 5, 10, 20].map(w => {
                                             const p = Math.round(Number(salePriceRef?.prices?.[w]) || 0);
@@ -531,7 +528,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                                         })}
                                     </div>
                                 </div>
-                                {/* Акционные товары выводятся в точно таком же стиле ProductRow, не ломая верстку */}
                                 {saleItems.map((p: any) => (
                                     <ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />
                                 ))}
@@ -550,6 +546,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                   <div className="w-full flex items-center justify-between">
                     <div className="flex items-center gap-3"><combinedEliteSection.icon size={22} style={{ color: combinedEliteSection.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: combinedEliteSection.color }}>{combinedEliteSection.title}</h2></div>
                     <div className="flex items-center gap-2">
+                      {/* ИСПРАВЛЕНО 3: Добавлена подсказка свернуть/развернуть */}
+                      <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
+                        {!closedGrades.includes(combinedEliteSection.id) ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
+                      </span>
                       <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${!closedGrades.includes(combinedEliteSection.id) ? 'rotate-180' : ''}`} />
                     </div>
                   </div>
@@ -563,6 +563,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             )}
           </div>
 
+          {/* КОНЦЕНТРАТЫ */}
           <div id="concentrates-menu" className="flex items-center gap-4 pt-6 pb-6 mt-4 relative">
              <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-emerald-500/50 to-emerald-500"></div>
              <span className="text-[16px] font-black uppercase tracking-[0.3em] text-white px-6 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md" style={{ color: '#10B981', borderColor: '#10B98130' }}>{lang === 'ru' ? 'Концентраты' : 'Concentrates'}</span>
@@ -570,13 +571,17 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
           </div>
           <div className="space-y-3">
             {concentrateSections.map(sec => {
-              const isOpen = closedGrades.includes(sec.id);
+              const isOpen = !closedGrades.includes(sec.id);
               return (
                 <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}>
                   <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group">
                     <div className="w-full flex items-center justify-between px-4">
                       <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div>
                       <div className="flex items-center gap-2">
+                        {/* ИСПРАВЛЕНО 3: Добавлена подсказка свернуть/развернуть */}
+                        <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
+                          {isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
+                        </span>
                         <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                       </div>
                     </div>
@@ -601,6 +606,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             })}
           </div>
 
+          {/* ПРЕРОЛЛЫ */}
           <div id="prerolls-menu" className="flex items-center gap-4 pt-6 pb-6 mt-4 relative">
              <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-[#F59E0B]/50 to-[#F59E0B]"></div>
              <span className="text-[16px] font-black uppercase tracking-[0.3em] text-white px-6 py-2 rounded-full border border-[#F59E0B]/30 bg-[#F59E0B]/10 backdrop-blur-md" style={{ borderColor: `${GOLDEN_COLOR}4d`, color: GOLDEN_COLOR }}>{lang === 'ru' ? 'Прероллы' : 'Prerolls'}</span>
@@ -608,7 +614,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
           </div>
           <div className="space-y-3">
             {prerollSections.map(sec => {
-              const isOpen = closedGrades.includes(sec.id);
+              const isOpen = !closedGrades.includes(sec.id);
               const priceRef = sec.items[0];
               return (
                 <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}>
@@ -616,6 +622,10 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                     <div className="w-full flex items-center justify-between px-4">
                       <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div>
                       <div className="flex items-center gap-2">
+                        {/* ИСПРАВЛЕНО 3: Добавлена подсказка свернуть/развернуть */}
+                        <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
+                          {isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
+                        </span>
                         <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                       </div>
                     </div>
@@ -639,6 +649,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             })}
           </div>
 
+          {/* АКСЕССУАРЫ */}
           {accessoriesSections && (
             <div id="accessories-menu" className="pt-4">
               <div className="flex items-center gap-4 pt-6 pb-6 relative">
@@ -648,13 +659,17 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               </div>
               <div className="space-y-3">
                 {accessoriesSections.map(sec => {
-                  const isOpen = closedGrades.includes(sec.id);
+                  const isOpen = !closedGrades.includes(sec.id);
                   return (
                     <div key={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}>
                       <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group">
                         <div className="w-full flex items-center justify-between px-4">
                           <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div>
                           <div className="flex items-center gap-2">
+                            {/* ИСПРАВЛЕНО 3: Добавлена подсказка свернуть/развернуть */}
+                            <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
+                              {isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
+                            </span>
                             <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                           </div>
                         </div>
