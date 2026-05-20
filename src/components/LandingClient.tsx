@@ -377,9 +377,19 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               <MapPin style={{ color: IMPORT_COLOR }} strokeWidth={1.5} />
             </div>
 
-            <div className="relative z-10 flex items-center justify-center w-full min-w-0">
-              <h3 className="text-[12px] font-black tracking-wide text-white uppercase leading-tight text-center group-hover:text-emerald-300 transition-colors">
-                {lang === 'ru' ? 'ИМПОРТ И ЭКСКЛЮЗИВЫ' : 'IMPORT & EXCLUSIVES'}
+            <div className="relative z-10 flex flex-col items-center justify-center w-full min-w-0 px-1 text-center">
+              <h3 className="text-[10px] font-black tracking-wide text-white uppercase leading-tight group-hover:text-emerald-300 transition-colors">
+                {lang === 'ru' ? (
+                  <>
+                    ИМПОРТНЫЕ ПРОДУКТЫ<br />
+                    <span className="text-[9px] opacity-90 font-black">И ЛОКАЛЬНЫЕ ЭКСКЛЮЗИВЫ</span>
+                  </>
+                ) : (
+                  <>
+                    IMPORTED PRODUCTS<br />
+                    <span className="text-[9px] opacity-90 font-black">& LOCAL EXCLUSIVES</span>
+                  </>
+                )}
               </h3>
             </div>
           </div>
