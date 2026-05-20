@@ -266,11 +266,9 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
     setClosedGrades(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
   };
 
-  // ПРАВКА ПУНКТА 4: Плавный доезд до секции, и только затем (через 400ms) открытие нужной категории «перед глазами» клиента
   const handleAnchorNavigation = (targetSectionId: string, accordionIdsToOpen: string[], allAccordionIds: string[]) => {
     triggerHaptic('medium');
     
-    // 1. Сначала плавно перемещаем экран к нужному якорю меню
     const el = document.getElementById(targetSectionId);
     if (el) {
       const offset = 20;
@@ -280,7 +278,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
       window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' });
     }
 
-    // 2. С задержкой в 400мс (когда скролл завершен) раскрываем целевые подразделы и сворачиваем остальные
     setTimeout(() => {
       const newClosedGrades = allAccordionIds.filter(id => !accordionIdsToOpen.includes(id));
       setClosedGrades(newClosedGrades);
@@ -299,7 +296,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
     }
   };
 
-  // Массив всех зарегистрированных ID вкладок аккордеонов для логики исключений
   const allSectionIds = React.useMemo(() => {
     const ids = ['classic', 'premium'];
     if (combinedEliteSection) ids.push(combinedEliteSection.id);
@@ -323,7 +319,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                   <SendHorizontal size={18} className="opacity-80"/>
                 </Link>
 
-                {/* ПРАВКА ПУНКТА 1: Кнопка WhatsApp оставлена неактивной (opacity-20 grayscale cursor-default) */}
                 <div className="w-[46px] h-[46px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/5 opacity-20 grayscale shadow-xl cursor-default">
                   <MessageCircle size={18} />
                 </div>
@@ -351,13 +346,12 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
           
           {/* SPLIT CARD (FLOWERS) */}
           <div className="relative rounded-[1.5rem] border border-white/15 flex overflow-hidden col-span-2 bg-[#112D21] h-[68px]">
-            {/* Левая половина - CLASSIC (Якорь доводит скролл и открывает только Classic с задержкой) */}
             <div 
               onClick={() => handleAnchorNavigation('buds-menu', ['classic'], allSectionIds)} 
               className="relative flex-1 flex items-center justify-center cursor-pointer transition-all duration-300 bg-emerald-500/10 hover:bg-emerald-500/20 active:bg-emerald-500/30 group border-r border-white/15"
             >
               <div className="absolute left-6 top-1/2 -translate-y-1/2 pointer-events-none z-0 opacity-[0.15] scale-[2.2] -rotate-12 transition-transform group-hover:scale-[2.4] duration-500">
-                <BlurImage src="https://res.cloudinary.com/dpjwbcgrq/image/upload/v1774704686/IMG_0036_t5cnic.png" width={40} height={40} className="w-10 h-10 object-contain invert" alt="Leaf overlay" />
+                <Leaf style={{ color: '#FFF' }} strokeWidth={1.5} />
               </div>
               <div className="relative z-10 flex flex-col items-center text-center gap-0.5 min-w-0 pl-14">
                 <span className="text-[11px] font-black tracking-[0.2em] text-white/50 uppercase leading-none">{lang === 'ru' ? 'БОШКИ' : 'FLOWERS'}</span>
@@ -365,7 +359,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
               </div>
             </div>
 
-            {/* Правая половина - PREMIUM (Якорь доводит скролл и открывает только Premium с задержкой) */}
             <div 
               onClick={() => handleAnchorNavigation('buds-menu', ['premium'], allSectionIds)} 
               className="relative flex-1 flex items-center justify-center cursor-pointer transition-all duration-300 bg-purple-500/10 hover:bg-purple-500/20 active:bg-purple-500/30 group"
@@ -380,7 +373,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
             </div>
           </div>
 
-          {/* НИЖНИЕ СЕКЦИОННЫЕ КНОПКИ (ПРАВКА ПУНКТА 3: Теперь все якоря точечно раскрывают свои категории с задержкой) */}
+          {/* НИЖНИЕ СЕКЦИОННЫЕ КНОПКИ */}
           {[
             { id: 'import', title: lang === 'ru' ? 'ИМПОРТ И ЭКСКЛЮЗИВЫ' : 'IMPORT & EXCLUSIVES', icon: MapPin, scroll: 'import-menu-section', bgClass: 'bg-blue-500/10 hover:bg-blue-500/20' },
             { id: 'concentrates', title: lang === 'ru' ? 'КОНЦЕНТРАТЫ' : 'CONCENTRATES', icon: Droplets, scroll: 'concentrates-menu-section', bgClass: 'bg-amber-500/10 hover:bg-amber-500/20' },
@@ -507,7 +500,6 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                   </div>
                 </button>
                 <div className={`overflow-hidden transition-all duration-500 ${!closedGrades.includes(combinedEliteSection.id) ? 'max-h-[3000px]' : 'max-h-0'}`}>
-                  {/* ПРАВКА ПУНКТА 4: showSubcategory переведен в положение true для отображения подписей */}
                   <div className="p-6 grid grid-cols-2 gap-4 bg-white/5">{combinedEliteSection.items.map(p => (<HighlightCard key={p.id} item={p} onClick={() => setSelectedProduct(p)} showSubcategory={true} />))}</div>
                 </div>
               </div>
@@ -535,7 +527,7 @@ export default function LandingClient({ initialProducts, initialDescriptions = [
                  <span className="text-[16px] font-black uppercase tracking-[0.3em] px-6 py-2 rounded-full border border-[#EC4899]/30 bg-[#EC4899]/10 backdrop-blur-md" style={{ color: '#EC4899' }}>{lang === 'ru' ? 'Аксессуары' : 'Accessories'}</span>
                  <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent via-[#EC4899]/50 to-[#EC4899]"></div>
               </div>
-              <div className="space-y-3">{accessoriesSections.map(sec => { const isOpen = !closedGrades.includes(sec.id); return ( <div key={sec.id} id={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}> <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group"> <div className="w-full flex items-center justify-between px-4"> <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div> <div className="flex items-center gap-2"> <span className="text-[9px] font-black uppercase tracking-widest opacity-40">{isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}</span> <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} /> </div> </div> </button> <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}> <div className="divide-y divide-white/10 bg-white/5">{sec.items.map((p: any) => packs.map ? p : <ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />)}</div> </div> </div> ); })} </div>
+              <div className="space-y-3">{accessoriesSections.map(sec => { const isOpen = !closedGrades.includes(sec.id); return ( <div key={sec.id} id={sec.id} className={`rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]`} style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}> <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex flex-col active:bg-white/5 transition-colors text-left group"> <div className="w-full flex items-center justify-between px-4"> <div className="flex items-center gap-3"><sec.icon size={22} style={{ color: sec.color }} /><h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-emerald-300 transition-colors" style={{ color: sec.color }}>{sec.title}</h2></div> <div className="flex items-center gap-2"> <span className="text-[9px] font-black uppercase tracking-widest opacity-40">{isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}</span> <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} /> </div> </div> </button> <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}> <div className="divide-y divide-white/10 bg-white/5">{sec.items.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}</div> </div> </div> ); })} </div>
             </div>
           )}
         </div>
