@@ -5,7 +5,7 @@ import {
   Plus, Tag, Zap, MapPin, Leaf, Crown, ShoppingBag, Send, 
   MessageCircle, Instagram, SendHorizontal, ChevronDown, 
   Droplets, Snowflake, Box, Sparkles, Bike, Wallet, Timer, 
-  CreditCard, Cigarette, Layers, X, EyeOff, Trophy, Users, ShieldCheck
+  CreditCard, Cigarette, Layers, X, Trophy, Users, ShieldCheck
 } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
@@ -433,8 +433,6 @@ export default function LandingClient({ initialProducts = [], initialDescription
               const isOpen = !closedGrades.includes(id);
               return (
                 <div key={id} className="rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]" style={{ borderColor: isOpen ? `${color}A0` : 'rgba(255,255,255,0.08)' }}>
-                  
-                  {/* ХЕДЕР ВЫРОВНЕН ПО ШАБЛОНУ CONCENTRATES */}
                   <button onClick={() => toggleSection(id)} className="w-full px-4 pt-3 pb-3 flex items-center justify-between active:bg-white/5 transition-colors text-left group">
                     <div className="flex items-center gap-3">
                       <Icon size={22} style={{ color: color }} />
@@ -507,7 +505,6 @@ export default function LandingClient({ initialProducts = [], initialDescription
             
             {combinedEliteSection && (
               <div key={combinedEliteSection.id} id="import-menu-section" className="rounded-[2rem] overflow-hidden border transition-all duration-300 bg-[#112D21]" style={{ borderColor: !closedGrades.includes(combinedEliteSection.id) ? `${combinedEliteSection.color}A0` : 'rgba(255,255,255,0.08)' }}>
-                {/* ХЕДЕР СТРОГО СКОПИРОВАН С КЛАССИКИ И КОНЦЕНТРАТОВ */}
                 <button onClick={() => toggleSection(combinedEliteSection.id)} className="w-full px-4 pt-3 pb-3 flex items-center justify-between active:bg-white/5 transition-colors text-left group">
                   <div className="flex items-center gap-3">
                     <combinedEliteSection.icon size={22} style={{ color: combinedEliteSection.color }} />
@@ -519,7 +516,6 @@ export default function LandingClient({ initialProducts = [], initialDescription
                   </div>
                 </button>
                 <div className={`overflow-hidden transition-all duration-500 ${!closedGrades.includes(combinedEliteSection.id) ? 'max-h-[3000px]' : 'max-h-0'}`}>
-                  {/* СЕТКА ГРИДА ПОДОГНАНА ПОД РАЗМЕР ВНУТРЕННИХ БЛОКОВ */}
                   <div className="px-4 py-4 grid grid-cols-2 gap-3 bg-white/5">
                     {combinedEliteSection.items.map(p => (<HighlightCard key={p.id} item={p} onClick={() => setSelectedProduct(p)} showSubcategory={true} />))}
                   </div>
@@ -654,21 +650,18 @@ export default function LandingClient({ initialProducts = [], initialDescription
           <Plus size={18} className="text-emerald-400 shrink-0" />
           <div>
             <p className="text-[8px] font-black uppercase tracking-[0.15em] text-white/40 mb-1">{lang === 'ru' ? 'Минимальный заказ' : 'Minimum order'}</p>
-            <p className="text-[13px] font-bold text-white tracking-[0.1em]">От 1000฿, Доставка бесплатная</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <CreditCard size={18} className="text-emerald-400 shrink-0" />
-          <div>
-            <p className="text-[8px] font-black uppercase tracking-[0.15em] text-white/40 mb-1">{lang === 'ru' ? 'Расчет при получении' : 'Payment on Delivery'}</p>
-            <p className="text-[13px] font-bold text-white tracking-[0.1em] leading-tight">{lang === 'ru' ? 'Наличные в руки курьеру' : 'Cash on delivery to the courier'}</p>
+            <p className="text-[13px] font-bold text-white tracking-[0.1em]">
+              {lang === 'ru' ? 'От 1000฿, Доставка бесплатная' : 'From 1000฿, Free delivery'}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-4">
           <Wallet size={18} className="text-emerald-400 shrink-0" />
           <div>
-            <p className="text-[8px] font-black uppercase tracking-[0.15em] text-white/40 mb-1">{lang === 'ru' ? 'Другие способы оплаты' : 'Other payment methods'}</p>
-            <p className="text-[13px] font-bold text-white tracking-[0.1em] leading-tight">{lang === 'ru' ? 'Банковский перевод, Крипта, Рубли' : 'Bank transfer, Crypto, Rubles'}</p>
+            <p className="text-[8px] font-black uppercase tracking-[0.15em] text-white/40 mb-1">{lang === 'ru' ? 'Способы оплаты' : 'Payment methods'}</p>
+            <p className="text-[13px] font-bold text-white tracking-[0.1em] leading-tight">
+              {lang === 'ru' ? 'Наличные, перевод, крипта, рубли' : 'Cash, bank transfer, crypto'}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -685,28 +678,36 @@ export default function LandingClient({ initialProducts = [], initialDescription
           <Trophy size={18} className="text-emerald-400 shrink-0" />
           <div>
             <p className="text-[8px] font-black uppercase tracking-[0.15em] text-white/40 mb-1">{lang === 'ru' ? 'Опыт на рынке' : 'Market Experience'}</p>
-            <p className="text-[13px] font-bold text-white tracking-[0.1em]">{lang === 'ru' ? '3 года стабильной работы' : '3 years of solid experience'}</p>
+            <p className="text-[13px] font-bold text-white tracking-[0.1em]">
+              {lang === 'ru' ? '3 года стабильной работы' : '3 years of solid experience'}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-4">
           <Users size={18} className="text-emerald-400 shrink-0" />
           <div>
             <p className="text-[8px] font-black uppercase tracking-[0.15em] text-white/40 mb-1">{lang === 'ru' ? 'Репутация' : 'Reputation'}</p>
-            <p className="text-[13px] font-bold text-white tracking-[0.1em]">Hundreds of satisfied regular loyal clients</p>
+            <p className="text-[13px] font-bold text-white tracking-[0.1em]">
+              {lang === 'ru' ? 'Сотни довольных постоянных клиентов' : 'Hundreds of satisfied regular loyal clients'}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <CreditCard size={18} className="text-emerald-400 shrink-0" />
+          <div>
+            <p className="text-[8px] font-black uppercase tracking-[0.15em] text-white/40 mb-1">{lang === 'ru' ? 'Расчет при получении' : 'Payment on Delivery'}</p>
+            <p className="text-[13px] font-bold text-white tracking-[0.1em] leading-tight">
+              {lang === 'ru' ? 'Наличные в руки курьеру' : 'Cash on delivery to the courier'}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-4">
           <Sparkles size={18} className="text-emerald-400 shrink-0" />
           <div>
             <p className="text-[8px] font-black uppercase tracking-[0.15em] text-white/40 mb-1">{lang === 'ru' ? 'Прямые поставки' : 'Direct Sourcing'}</p>
-            <p className="text-[13px] font-bold text-white tracking-[0.1em] leading-tight">Partnership with top-tier growers & suppliers</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <EyeOff size={18} className="text-emerald-400 shrink-0" />
-          <div>
-            <p className="text-[8px] font-black uppercase tracking-[0.15em] text-white/40 mb-1">{lang === 'ru' ? 'Конфиденциальность' : 'Privacy'}</p>
-            <p className="text-[13px] font-bold text-white tracking-[0.1em]">Complete anonymity for every single order</p>
+            <p className="text-[13px] font-bold text-white tracking-[0.1em] leading-tight">
+              {lang === 'ru' ? 'Партнерство с лучшими фермерами и поставщиками' : 'Partnership with top-tier growers & suppliers'}
+            </p>
           </div>
         </div>
       </InfoModal>
