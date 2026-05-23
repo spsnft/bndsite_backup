@@ -181,7 +181,6 @@ export default function LandingClient({ initialProducts = [], initialDescription
   const gradeSections = React.useMemo(() => {
     const buds = processedProducts.filter(p => p.category === 'buds' && !isElite(p));
     
-    // ЛОГИКА ФИЛЬТРАЦИИ СТРОГО ПО ОБНОВЛЕННЫМ СУБКАТЕГОРИЯМ
     const classicRegular = buds.filter(p => p.subcategory?.toLowerCase() === 'classic');
     const classicSale = buds.filter(p => p.subcategory?.toLowerCase() === 'classic sale');
     
@@ -445,7 +444,12 @@ export default function LandingClient({ initialProducts = [], initialDescription
         )}
         {flashSales.length > 0 && (
           <section className="mt-[12px] mb-[12px] space-y-3 overflow-hidden">
-            <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-white/80">{t.sales || 'Sales'}</h2></div>
+            <div className="flex items-center gap-2 px-2">
+              <BadgeIcon type="SALE" />
+              <h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-white/80">
+                {lang === 'ru' ? 'Распродажи недели' : 'Sales of the week'}
+              </h2>
+            </div>
             <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar mx-[-1rem] px-4 snap-x">{flashSales.map((p, idx) => (<div key={p?.id || idx} className="w-[170px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} hideBadge={true} isMini={false} showSubcategory={true} /></div>))}</div>
           </section>
         )}
@@ -482,7 +486,9 @@ export default function LandingClient({ initialProducts = [], initialDescription
                                 <div className="border-b border-amber-500/10 bg-amber-500/[0.02] py-3.5 px-6 flex flex-col gap-2.5">
                                     <div className="flex items-center gap-2 opacity-90 text-amber-400">
                                         <Tag size={13} className="text-amber-400 fill-amber-400/10" />
-                                        <span className="text-[10px] font-black uppercase tracking-[0.15em]">{lang === 'ru' ? 'Сорта со скидкой (SALE)' : 'Strains on Sale'}</span>
+                                        <span className="text-[10px] font-black uppercase tracking-[0.15em]">
+                                            {lang === 'ru' ? 'Сорта со скидкой' : 'Strains on Sale'}
+                                        </span>
                                     </div>
                                     <div className="grid grid-cols-4 gap-1.5">
                                         {[1, 5, 10, 20].map(w => {
@@ -580,7 +586,9 @@ export default function LandingClient({ initialProducts = [], initialDescription
                                 <div className="border-b border-amber-500/10 bg-amber-500/[0.02] py-3.5 px-6 flex flex-col gap-2.5">
                                     <div className="flex items-center gap-2 opacity-90 text-amber-400">
                                         <Tag size={13} className="text-amber-400 fill-amber-400/10" />
-                                        <span className="text-[10px] font-black uppercase tracking-[0.15em]">{lang === 'ru' ? 'Концентраты со скидкой (SALE)' : 'Concentrates on Sale'}</span>
+                                        <span className="text-[10px] font-black uppercase tracking-[0.15em]">
+                                            {lang === 'ru' ? 'Концентраты со скидкой' : 'Concentrates on Sale'}
+                                        </span>
                                     </div>
                                     <div className="grid grid-cols-4 gap-1.5">
                                         {[1, 5, 10, 20].map(w => {
@@ -658,7 +666,9 @@ export default function LandingClient({ initialProducts = [], initialDescription
                                 <div className="border-b border-amber-500/10 bg-amber-500/[0.02] py-3.5 px-6 flex flex-col gap-2.5">
                                     <div className="flex items-center gap-2 opacity-90 text-amber-400">
                                         <Tag size={13} className="text-amber-400 fill-amber-400/10" />
-                                        <span className="text-[10px] font-black uppercase tracking-[0.15em]">{lang === 'ru' ? 'Прероллы со скидкой (SALE)' : 'Prerolls on Sale'}</span>
+                                        <span className="text-[10px] font-black uppercase tracking-[0.15em]">
+                                            {lang === 'ru' ? 'Прероллы со скидкой' : 'Prerolls on Sale'}
+                                        </span>
                                     </div>
                                     <div className="grid grid-cols-4 gap-1.5">
                                         {[ {w:1, l:'1pcs'}, {w:5, l:'3pcs'}, {w:10, l:'5pcs'}, {w:20, l:'10pcs'} ].map(unit => {
