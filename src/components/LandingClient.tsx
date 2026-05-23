@@ -89,7 +89,7 @@ const HighlightCard = React.memo(({ item, onClick, priority, hideBadge, isMini, 
   
   const accentColor = item.category === 'concentrates' 
     ? (sub?.includes('fresh frozen premium') ? "#34D399" : sub?.includes('fresh frozen') ? "#FEC107" : SELECTED_COLOR)
-    : (isPrerolls ? GOLDEN_COLOR : (isElite(item) ? (sub?.includes('exclusive') ? SELECTED_COLOR : IMPORT_COLOR) : (sub === 'classic' ? '#10B981' : (sub === 'selected' ? SELECTED_COLOR : '#A855F7'))));
+    : (isPrerolls ? GOLDEN_COLOR : (isElite(item) ? (sub?.includes('exclusive') ? SELECTED_COLOR : IMPORT_COLOR) : (sub.includes('classic') ? '#10B981' : (sub === 'selected' ? SELECTED_COLOR : '#A855F7'))));
   
   const priceInfo = getFirstAvailablePrice(item) || { price: 0, weight: 0 };
   const currentPrice = priceInfo.price || 0;
@@ -116,7 +116,7 @@ const HighlightCard = React.memo(({ item, onClick, priority, hideBadge, isMini, 
       <div className="relative z-10 px-5 py-3 pb-0 flex-1 flex flex-col min-h-0">
         <div className="min-w-0 pr-6">
           <h3 className={`${isMini ? 'text-[11px]' : 'text-[13px]'} font-black uppercase tracking-tight leading-tight text-white group-hover:text-emerald-300 transition-colors`}>{item.name}</h3>
-          {showSubcategory && (<p className={`${isMini ? 'text-[8px]' : 'text-[9px]'} font-bold mt-1 text-white/50 uppercase tracking-widest italic`}>{item.subcategory === 'classic' ? 'Classic' : (item.subcategory === 'selected' ? 'Selected' : item.subcategory || "Product")}</p>)}
+          {showSubcategory && (<p className={`${isMini ? 'text-[8px]' : 'text-[9px]'} font-bold mt-1 text-white/50 uppercase tracking-widest italic`}>{item.subcategory?.includes('classic') ? 'Classic' : 'Premium'}</p>)}
         </div>
         <div className="relative flex-1 w-full min-h-0 flex items-center justify-center my-1">
             <BlurImage src={item.image} priority={priority} width={180} height={180} className="max-w-full max-h-full object-contain transform group-hover:scale-105 transition-transform duration-300" alt={item.name} />
@@ -181,16 +181,16 @@ export default function LandingClient({ initialProducts = [], initialDescription
   const gradeSections = React.useMemo(() => {
     const buds = processedProducts.filter(p => p.category === 'buds' && !isElite(p));
     
-    const classicItems = buds.filter(p => p.subcategory?.toLowerCase() === 'classic');
-    const classicRegular = classicItems.filter(p => p.badge?.toUpperCase() !== 'SALE');
-    const classicSale = classicItems.filter(p => p.badge?.toUpperCase() === 'SALE');
+    // ЛОГИКА ФИЛЬТРАЦИИ СТРОГО ПО ОБНОВЛЕННЫМ СУБКАТЕГОРИЯМ
+    const classicRegular = buds.filter(p => p.subcategory?.toLowerCase() === 'classic');
+    const classicSale = buds.filter(p => p.subcategory?.toLowerCase() === 'classic sale');
     
-    const premiumRegular = buds.filter(p => p.subcategory?.toLowerCase() === 'selected');
-    const premiumSale = buds.filter(p => p.subcategory?.toLowerCase() === 'premium');
+    const premiumRegular = buds.filter(p => p.subcategory?.toLowerCase() === 'premium');
+    const premiumSale = buds.filter(p => p.subcategory?.toLowerCase() === 'premium sale');
 
     const sections = [];
     
-    if (classicItems.length > 0) {
+    if (classicRegular.length > 0 || classicSale.length > 0) {
       sections.push({
         id: 'classic',
         title: 'Classic Grade',
@@ -198,7 +198,7 @@ export default function LandingClient({ initialProducts = [], initialDescription
         icon: Leaf,
         regularItems: classicRegular,
         saleItems: classicSale,
-        priceRef: classicRegular[0] || classicItems[0],
+        priceRef: classicRegular[0] || classicSale[0],
         salePriceRef: classicSale[0]
       });
     }
@@ -497,7 +497,7 @@ export default function LandingClient({ initialProducts = [], initialDescription
                                     </div>
                                 </div>
                                 <div className="divide-y divide-white/5 bg-white/[0.01]">
-                                  {saleItems.map((p: any) => Gram => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
+                                  {saleItems.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
                                 </div>
                             </div>
                         )}
@@ -848,7 +848,7 @@ export default function LandingClient({ initialProducts = [], initialDescription
               ? { color: concentrateSections.find(s => s.id === selectedProduct.subcategory)?.color || '#10B981' } 
               : (selectedProduct.category === 'joints' ? { color: GOLDEN_COLOR } 
               : (isElite(selectedProduct) ? {color: selectedProduct.subcategory?.toLowerCase().includes('exclusive') ? '#10B981' : IMPORT_COLOR} 
-              : (selectedProduct.subcategory?.toLowerCase() === 'classic' ? { color: '#10B981' } : { color: '#A855F7' })))
+              : (selectedProduct.subcategory?.toLowerCase().includes('classic') ? { color: '#10B981' } : { color: '#A855F7' })))
           } 
           onClose={() => setSelectedProduct(null)} 
         />
