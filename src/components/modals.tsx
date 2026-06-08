@@ -293,7 +293,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     setIsSubmitting(true);
     triggerHaptic('medium');
 
-    // Формируем структурированный текстовый список товаров с указанием категории и подкатегории
     let orderText = '';
     processedItems.forEach(item => {
       const itemCategory = item.category === 'buds' ? 'Buds' : item.category === 'joints' ? 'Joints' : item.category || 'Product';
@@ -328,6 +327,9 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
           method: `${contactMethod} / ${currentPayment}`
         }),
       });
+
+      // ИСПРАВЛЕНИЕ: Корзина очищается СРАЗУ ПОСЛЕ УСПЕШНОЙ отправки данных в таблицу
+      clearCart();
 
       triggerHaptic('success');
       setShowSuccessPopup(true);
@@ -367,7 +369,7 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     const encoded = encodeURIComponent(message);
     window.open(`https://t.me/bshk_phuket?text=${encoded}`, '_blank');
     
-    clearCart();
+    // Из этой функции убрали clearCart(), так как она теперь отрабатывает раньше
     setShowSuccessPopup(false);
     onClose();
   };
