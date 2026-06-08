@@ -286,14 +286,14 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
 
   const isFormValid = phone.trim().length > 0 && contactMethod !== '';
 
-  const handleFinalSubmitToGoogleAndTG = async (e: React.FormEvent) => {
+  const handleFormSubmitAndPreSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid || isSubmitting) return;
 
     setIsSubmitting(true);
     triggerHaptic('medium');
 
-    // Формируем структурированный текстовый список товаров
+    // 1. Формируем структурированный текстовый список товаров для таблицы
     let orderText = '';
     processedItems.forEach(item => {
       orderText += `• ${item.name} (${item.weight}) — ${item.finalPrice}฿\n`;
@@ -314,9 +314,10 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     try {
       const scriptUrl = 'https://script.google.com/macros/s/AKfycbyWoirxcrPstlMohLMoWV0llN69vMnWzGNc-8wksFULMlasDQechzbRJwcY-RbuagsE/exec';
 
+      // Теневая фоновая отправка на бэкенд Google Таблицы
       await fetch(scriptUrl, {
         method: 'POST',
-        mode: 'no-cors', // Чтобы обходить политики CORS при прямом запросе к Google Apps Script
+        mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           orderText: orderText.trim(),
@@ -326,15 +327,46 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
         }),
       });
 
+      // Переключаем интерфейс на поп-ап ускорения заказа
       triggerHaptic('success');
       setShowSuccessPopup(true);
-      clearCart();
     } catch (err) {
       console.error(err);
       alert(lang === 'ru' ? 'Ошибка отправки. Попробуйте еще раз.' : 'Send error. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleFinalTelegramSubmit = () => {
+    triggerHaptic('success');
+    
+    const paymentLabels: Record<string, string> = {
+      cash: lang === 'ru' ? 'Наличные курьеру' : 'Cash on delivery',
+      thai: lang === 'ru' ? 'Перевод Бат (Thai QR)' : 'Thai Bank Transfer',
+      crypto: 'Crypto',
+      rub: 'Рубли'
+    };
+
+    let message = lang === 'ru' ? `*⚡️ НОВЫЙ ЗАКАЗ НА СТЕНДЕ*\n\n` : `*⚡️ NEW WEB ORDER*\n\n`;
+    
+    processedItems.forEach(item => {
+      message += `• *${item.name}* (${item.weight}) — ${item.finalPrice}฿\n`;
+    });
+    
+    message += `\n*${lang === 'ru' ? 'Итого' : 'Total'}:* ${finalCalculatedTotal}฿\n`;
+    message += `-----------------------\n`;
+    message += `*${lang === 'ru' ? 'Способ связи' : 'Contact via'}:* ${contactMethod.toUpperCase()}\n`;
+    message += `*${lang === 'ru' ? 'Контакт / Номер' : 'Username / Phone'}:* ${phone}\n`;
+    message += `*${lang === 'ru' ? 'Оплата' : 'Payment'}:* ${paymentLabels[paymentMethod] || paymentMethod}\n`;
+    message += `*${lang === 'ru' ? 'Адрес доставки' : 'Delivery Address'}:* ${address.trim() !== '' ? address : (lang === 'ru' ? 'Не указан (уточнить)' : 'Not specified')}\n`;
+    
+    const encoded = encodeURIComponent(message);
+    window.open(`https://t.me/bshk_phuket?text=${encoded}`, '_blank');
+    
+    clearCart();
+    setShowSuccessPopup(false);
+    onClose();
   };
 
   return (
@@ -413,7 +445,7 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
             </div>
           )}
 
-          <form id="checkout-form" onSubmit={handleFinalSubmitToGoogleAndTG} className="space-y-4 pt-2 border-t border-white/5">
+          <form id="checkout-form" onSubmit={handleFormSubmitAndPreSave} className="space-y-4 pt-2 border-t border-white/5">
             
             <div className="space-y-1.5">
               <label className="text-[9px] font-black uppercase tracking-widest text-white/40 block">
@@ -515,6 +547,7 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
           </button>
         </div>
 
+        {/* ДВУХЭТАПНЫЙ ПОП-АП С ОПЕРАТОРОМ — СНОВА НА МЕСТЕ */}
         {showSuccessPopup && (
           <div className="absolute inset-0 bg-[#112D21] z-50 flex flex-col items-center justify-center p-6 text-center animate-fade-in">
             <div className="p-4 bg-emerald-500/10 rounded-full text-emerald-400 mb-4">
@@ -522,21 +555,29 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
             </div>
             
             <h3 className="text-[18px] font-black uppercase tracking-tight text-white mb-2">
-              {lang === 'ru' ? 'Заказ принят!' : 'Order Processed!'}
+              {lang === 'ru' ? 'Заказ передан!' : 'Order Processed!'}
             </h3>
             
             <p className="text-[12px] font-medium text-white/70 leading-relaxed max-w-xs mb-8">
               {lang === 'ru' 
-                ? 'Данные успешно переданы оператору. Мы свяжемся с вами в Telegram или по указанному номеру в ближайшее время.' 
-                : 'Your order has been successfully processed. Our manager will contact you shortly via Telegram or phone.'}
+                ? 'Чтобы ускорить оформление — отправьте сформированное сообщение нашему оператору в Telegram.' 
+                : 'To accelerate processing time — please forward the generated invoice text to our Telegram operator.'}
             </p>
 
-            <div className="w-full max-w-xs">
+            <div className="w-full space-y-2 max-w-xs">
               <button
-                onClick={() => { setShowSuccessPopup(false); onClose(); }}
-                className="w-full h-[52px] bg-emerald-400 text-black rounded-2xl flex items-center justify-center font-black uppercase text-[12px] tracking-[0.15em] shadow-xl active:scale-95 transition-all"
+                onClick={handleFinalTelegramSubmit}
+                className="w-full h-[52px] bg-emerald-400 text-black rounded-2xl flex items-center justify-center gap-3 font-black uppercase text-[12px] tracking-[0.15em] shadow-xl active:scale-95 transition-all"
               >
-                {lang === 'ru' ? 'Отлично' : 'Great'}
+                <span>{lang === 'ru' ? 'Подтвердить в Telegram' : 'Confirm in Telegram'}</span>
+                <SendHorizontal size={15} />
+              </button>
+              
+              <button
+                onClick={() => setShowSuccessPopup(false)}
+                className="w-full py-2.5 text-[10px] font-black uppercase text-white/40 tracking-widest active:opacity-60"
+              >
+                {lang === 'ru' ? 'Вернуться назад' : 'Go Back'}
               </button>
             </div>
           </div>
