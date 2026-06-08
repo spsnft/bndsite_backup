@@ -293,10 +293,12 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     setIsSubmitting(true);
     triggerHaptic('medium');
 
-    // 1. Формируем структурированный текстовый список товаров для таблицы
+    // Формируем структурированный текстовый список товаров с указанием категории и подкатегории
     let orderText = '';
     processedItems.forEach(item => {
-      orderText += `• ${item.name} (${item.weight}) — ${item.finalPrice}฿\n`;
+      const itemCategory = item.category === 'buds' ? 'Buds' : item.category === 'joints' ? 'Joints' : item.category || 'Product';
+      const itemSub = item.subcategory ? ` / ${item.subcategory}` : '';
+      orderText += `• [${itemCategory}${itemSub}] ${item.name} (${item.weight}) — ${item.finalPrice}฿\n`;
     });
 
     if (address.trim() !== '') {
@@ -327,7 +329,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
         }),
       });
 
-      // Переключаем интерфейс на поп-ап ускорения заказа
       triggerHaptic('success');
       setShowSuccessPopup(true);
     } catch (err) {
@@ -351,7 +352,9 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     let message = lang === 'ru' ? `*⚡️ НОВЫЙ ЗАКАЗ НА СТЕНДЕ*\n\n` : `*⚡️ NEW WEB ORDER*\n\n`;
     
     processedItems.forEach(item => {
-      message += `• *${item.name}* (${item.weight}) — ${item.finalPrice}฿\n`;
+      const itemCategory = item.category === 'buds' ? 'Buds' : item.category === 'joints' ? 'Joints' : item.category || 'Product';
+      const itemSub = item.subcategory ? ` / ${item.subcategory}` : '';
+      message += `• *[${itemCategory}${itemSub}] ${item.name}* (${item.weight}) — ${item.finalPrice}฿\n`;
     });
     
     message += `\n*${lang === 'ru' ? 'Итого' : 'Total'}:* ${finalCalculatedTotal}฿\n`;
@@ -547,7 +550,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
           </button>
         </div>
 
-        {/* ДВУХЭТАПНЫЙ ПОП-АП С ОПЕРАТОРОМ — СНОВА НА МЕСТЕ */}
         {showSuccessPopup && (
           <div className="absolute inset-0 bg-[#112D21] z-50 flex flex-col items-center justify-center p-6 text-center animate-fade-in">
             <div className="p-4 bg-emerald-500/10 rounded-full text-emerald-400 mb-4">
