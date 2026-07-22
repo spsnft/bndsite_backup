@@ -1,8 +1,10 @@
+// src/components/modals.tsx
 "use client"
 import * as React from "react"
 import { X, Plus, Minus, Trash2, SendHorizontal, Sparkles, Wind, MapPin, Beaker, Info, Layers, ShoppingBag, CheckCircle2, MessageCircle, Phone } from "lucide-react"
 import { BlurImage } from "@/components/blur-image"
 import { useCart } from "@/lib/cart-store"
+import { siteConfig } from "@/config/site"
 import { 
   triggerHaptic, isElite, getInterpolatedPrice, 
   TYPE_COLORS, GRADES, SELECTED_COLOR, Baht 
@@ -313,22 +315,24 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     const currentPayment = paymentLabels[paymentMethod] || paymentMethod;
 
     try {
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbyWoirxcrPstlMohLMoWV0llN69vMnWzGNc-8wksFULMlasDQechzbRJwcY-RbuagsE/exec';
+      const scriptUrl = siteConfig.apiUrl;
 
-      // Теневая фоновая отправка на бэкенд Google Таблицы
-      await fetch(scriptUrl, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderText: orderText.trim(),
-          total: finalCalculatedTotal,
-          contact: phone,
-          method: `${contactMethod} / ${currentPayment}`
-        }),
-      });
+      if (scriptUrl) {
+        // Теневая фоновая отправка на бэкенд Google Таблицы
+        await fetch(scriptUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderText: orderText.trim(),
+            total: finalCalculatedTotal,
+            contact: phone,
+            method: `${contactMethod} / ${currentPayment}`
+          }),
+        });
+      }
 
-      // ИСПРАВЛЕНИЕ: Корзина очищается СРАЗУ ПОСЛЕ УСПЕШНОЙ отправки данных в таблицу
+      // Корзина очищается сразу после отправки данных
       clearCart();
 
       triggerHaptic('success');
@@ -367,9 +371,9 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     message += `*${lang === 'ru' ? 'Адрес доставки' : 'Delivery Address'}:* ${address.trim() !== '' ? address : (lang === 'ru' ? 'Не указан (уточнить)' : 'Not specified')}\n`;
     
     const encoded = encodeURIComponent(message);
-    window.open(`https://t.me/bshk_phuket?text=${encoded}`, '_blank');
+    const targetOperator = siteConfig.telegramOperator || "demo_operator";
+    window.open(`https://t.me/${targetOperator}?text=${encoded}`, '_blank');
     
-    // Из этой функции убрали clearCart(), так как она теперь отрабатывает раньше
     setShowSuccessPopup(false);
     onClose();
   };
@@ -514,7 +518,7 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
             <div className="space-y-1.5">
               <div className="flex justify-between items-center">
                 <label className="text-[9px] font-black uppercase tracking-widest text-white/40">
-                  {lang === 'ru' ? 'Адрес доставки (Пхукет)' : 'Delivery Address (Phuket)'}
+                  {lang === 'ru' ? 'Адрес доставки' : 'Delivery Address'}
                 </label>
                 <button
                   type="button"
