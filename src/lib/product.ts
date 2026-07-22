@@ -1,11 +1,18 @@
+import { siteConfig } from "@/config/site"
+
 export async function getProducts() {
   try {
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWoirxcrPstlMohLMoWV0llN69vMnWzGNc-8wksFULMlasDQechzbRJwcY-RbuagsE/exec';
+    const SCRIPT_URL = siteConfig.apiUrl;
+
+    // Если URL еще не задан в .env.local, отдаем пустой массив без падения приложения
+    if (!SCRIPT_URL) {
+      console.warn("⚠️ API URL не настроен в siteConfig.apiUrl / .env.local");
+      return { products: [], stories: [], descriptions: [] };
+    }
 
     const response = await fetch(SCRIPT_URL, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      // Убираем no-store и ставим кэширование
       next: { revalidate: 60 } 
     });
 
@@ -13,15 +20,15 @@ export async function getProducts() {
 
     const data = await response.json();
     
-    // ВАЖНО: Достаем все три массива из ответа API
     const items = data.products || [];
     const stories = data.stories || [];
     const descriptions = data.descriptions || [];
 
-    const formattedProducts = items.map((item: any) => ({
+    const formattedProducts = items.map((item: any, index: number) => ({
       ...item,
-      id: String(item.id || Math.random()),
-      name: String(item.name || "Unnamed"),
+      // Безопасный ID без использования Math.random() для защиты от Hydration Mismatch
+      id: String(item.id || `product-${index}`),
+      name: String(item.name || "Unnamed Product"),
       category: String(item.category || "").toLowerCase().trim(),
       subcategory: String(item.subcategory || "").toLowerCase().trim(),
       
@@ -30,7 +37,7 @@ export async function getProducts() {
         : '/images/placeholder.webp',
 
       description: String(item.description || ""),
-      farm: String(item.farm || "Organic Thai Farm"),
+      farm: String(item.farm || "Organic Demo Farm"),
       taste: String(item.taste || "Sweet, Earthy"),
       terpenes: String(item.terpenes || "Myrcene, Limonene"),
 
@@ -49,7 +56,7 @@ export async function getProducts() {
       descriptions: descriptions 
     };
   } catch (error) {
-    console.error("❌ Ошибка загрузки:", error);
+    console.error("❌ Ошибка загрузки каталога:", error);
     return { products: [], stories: [], descriptions: [] };
   }
 }
