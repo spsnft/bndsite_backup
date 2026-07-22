@@ -1,8 +1,10 @@
+// src/app/layout.tsx
 import "@/styles/globals.css"
 import type { Metadata, Viewport } from "next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 import { Montserrat } from 'next/font/google'
+import { siteConfig } from "@/config/site"
 
 const montserrat = Montserrat({
   subsets: ['latin', 'cyrillic'],
@@ -11,7 +13,7 @@ const montserrat = Montserrat({
 })
 
 export const viewport: Viewport = {
-  themeColor: "#193D2E",
+  themeColor: siteConfig.themeColor,
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -19,34 +21,34 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bnd.delivery"),
-  title: "BND Delivery | Phuket",
-  description: "Premium Delivery Service in Phuket",
+  metadataBase: new URL(siteConfig.url),
+  title: siteConfig.name,
+  description: siteConfig.description,
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
     apple: "/icon.png",
   },
   openGraph: {
-    title: "BND Delivery | Phuket",
-    description: "Premium Delivery Service in Phuket",
-    url: "https://bnd.delivery",
-    siteName: "BND Delivery",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
     images: [
       {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "BND Delivery Phuket",
+        alt: siteConfig.name,
       },
     ],
-    locale: "ru_RU",
+    locale: siteConfig.locale,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "BND Delivery | Phuket",
-    description: "Premium Delivery Service in Phuket",
+    title: siteConfig.name,
+    description: siteConfig.description,
     images: ["/images/og-image.png"],
   },
   other: {
