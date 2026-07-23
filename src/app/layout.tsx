@@ -62,7 +62,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" />
       </head>
-      <body className="font-sans min-h-screen bg-[#193D2E] text-white antialiased selection:bg-emerald-500/30">
+      {/* ✅ ЗДЕСЬ ГЛАВНОЕ ИЗМЕНЕНИЕ: заменяем хардкод на brand-цвета */}
+      <body className="font-sans min-h-screen bg-brand-primary text-brand-light antialiased selection:bg-brand-secondary/30">
         {children}
         <SpeedInsights />
         <Analytics />
