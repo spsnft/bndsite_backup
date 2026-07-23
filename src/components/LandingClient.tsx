@@ -518,4 +518,395 @@ export default function LandingClient({ initialProducts = [], initialDescription
                                             {lang === 'ru' ? 'Сорта со скидкой' : 'Strains on Sale'}
                                         </span>
                                     </div>
-                                    <div className="grid grid-cols-4 gap-
+                                    <div className="grid grid-cols-4 gap-1.5">
+                                        {[1, 5, 10, 20].map(w => {
+                                            const p = Math.round(Number(salePriceRef?.prices?.[w]) || 0);
+                                            return (
+                                                <div key={w} className="flex flex-col items-center justify-center gap-0.5 bg-amber-500/5 py-1 rounded-xl border border-amber-500/10">
+                                                    <span className="text-[11px] font-black opacity-50 uppercase leading-none">{w}g</span>
+                                                    <span className="text-[14px] font-black text-amber-400 leading-none">{p > 0 ? (<>{p}<BahtSymbol /></>) : '—'}</span>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                                <div className="divide-y divide-white/5 bg-white/[0.01]">
+                                  {saleItems.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
+                                </div>
+                            </div>
+                        )}
+
+                        {regularItems.length > 0 && (
+                            <div>
+                                <div className="border-b border-white/5 bg-white/5 py-3.5 px-6 flex flex-col gap-2.5">
+                                    <div className="flex items-center gap-2 opacity-40 text-brand-light">
+                                        <Leaf size={13} />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.15em]">
+                                            {lang === 'ru' ? 'Лучшие сорта' : 'Top Strains'}
+                                        </span>
+                                    </div>
+                                    <div className="grid grid-cols-4 gap-1.5">
+                                        {[1, 5, 10, 20].map(w => {
+                                            const p = Math.round(Number(priceRef?.prices?.[w]) || 0);
+                                            return (
+                                                <div key={w} className="flex flex-col items-center justify-center gap-0.5 bg-white/5 py-1 rounded-xl border border-white/5">
+                                                    <span className="text-[11px] font-black opacity-50 uppercase leading-none">{w}g</span>
+                                                    <span className="text-[14px] font-black text-brand-light/95 leading-none">{p > 0 ? (<>{p}<BahtSymbol /></>) : '—'}</span>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                                <div className="divide-y divide-white/5">
+                                  {regularItems.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            
+            {combinedEliteSection && (
+              <div key={combinedEliteSection.id} id="import-menu-section" className="rounded-[2rem] overflow-hidden border transition-all duration-300 bg-brand-primary" style={{ borderColor: !closedGrades.includes(combinedEliteSection.id) ? `${combinedEliteSection.color}A0` : 'rgba(255,255,255,0.08)' }}>
+                <button onClick={() => toggleSection(combinedEliteSection.id)} className="w-full px-4 pt-3 pb-3 flex items-center justify-between active:bg-white/5 transition-colors text-left group">
+                  <div className="flex items-center gap-3">
+                    <combinedEliteSection.icon size={22} style={{ color: combinedEliteSection.color }} />
+                    <h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-brand-secondary transition-colors" style={{ color: combinedEliteSection.color }}>{combinedEliteSection.title}</h2>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">{!closedGrades.includes(combinedEliteSection.id) ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}</span>
+                    <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${!closedGrades.includes(combinedEliteSection.id) ? 'rotate-180' : ''}`} />
+                  </div>
+                </button>
+                <div className={`overflow-hidden transition-all duration-500 ${!closedGrades.includes(combinedEliteSection.id) ? 'max-h-[3000px]' : 'max-h-0'}`}>
+                  <div className="px-4 py-4 grid grid-cols-2 gap-3 bg-white/5">
+                    {combinedEliteSection.items.map(p => (<HighlightCard key={p.id} item={p} onClick={() => setSelectedProduct(p)} showSubcategory={true} />))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div id="concentrates-menu-section" className="flex items-center gap-4 pt-6 pb-6 mt-4 relative">
+             <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-brand-secondary/50 to-brand-secondary"></div>
+             <span className="text-[16px] font-black uppercase tracking-[0.3em] text-brand-light px-6 py-2 rounded-full border border-brand-secondary/30 bg-brand-secondary/10 backdrop-blur-md">{lang === 'ru' ? 'Концентраты' : 'Concentrates'}</span>
+             <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent via-brand-secondary/50 to-brand-secondary"></div>
+          </div>
+          <div className="space-y-3">
+            {concentrateSections.map(({ id, title, color, icon: Icon, regularItems, saleItems, priceRef, salePriceRef }) => { 
+              const isOpen = !closedGrades.includes(id); 
+              return ( 
+                <div key={id} id={id} className="rounded-[2rem] overflow-hidden border transition-all duration-300 bg-brand-primary" style={{ borderColor: isOpen ? `${color}A0` : 'rgba(255,255,255,0.08)' }}> 
+                  <button onClick={() => toggleSection(id)} className="w-full px-4 pt-3 pb-3 flex items-center justify-between active:bg-white/5 transition-colors text-left group"> 
+                    <div className="flex items-center gap-3">
+                      <Icon size={22} style={{ color: color }} />
+                      <h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-brand-secondary transition-colors" style={{ color: color }}>{title}</h2>
+                    </div> 
+                    <div className="flex items-center gap-2"> 
+                      <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">{isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}</span> 
+                      <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} /> 
+                    </div> 
+                  </button> 
+                  <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}> 
+                    <div className="bg-white/[0.02]">
+                        {saleItems.length > 0 && (
+                            <div className="border-b border-white/5">
+                                <div className="border-b border-amber-500/10 bg-amber-500/[0.02] py-3.5 px-6 flex flex-col gap-2.5">
+                                    <div className="flex items-center gap-2 opacity-90 text-amber-400">
+                                        <Tag size={13} className="text-amber-400 fill-amber-400/10" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.15em]">
+                                            {lang === 'ru' ? 'Концентраты со скидкой' : 'Concentrates on Sale'}
+                                        </span>
+                                    </div>
+                                    <div className="grid grid-cols-4 gap-1.5">
+                                        {[1, 5, 10, 20].map(w => {
+                                            const p = Math.round(Number(salePriceRef?.prices?.[w]) || 0);
+                                            return (
+                                                <div key={w} className="flex flex-col items-center justify-center gap-0.5 bg-amber-500/5 py-1 rounded-xl border border-amber-500/10">
+                                                    <span className="text-[11px] font-black opacity-50 uppercase leading-none">{w}g</span>
+                                                    <span className="text-[14px] font-black text-amber-400 leading-none">{p > 0 ? (<>{p}<BahtSymbol /></>) : '—'}</span>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                                <div className="divide-y divide-white/5 bg-white/[0.01]">
+                                  {saleItems.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
+                                </div>
+                            </div>
+                        )}
+
+                        {regularItems.length > 0 && (
+                            <div>
+                                <div className="border-b border-white/5 bg-white/5 py-3.5 px-6 flex flex-col gap-2.5">
+                                    <div className="flex items-center gap-2 opacity-40 text-brand-light">
+                                        <Icon size={13} />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.15em]">
+                                            {lang === 'ru' ? 'Лучшие сорта' : 'Top Strains'}
+                                        </span>
+                                    </div>
+                                    <div className="grid grid-cols-4 gap-1.5">
+                                        {[1, 5, 10, 20].map(w => {
+                                            const p = Math.round(Number(priceRef?.prices?.[w]) || 0);
+                                            return (
+                                                <div key={w} className="flex flex-col items-center justify-center gap-0.5 bg-white/5 py-1 rounded-xl border border-white/5">
+                                                    <span className="text-[11px] font-black opacity-50 uppercase leading-none">{w}g</span>
+                                                    <span className="text-[14px] font-black text-brand-light/95 leading-none">{p > 0 ? (<>{p}<BahtSymbol /></>) : '—'}</span>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                                <div className="divide-y divide-white/5">
+                                  {regularItems.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
+                                </div>
+                            </div>
+                        )}
+                    </div> 
+                  </div> 
+                </div> 
+              ); 
+            })} 
+          </div>
+
+          <div id="prerolls-menu-section" className="flex items-center gap-4 pt-6 pb-6 mt-4 relative">
+             <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-[#F59E0B]/50 to-[#F59E0B]"></div>
+             <span className="text-[16px] font-black uppercase tracking-[0.3em] text-brand-light px-6 py-2 rounded-full border border-[#F59E0B]/30 bg-[#F59E0B]/10 backdrop-blur-md" style={{ color: GOLDEN_COLOR }}>{lang === 'ru' ? 'Прероллы' : 'Prerolls'}</span>
+             <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent via-[#F59E0B]/50 to-[#F59E0B]"></div>
+          </div>
+          <div className="space-y-3">
+            {prerollSections.map(({ id, title, color, icon: Icon, regularItems, saleItems, priceRef, salePriceRef }) => { 
+              const isOpen = !closedGrades.includes(id); 
+              return ( 
+                <div key={id} id={id} className="rounded-[2rem] overflow-hidden border transition-all duration-300 bg-brand-primary" style={{ borderColor: isOpen ? `${color}A0` : 'rgba(255,255,255,0.08)' }}> 
+                  <button onClick={() => toggleSection(id)} className="w-full px-4 pt-3 pb-3 flex items-center justify-between active:bg-white/5 transition-colors text-left group"> 
+                    <div className="flex items-center gap-3">
+                      <Icon size={22} style={{ color: color }} />
+                      <h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-brand-secondary transition-colors" style={{ color: color }}>{title}</h2>
+                    </div> 
+                    <div className="flex items-center gap-2"> 
+                      <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">{isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}</span> 
+                      <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} /> 
+                    </div> 
+                  </button> 
+                  <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}> 
+                    <div className="bg-white/[0.02]">
+                        {saleItems.length > 0 && (
+                            <div className="border-b border-white/5">
+                                <div className="border-b border-amber-500/10 bg-amber-500/[0.02] py-3.5 px-6 flex flex-col gap-2.5">
+                                    <div className="flex items-center gap-2 opacity-90 text-amber-400">
+                                        <Tag size={13} className="text-amber-400 fill-amber-400/10" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.15em]">
+                                            {lang === 'ru' ? 'Прероллы со скидкой' : 'Prerolls on Sale'}
+                                        </span>
+                                    </div>
+                                    <div className="grid grid-cols-4 gap-1.5">
+                                        {[ {w:1, l:'1pcs'}, {w:5, l:'3pcs'}, {w:10, l:'5pcs'}, {w:20, l:'10pcs'} ].map(unit => {
+                                            const p = Math.round(Number(salePriceRef?.prices?.[unit.w]) || 0);
+                                            return (
+                                                <div key={unit.w} className="flex flex-col items-center justify-center gap-0.5 bg-amber-500/5 py-1 rounded-xl border border-amber-500/10">
+                                                    <span className="text-[11px] font-black opacity-50 uppercase leading-none">{unit.l}</span>
+                                                    <span className="text-[14px] font-black text-amber-400 leading-none">{p > 0 ? (<>{p}<BahtSymbol /></>) : '—'}</span>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                                <div className="divide-y divide-white/5 bg-white/[0.01]">
+                                  {saleItems.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
+                                </div>
+                            </div>
+                        )}
+
+                        {regularItems.length > 0 && (
+                            <div>
+                                <div className="border-b border-white/5 bg-white/5 py-3.5 px-6 flex flex-col gap-2.5">
+                                    <div className="flex items-center gap-2 opacity-40 text-brand-light">
+                                        <Icon size={13} />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.15em]">
+                                            {lang === 'ru' ? 'Лучшие сорта' : 'Top Strains'}
+                                        </span>
+                                    </div>
+                                    <div className="grid grid-cols-4 gap-1.5">
+                                        {[ {w:1, l:'1pcs'}, {w:5, l:'3pcs'}, {w:10, l:'5pcs'}, {w:20, l:'10pcs'} ].map(unit => {
+                                            const p = Math.round(Number(priceRef?.prices?.[unit.w]) || 0);
+                                            return (
+                                                <div key={unit.w} className="flex flex-col items-center justify-center gap-0.5 bg-white/5 py-1 rounded-xl border border-white/5">
+                                                    <span className="text-[11px] font-black opacity-50 uppercase leading-none">{unit.l}</span>
+                                                    <span className="text-[14px] font-black text-brand-light/95 leading-none">{p > 0 ? (<>{p}<BahtSymbol /></>) : '—'}</span>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                                <div className="divide-y divide-white/5">
+                                  {regularItems.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
+                                </div>
+                            </div>
+                        )}
+                    </div> 
+                  </div> 
+                </div> 
+              ); 
+            })} 
+          </div>
+
+          {accessoriesSections && (
+            <div id="accessories-menu-section" className="pt-4">
+              <div className="flex items-center gap-4 pt-6 pb-6 relative">
+                 <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-[#EC4899]/50 to-[#EC4899]"></div>
+                 <span className="text-[16px] font-black uppercase tracking-[0.3em] px-6 py-2 rounded-full border border-[#EC4899]/30 bg-[#EC4899]/10 backdrop-blur-md" style={{ color: '#EC4899' }}>{lang === 'ru' ? 'Аксессуары' : 'Accessories'}</span>
+                 <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent via-[#EC4899]/50 to-[#EC4899]"></div>
+              </div>
+              <div className="space-y-3">
+                {accessoriesSections.map(sec => { 
+                  const isOpen = !closedGrades.includes(sec.id); 
+                  return ( 
+                    <div key={sec.id} id={sec.id} className="rounded-[2rem] overflow-hidden border transition-all duration-300 bg-brand-primary" style={{ borderColor: isOpen ? `${sec.color}A0` : 'rgba(255,255,255,0.08)' }}> 
+                      <button onClick={() => toggleSection(sec.id)} className="w-full px-4 pt-3 pb-3 flex items-center justify-between active:bg-white/5 transition-colors text-left group"> 
+                        <div className="flex items-center gap-3">
+                          <sec.icon size={22} style={{ color: sec.color }} />
+                          <h2 className="text-[15px] font-black uppercase tracking-tighter group-hover:text-brand-secondary transition-colors" style={{ color: sec.color }}>{sec.title}</h2>
+                        </div> 
+                        <div className="flex items-center gap-2"> 
+                          <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">{isOpen ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}</span> 
+                          <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} /> 
+                        </div> 
+                      </button> 
+                      <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px]' : 'max-h-0'}`}> 
+                        <div className="divide-y divide-white/10 bg-white/5">
+                          {sec.items.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
+                        </div> 
+                      </div> 
+                    </div> 
+                  ); 
+                })} 
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {items.length > 0 && (
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] w-full max-w-sm px-6">
+          <button onClick={() => { triggerHaptic('medium'); setIsCheckoutOpen(true); }} className="w-full bg-white/10 backdrop-blur-2xl text-brand-light py-3 px-7 rounded-[2.5rem] border border-white/20 shadow-2xl flex justify-between items-center active:scale-95 transition-all">
+            <div className="flex items-center gap-4 relative z-10">
+              <div className="p-2 bg-brand-secondary/20 rounded-xl"><ShoppingBag size={20} className="text-brand-secondary"/></div>
+              <div className="text-left">
+                <div className="font-black uppercase text-[18px] leading-none mb-0.5">{getTotal()}<BahtSymbol /></div>
+                <span className="font-black uppercase text-[9px] text-brand-secondary leading-none">{items.length} {t.items || 'items'}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 text-brand-light opacity-70">
+              <span className="text-[12px] font-black uppercase">{t.basket || 'Basket'}</span>
+              <span className="p-2 bg-white/10 rounded-full animate-pulse"><Send size={18}/></span>
+            </div>
+          </button>
+        </div>
+      )}
+      
+      <InfoModal isOpen={isDeliveryModalOpen} onClose={() => setIsDeliveryModalOpen(false)} title={lang === 'ru' ? 'Доставка и Оплата' : 'Delivery & Payment'}>
+        <div className="flex items-center gap-4">
+          <Timer size={18} className="text-brand-secondary shrink-0" />
+          <div>
+            <p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Часы работы' : 'Working hours'}</p>
+            <p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">12:00 — 00:00</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <Plus size={18} className="text-brand-secondary shrink-0" />
+          <div>
+            <p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Минимальный заказ' : 'Minimum order'}</p>
+            <p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">
+              {lang === 'ru' ? 'От 1000฿, Доставка бесплатная' : 'From 1000฿, Free delivery'}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <Wallet size={18} className="text-brand-secondary shrink-0" />
+          <div>
+            <p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Способы оплаты' : 'Payment methods'}</p>
+            <p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">
+              {lang === 'ru' ? 'Наличные, перевод, крипта, рубли' : 'Cash, bank transfer, crypto'}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <Bike size={18} className="text-brand-secondary shrink-0" />
+          <div>
+            <p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Сроки доставки' : 'Delivery times'}</p>
+            <p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">
+              {lang === 'ru' ? 'Пхукет: в течение 60 мин, Таиланд: 2-3 дня' : 'Phuket: within 60 min, Thailand: 2-3 days'}
+            </p>
+          </div>
+        </div>
+      </InfoModal>
+
+      <InfoModal isOpen={isGuaranteesModalOpen} onClose={() => setIsGuaranteesModalOpen(false)} title={lang === 'ru' ? 'О нас и Гарантии' : 'Our Guarantees'}>
+        <div className="flex items-center gap-4">
+          <Trophy size={18} className="text-brand-secondary shrink-0" />
+          <div>
+            <p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Опыт на рынке' : 'Market Experience'}</p>
+            <p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">
+              {lang === 'ru' ? '3 года стабильной работы' : '3 years of solid experience'}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <Users size={18} className="text-brand-secondary shrink-0" />
+          <div>
+            <p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Репутация' : 'Reputation'}</p>
+            <p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">
+              {lang === 'ru' ? 'Сотни довольных постоянных клиентов' : 'Hundreds of satisfied regular loyal clients'}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <CreditCard size={18} className="text-brand-secondary shrink-0" />
+          <div>
+            <p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Расчет при получении' : 'Payment on Delivery'}</p>
+            <p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">
+              {lang === 'ru' ? 'Наличные в руки курьеру' : 'Cash on delivery to the courier'}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <Sparkles size={18} className="text-brand-secondary shrink-0" />
+          <div>
+            <p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Прямые поставки' : 'Direct Sourcing'}</p>
+            <p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">
+              {lang === 'ru' ? 'Партнерство с лучшими фермерами и поставщиками' : 'Partnership with top-tier growers & suppliers'}
+            </p>
+          </div>
+        </div>
+      </InfoModal>
+
+      {selectedProduct && (
+        <ProductModal 
+          product={{ ...selectedProduct, unitLabel: selectedProduct.category === 'accessories' ? 'pcs' : 'g' }} 
+          t={t} 
+          style={
+            selectedProduct.category === 'concentrates' 
+              ? { color: concentrateSections.find(s => s.id === selectedProduct.subcategory)?.color || '#10B981' } 
+              : (selectedProduct.category === 'joints' ? { color: GOLDEN_COLOR } 
+              : (isElite(selectedProduct) ? {color: selectedProduct.subcategory?.toLowerCase().includes('exclusive') ? '#10B981' : IMPORT_COLOR} 
+              : (selectedProduct.subcategory?.toLowerCase().includes('classic') ? { color: '#10B981' } : { color: '#A855F7' })))
+          } 
+          onClose={() => setSelectedProduct(null)} 
+        />
+      )}
+      {isCheckoutOpen && (
+        <CheckoutModal 
+          items={items.map(item => ({ ...item, unitLabel: item.category === 'accessories' ? 'pcs' : 'g' }))} 
+          total={getTotal()} 
+          t={t} 
+          lang={lang} 
+          onClose={() => setIsCheckoutOpen(false)} 
+          onEditItem={(p) => { setSelectedProduct(p); setIsCheckoutOpen(false); }} 
+        />
+      )}
+    </div>
+  );
+}
