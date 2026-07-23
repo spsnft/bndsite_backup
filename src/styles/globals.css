@@ -5,18 +5,27 @@
 @layer base {
   :root {
     color-scheme: dark;
+    
+    /* ✅ Определяем CSS-переменные для цветов MPS Phuket */
+    --color-primary: #233E3F;
+    --color-secondary: #A88444;
+    --color-wood: #57291E;
+    --color-dark: #352F2C;
+    --color-light: #BBB3A6;
   }
 
   body {
-    @apply bg-[#193D2E] text-white antialiased font-sans;
-    background-color: #193D2E;
+    /* ✅ Теперь используем переменные вместо жесткого HEX */
+    @apply bg-brand-primary text-brand-light antialiased font-sans;
+    background-color: var(--color-primary);
+    
     /* Включаем качественную отрисовку шрифта */
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Форсируем правильное отображение знака бата для Inter Tight */
+  /* Форсируем правильное отображение цифр */
   span, p, div, h1, h2, h3 {
     font-variant-numeric: tabular-nums;
   }
@@ -34,5 +43,19 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+  
+  /* ✨ Новая текстура для карточек (имитация льна/песка) */
+  .bg-parchment-texture {
+    background-image: 
+      radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.03) 0%, transparent 50%);
+    background-color: var(--color-light);
+  }
+  
+  /* ✨ Добавляем класс для золотого текста с тенью (премиум-эффект) */
+  .text-gold-premium {
+    color: var(--color-secondary);
+    text-shadow: 0 2px 8px rgba(168, 132, 68, 0.3);
   }
 }
