@@ -1,16 +1,13 @@
-import { getProducts } from "@/lib/product"
 import LandingClient from "@/components/LandingClient"
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
-export default async function Page() {
-  const data = await getProducts();
-  
+export default function Page() {
   return (
     <main>
       <LandingClient 
-        initialProducts={data.products || []} 
-        initialDescriptions={data.descriptions || []} 
+        initialProducts={[]} 
+        initialDescriptions={[]} 
       />
     </main>
   );
