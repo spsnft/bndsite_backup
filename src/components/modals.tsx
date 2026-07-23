@@ -171,7 +171,7 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
   const removeItem = useCart((s: any) => s.removeItem);
   const clearCart = useCart((s: any) => s.clearCart);
 
-  const [contactMethod, setContactMethod] = React.useState<string>('telegram');
+  const [contactMethod, setContactMethod] = React.useState<string>('line');
   const [phone, setPhone] = React.useState<string>('');
   const [paymentMethod, setPaymentMethod] = React.useState<string>('cash');
   const [address, setAddress] = React.useState<string>('');
@@ -338,7 +338,7 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     }
   };
 
-  const handleFinalTelegramSubmit = () => {
+  const handleFinalSubmit = () => {
     triggerHaptic('success');
     
     const paymentLabels: Record<string, string> = {
@@ -364,8 +364,9 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     message += `*${lang === 'ru' ? 'Адрес доставки' : 'Delivery Address'}:* ${address.trim() !== '' ? address : (lang === 'ru' ? 'Не указан (уточнить)' : 'Not specified')}\n`;
     
     const encoded = encodeURIComponent(message);
-    const targetOperator = siteConfig.telegramOperator || "demo_operator";
-    window.open(`https://t.me/${targetOperator}?text=${encoded}`, '_blank');
+    
+    // LINE URL scheme
+    window.open(`https://line.me/R/ti/p/@mpsphuket`, '_blank');
     
     setShowSuccessPopup(false);
     onClose();
@@ -453,8 +454,8 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
               <label className="text-[9px] font-black uppercase tracking-widest text-brand-light/40 block">
                 {lang === 'ru' ? 'Способ связи *' : 'Contact Method *'}
               </label>
-              <div className="grid grid-cols-4 gap-1.5">
-                {['telegram', 'whatsapp', 'line', 'instagram'].map((m) => (
+              <div className="grid grid-cols-2 gap-1.5">
+                {['line', 'whatsapp'].map((m) => (
                   <button
                     key={m}
                     type="button"
@@ -469,13 +470,13 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
 
             <div className="space-y-1.5">
               <label className="text-[9px] font-black uppercase tracking-widest text-brand-light/40 block">
-                {lang === 'ru' ? 'Номер телефона или Username *' : 'Phone Number or Username *'}
+                {lang === 'ru' ? 'LINE ID или WhatsApp номер *' : 'LINE ID or WhatsApp Number *'}
               </label>
               <div className="relative">
                 <input
                   type="text"
                   required
-                  placeholder={lang === 'ru' ? '@username или +66…' : '@username or +66…'}
+                  placeholder={lang === 'ru' ? '@lineid или +66…' : '@lineid or +66…'}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   className="w-full h-[44px] bg-white/5 border border-white/10 rounded-xl px-3 text-[13px] text-brand-light font-medium placeholder:text-white/20 focus:outline-none focus:border-brand-secondary/50 transition-colors"
@@ -561,16 +562,16 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
             
             <p className="text-[12px] font-medium text-brand-light/70 leading-relaxed max-w-xs mb-8">
               {lang === 'ru' 
-                ? 'Чтобы ускорить оформление — отправьте сформированное сообщение нашему оператору в Telegram.' 
-                : 'To accelerate processing time — please forward the generated invoice text to our Telegram operator.'}
+                ? 'Отправьте скриншот заказа в LINE или WhatsApp для подтверждения.' 
+                : 'Send a screenshot of your order via LINE or WhatsApp to confirm.'}
             </p>
 
             <div className="w-full space-y-2 max-w-xs">
               <button
-                onClick={handleFinalTelegramSubmit}
+                onClick={handleFinalSubmit}
                 className="w-full h-[52px] bg-brand-secondary text-brand-primary rounded-2xl flex items-center justify-center gap-3 font-black uppercase text-[12px] tracking-[0.15em] shadow-xl active:scale-95 transition-all"
               >
-                <span>{lang === 'ru' ? 'Подтвердить в Telegram' : 'Confirm in Telegram'}</span>
+                <span>{lang === 'ru' ? 'Открыть LINE' : 'Open LINE'}</span>
                 <SendHorizontal size={15} />
               </button>
               
