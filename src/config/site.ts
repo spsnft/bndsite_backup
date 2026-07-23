@@ -1,5 +1,3 @@
-// src/config/site.ts
-
 export const siteConfig = {
   name: "MPS Phuket",
   description: "Premium 420 Store — Phuket",
