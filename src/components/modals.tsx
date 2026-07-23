@@ -1,7 +1,6 @@
-// src/components/modals.tsx
 "use client"
 import * as React from "react"
-import { X, Plus, Minus, Trash2, SendHorizontal, Sparkles, Wind, MapPin, Beaker, Info, Layers, ShoppingBag, CheckCircle2, MessageCircle, Phone } from "lucide-react"
+import { X, Plus, Minus, Trash2, SendHorizontal, Sparkles, Wind, MapPin, Info, Layers, ShoppingBag, CheckCircle2 } from "lucide-react"
 import { BlurImage } from "@/components/blur-image"
 import { useCart } from "@/lib/cart-store"
 import { siteConfig } from "@/config/site"
@@ -59,12 +58,10 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
 
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/40 backdrop-blur-lg" onClick={onClose}>
-      {/* ✅ ИСПРАВЛЕНО: bg-[#193D2E] → bg-brand-primary */}
       <div className="relative w-full max-w-[400px] bg-brand-primary rounded-[2.5rem] border border-white/10 overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}>
         <button onClick={onClose} className="absolute top-4 right-4 z-20 p-1.5 bg-black/40 rounded-full text-white/50 hover:text-white transition-colors"><X size={18}/></button>
         <div className="relative aspect-[1.3/1] w-full bg-black/10">
           <BlurImage src={product?.image} width={400} height={400} className="w-full h-full object-contain p-4" alt={product?.name} />
-          {/* ✅ ИСПРАВЛЕНО: градиент с #193D2E → brand-primary */}
           <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-brand-primary via-brand-primary/90 to-transparent">
             <h2 className="text-[20px] font-black uppercase tracking-tighter text-brand-light">{product?.name}</h2>
             <div className="flex items-center gap-2 mt-1">
@@ -102,7 +99,6 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
                   onChange={(e) => { const newW = parseFloat(e.target.value); if (newW !== weight) triggerHaptic('light'); setWeight(newW); }}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20 appearance-none -webkit-appearance-none"
                 />
-                {/* ✅ ИСПРАВЛЕНО: бордер с #193D2E → brand-primary */}
                 <div className="absolute w-8 h-8 bg-brand-secondary rounded-full shadow-[0_0_20px_rgba(168,132,68,0.6)] pointer-events-none transition-all duration-75 flex items-center justify-center border-4 border-brand-primary z-10"
                   style={{ left: `calc(${((weight - minW) / (maxW - minW)) * 100}% - 16px)`, marginLeft: weight === minW ? '16px' : weight === maxW ? '-16px' : '0px' }}>
                    <div className="w-2 h-2 bg-brand-primary rounded-full"></div>
@@ -148,7 +144,6 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
           </div>
 
           {promoInfo && !isExclusiveOrImport && (
-            {/* ✅ ИСПРАВЛЕНО: emerald → brand-secondary */}
             <div className="relative py-3 px-4 bg-brand-secondary/10 border border-brand-secondary/20 rounded-2xl overflow-hidden animate-pulse">
               <p className="text-[10px] font-black uppercase tracking-tighter text-brand-secondary text-center">
                 Add <span className="text-brand-light">{promoInfo.diff}g</span> more for <span className="text-brand-light">{promoInfo.perGram}<Baht className="scale-75 inline-block" /></span> per gram!
@@ -162,7 +157,6 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
               setIsAdded(true); 
               setTimeout(() => {setIsAdded(false); onClose();}, 800); 
             }} 
-            // ✅ ИСПРАВЛЕНО: bg-emerald-400 → bg-brand-secondary, text-[#193D2E] → text-brand-primary
             className={`w-full py-2.5 rounded-2xl font-black uppercase text-[12px] tracking-[0.2em] transition-all active:scale-95 ${isAdded ? 'bg-brand-secondary text-brand-primary' : 'bg-brand-secondary text-brand-primary'}`}
           >
             {isAdded ? t.added : t.addToOrder}
@@ -379,12 +373,10 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
 
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/40 backdrop-blur-lg" onClick={onClose}>
-      {/* ✅ ИСПРАВЛЕНО: bg-[#193D2E] → bg-brand-primary */}
       <div className="relative w-full max-w-[420px] bg-brand-primary rounded-[2.5rem] border border-white/10 overflow-hidden shadow-2xl max-h-[90vh] flex flex-col animate-fade-in" onClick={e => e.stopPropagation()}>
         
         <div className="pt-2 px-6 pb-6 border-b border-white/5 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            {/* ✅ ИСПРАВЛЕНО: text-emerald-400 → text-brand-secondary */}
             <ShoppingBag className="text-brand-secondary" size={20} />
             <h2 className="text-[16px] font-black uppercase tracking-wider text-brand-light">{lang === 'ru' ? 'Ваш заказ' : 'Your Order'}</h2>
           </div>
@@ -425,7 +417,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
                           <Plus size={10} strokeWidth={3} />
                         </button>
                       </div>
-                      {/* ✅ ИСПРАВЛЕНО: text-emerald-400 → text-brand-secondary */}
                       <span className="text-[9px] font-black text-brand-secondary/60 uppercase tracking-widest">{item.singlePrice}฿ / {unitLabel}</span>
                     </div>
                   </div>
@@ -446,7 +437,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
           </div>
 
           {cartPromoInfo && (
-            // ✅ ИСПРАВЛЕНО: bg-amber-500 → bg-brand-secondary/10, text-amber-400 → text-brand-secondary
             <div className="py-2.5 px-4 bg-brand-secondary/10 border border-brand-secondary/20 rounded-2xl flex items-center gap-2">
               <Sparkles size={14} className="text-brand-secondary shrink-0" />
               <p className="text-[10px] font-black uppercase tracking-tight text-brand-secondary leading-normal">
@@ -469,7 +459,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
                     key={m}
                     type="button"
                     onClick={() => { triggerHaptic('light'); setContactMethod(m); }}
-                    // ✅ ИСПРАВЛЕНО: bg-emerald-400 → bg-brand-secondary
                     className={`py-2 px-1 rounded-xl font-black text-[10px] uppercase border transition-all truncate text-center ${contactMethod === m ? 'bg-brand-secondary border-brand-secondary text-brand-primary' : 'bg-white/5 border-white/5 text-brand-light/60'}`}
                   >
                     {m}
@@ -489,7 +478,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
                   placeholder={lang === 'ru' ? '@username или +66…' : '@username or +66…'}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  // ✅ ИСПРАВЛЕНО: border-emerald-400 → border-brand-secondary
                   className="w-full h-[44px] bg-white/5 border border-white/10 rounded-xl px-3 text-[13px] text-brand-light font-medium placeholder:text-white/20 focus:outline-none focus:border-brand-secondary/50 transition-colors"
                 />
               </div>
@@ -528,6 +516,75 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
                 <button
                   type="button"
                   onClick={() => { triggerHaptic('light'); window.open('https://maps.google.com', '_blank'); }}
-                  // ✅ ИСПРАВЛЕНО: text-emerald-400 → text-brand-secondary
                   className="text-[9px] font-black uppercase text-brand-secondary tracking-wider flex items-center gap-1 active:opacity-70"
                 >
+                  <MapPin size={10} />
+                  {lang === 'ru' ? 'Открыть Карты' : 'Open Maps'}
+                </button>
+              </div>
+              <textarea
+                placeholder={lang === 'ru' ? 'Hotel name, google maps link or plus code...' : 'Hotel name, google maps link or plus code...'}
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                rows={2}
+                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-[12px] text-brand-light font-medium placeholder:text-white/20 focus:outline-none focus:border-brand-secondary/50 transition-colors resize-none leading-relaxed"
+              />
+            </div>
+          </form>
+        </div>
+
+        <div className="py-3 px-6 border-t border-white/5 bg-black/10 space-y-3 shrink-0">
+          <div className="flex justify-between items-end">
+            <span className="text-[11px] font-black uppercase tracking-widest text-brand-light/40">{lang === 'ru' ? 'ИТОГО К ОПЛАТЕ' : 'TOTAL AMOUNT'}</span>
+            <span className="text-[26px] font-black tracking-tighter text-brand-light leading-none">{finalCalculatedTotal}<Baht className="opacity-40" /></span>
+          </div>
+          <button 
+            type="submit"
+            form="checkout-form"
+            disabled={!isFormValid || isSubmitting}
+            className={`w-full h-[50px] rounded-2xl flex items-center justify-center gap-3 font-black uppercase text-[12px] tracking-[0.15em] transition-all shadow-lg ${isFormValid && !isSubmitting ? 'bg-brand-secondary text-brand-primary active:scale-[0.98] hover:bg-brand-gold-400' : 'bg-white/10 text-brand-light/20 cursor-not-allowed'}`}
+          >
+            <span>{isSubmitting ? (lang === 'ru' ? 'Отправка...' : 'Sending...') : (lang === 'ru' ? 'Подтвердить заказ' : 'Confirm Order')}</span>
+            <SendHorizontal size={14} />
+          </button>
+        </div>
+
+        {showSuccessPopup && (
+          <div className="absolute inset-0 bg-brand-primary/90 z-50 flex flex-col items-center justify-center p-6 text-center animate-fade-in">
+            <div className="p-4 bg-brand-secondary/10 rounded-full text-brand-secondary mb-4">
+              <CheckCircle2 size={42} strokeWidth={2.5} />
+            </div>
+            
+            <h3 className="text-[18px] font-black uppercase tracking-tight text-brand-light mb-2">
+              {lang === 'ru' ? 'Заказ передан!' : 'Order Processed!'}
+            </h3>
+            
+            <p className="text-[12px] font-medium text-brand-light/70 leading-relaxed max-w-xs mb-8">
+              {lang === 'ru' 
+                ? 'Чтобы ускорить оформление — отправьте сформированное сообщение нашему оператору в Telegram.' 
+                : 'To accelerate processing time — please forward the generated invoice text to our Telegram operator.'}
+            </p>
+
+            <div className="w-full space-y-2 max-w-xs">
+              <button
+                onClick={handleFinalTelegramSubmit}
+                className="w-full h-[52px] bg-brand-secondary text-brand-primary rounded-2xl flex items-center justify-center gap-3 font-black uppercase text-[12px] tracking-[0.15em] shadow-xl active:scale-95 transition-all"
+              >
+                <span>{lang === 'ru' ? 'Подтвердить в Telegram' : 'Confirm in Telegram'}</span>
+                <SendHorizontal size={15} />
+              </button>
+              
+              <button
+                onClick={() => setShowSuccessPopup(false)}
+                className="w-full py-2.5 text-[10px] font-black uppercase text-brand-light/40 tracking-widest active:opacity-60"
+              >
+                {lang === 'ru' ? 'Вернуться назад' : 'Go Back'}
+              </button>
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
