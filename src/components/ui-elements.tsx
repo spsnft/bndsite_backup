@@ -46,16 +46,16 @@ export const HighlightCard = React.memo(({ item, onClick, priority, hideBadge, i
   return (
     <div 
       onClick={() => { triggerHaptic('light'); onClick(); }} 
-      className={`relative rounded-[2rem] active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden border border-white/5 ${isMini ? 'h-[180px]' : 'h-[240px]'} bg-[#1d4837]/60 backdrop-blur-xl`} 
+      className={`relative rounded-[2rem] active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden border border-white/5 ${isMini ? 'h-[180px]' : 'h-[240px]'} bg-brand-primary/60 backdrop-blur-xl`} 
       style={{ boxShadow: `inset 0 0 0 1px ${accentColor}20` }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40 pointer-events-none" />
       {!hideBadge && item.badge && (<div className={`absolute top-3 right-3 z-20 ${isMini ? 'scale-90' : 'scale-100'}`}><BadgeIcon type={item.badge} /></div>)}
       <div className={`relative z-10 p-5 pb-0 flex-1 flex flex-col min-h-0`}>
         <div className="min-w-0 pr-6">
-          <h3 className={`${isMini ? 'text-[12px]' : 'text-[14px]'} font-black uppercase tracking-tight leading-tight text-white`}>{item.name}</h3>
+          <h3 className={`${isMini ? 'text-[12px]' : 'text-[14px]'} font-black uppercase tracking-tight leading-tight text-brand-light`}>{item.name}</h3>
           {showSubcategory && (
-            <p className={`${isMini ? 'text-[9px]' : 'text-[10px]'} font-bold mt-1 text-white/40 uppercase tracking-widest`}>{item.subcategory || "Product"}</p>
+            <p className={`${isMini ? 'text-[9px]' : 'text-[10px]'} font-bold mt-1 text-brand-light/40 uppercase tracking-widest`}>{item.subcategory || "Product"}</p>
           )}
         </div>
         <div className="relative flex-1 w-full min-h-0 flex items-center justify-center my-2">
@@ -65,7 +65,7 @@ export const HighlightCard = React.memo(({ item, onClick, priority, hideBadge, i
       <div className={`relative z-10 flex justify-between items-end px-5 pb-5 mt-auto`}>
         <span className={`${isMini ? 'text-[9px]' : 'text-[10px]'} font-black uppercase tracking-widest`} style={{ color: TYPE_COLORS[item.type?.toLowerCase()] || "#FFF" }}>{item.type}</span>
         <div className="flex flex-col items-end gap-1">
-          {oldPrice > currentPrice && <span className={`${isMini ? 'text-[10px]' : 'text-[12px]'} font-bold line-through opacity-30 text-white leading-none`}>{oldPrice}<Baht /></span>}
+          {oldPrice > currentPrice && <span className={`${isMini ? 'text-[10px]' : 'text-[12px]'} font-bold line-through opacity-30 text-brand-light leading-none`}>{oldPrice}<Baht /></span>}
           <p className={`${isMini ? 'text-[16px]' : 'text-[20px]'} font-black tracking-tighter leading-none`} style={{ color: accentColor }}>{currentPrice > 0 ? (<>{currentPrice}<Baht /></>) : '—'}</p>
         </div>
       </div>
