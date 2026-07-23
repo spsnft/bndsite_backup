@@ -24,7 +24,6 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
   const [isAdded, setIsAdded] = React.useState(false);
   const addItem = useCart((s: any) => s.addItem);
   
-  // Расчет цен поднят НАВЕРХ, чтобы useMemo видел переменную perGram
   const currentPrice = Math.round(getInterpolatedPrice(weight, product.prices, isEliteProduct));
   const oldPrice = product.old_prices ? Math.round(getInterpolatedPrice(weight, product.old_prices, isEliteProduct)) : 0;
   const perGram = weight > 0 ? Math.round(currentPrice / weight) : 0;
@@ -60,12 +59,14 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
 
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/40 backdrop-blur-lg" onClick={onClose}>
-      <div className="relative w-full max-w-[400px] bg-[#193D2E] rounded-[2.5rem] border border-white/10 overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}>
+      {/* ✅ ИСПРАВЛЕНО: bg-[#193D2E] → bg-brand-primary */}
+      <div className="relative w-full max-w-[400px] bg-brand-primary rounded-[2.5rem] border border-white/10 overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}>
         <button onClick={onClose} className="absolute top-4 right-4 z-20 p-1.5 bg-black/40 rounded-full text-white/50 hover:text-white transition-colors"><X size={18}/></button>
         <div className="relative aspect-[1.3/1] w-full bg-black/10">
           <BlurImage src={product?.image} width={400} height={400} className="w-full h-full object-contain p-4" alt={product?.name} />
-          <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#193D2E] via-[#193D2E]/90 to-transparent">
-            <h2 className="text-[20px] font-black uppercase tracking-tighter text-white">{product?.name}</h2>
+          {/* ✅ ИСПРАВЛЕНО: градиент с #193D2E → brand-primary */}
+          <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-brand-primary via-brand-primary/90 to-transparent">
+            <h2 className="text-[20px] font-black uppercase tracking-tighter text-brand-light">{product?.name}</h2>
             <div className="flex items-center gap-2 mt-1">
               <span className="text-[12px] font-black uppercase tracking-widest" style={{ color: TYPE_COLORS[product?.type?.toLowerCase()] }}>{product?.type}</span>
               <span className="w-1 h-1 rounded-full bg-white/20"></span>
@@ -77,33 +78,34 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
           <div className="space-y-3">
             <div className="flex justify-between items-end">
               <div className="flex items-center gap-3">
-                {oldPrice > currentPrice && <span className="text-lg font-black line-through opacity-20 text-white">{oldPrice}<Baht /></span>}
-                <span className="text-[30px] font-black tracking-tighter text-white leading-none">{currentPrice}<Baht className="opacity-40" /></span>
+                {oldPrice > currentPrice && <span className="text-lg font-black line-through opacity-20 text-brand-light">{oldPrice}<Baht /></span>}
+                <span className="text-[30px] font-black tracking-tighter text-brand-light leading-none">{currentPrice}<Baht className="opacity-40" /></span>
               </div>
               <div className="flex flex-col items-end">
-                <div className="text-[14px] font-black uppercase text-white tracking-tighter">{getLabel(weight)}</div>
-                {!isPrerolls && <div className="text-[9px] font-black uppercase opacity-40 text-white tracking-widest">{perGram}<Baht />/G</div>}
+                <div className="text-[14px] font-black uppercase text-brand-light tracking-tighter">{getLabel(weight)}</div>
+                {!isPrerolls && <div className="text-[9px] font-black uppercase opacity-40 text-brand-light tracking-widest">{perGram}<Baht />/G</div>}
               </div>
             </div>
             <div className="grid grid-cols-4 gap-2">
               {availableSteps.map((v) => (
                 <button key={v} onClick={() => { triggerHaptic('light'); setWeight(v); }}
-                  className={`py-1 rounded-xl text-[12px] font-black transition-all border ${weight === v ? 'bg-white text-black border-white' : 'bg-white/5 text-white/40 border-white/5'}`}>{getLabel(v)}
+                  className={`py-1 rounded-xl text-[12px] font-black transition-all border ${weight === v ? 'bg-brand-secondary text-brand-primary border-brand-secondary' : 'bg-white/5 text-brand-light/40 border-white/5'}`}>{getLabel(v)}
                 </button>
               ))}
             </div>
             {showSlider && (
               <div className="relative h-14 flex items-center group">
                 <div className="absolute left-0 right-0 h-3 bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-white transition-all duration-75" style={{ width: `${((weight - minW) / (maxW - minW)) * 100}%` }}></div>
+                  <div className="h-full bg-brand-secondary transition-all duration-75" style={{ width: `${((weight - minW) / (maxW - minW)) * 100}%` }}></div>
                 </div>
                 <input type="range" min={minW} max={maxW} step="0.5" value={weight} 
                   onChange={(e) => { const newW = parseFloat(e.target.value); if (newW !== weight) triggerHaptic('light'); setWeight(newW); }}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20 appearance-none -webkit-appearance-none"
                 />
-                <div className="absolute w-8 h-8 bg-white rounded-full shadow-[0_0_20px_rgba(255,255,255,0.6)] pointer-events-none transition-all duration-75 flex items-center justify-center border-4 border-[#193D2E] z-10"
+                {/* ✅ ИСПРАВЛЕНО: бордер с #193D2E → brand-primary */}
+                <div className="absolute w-8 h-8 bg-brand-secondary rounded-full shadow-[0_0_20px_rgba(168,132,68,0.6)] pointer-events-none transition-all duration-75 flex items-center justify-center border-4 border-brand-primary z-10"
                   style={{ left: `calc(${((weight - minW) / (maxW - minW)) * 100}% - 16px)`, marginLeft: weight === minW ? '16px' : weight === maxW ? '-16px' : '0px' }}>
-                   <div className="w-2 h-2 bg-[#193D2E] rounded-full"></div>
+                   <div className="w-2 h-2 bg-brand-primary rounded-full"></div>
                 </div>
               </div>
             )}
@@ -113,7 +115,7 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
             {hasValue(product.description) && (
               <div className="p-3 bg-white/5 rounded-2xl border border-white/5">
                 <div className="flex gap-2 text-white/40 mb-1.5"><Info size={12}/><span className="text-[9px] font-black uppercase tracking-widest">Description</span></div>
-                <p className="text-[11px] text-white/80 leading-relaxed font-medium">{product.description}</p>
+                <p className="text-[11px] text-brand-light/80 leading-relaxed font-medium">{product.description}</p>
               </div>
             )}
             
@@ -121,34 +123,35 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
               {hasValue(product.taste) && (
                 <div className="p-3 bg-white/5 rounded-2xl border border-white/5">
                   <div className="flex gap-2 text-white/40 mb-1"><Sparkles size={11}/><span className="text-[8px] font-black uppercase tracking-widest">Taste</span></div>
-                  <p className="text-[10px] text-white font-bold uppercase">{product.taste}</p>
+                  <p className="text-[10px] text-brand-light font-bold uppercase">{product.taste}</p>
                 </div>
               )}
               {hasValue(product.terpenes) && (
                 <div className="p-3 bg-white/5 rounded-2xl border border-white/5">
                   <div className="flex gap-2 text-white/40 mb-1"><Wind size={11}/><span className="text-[8px] font-black uppercase tracking-widest">Terpenes</span></div>
-                  <p className="text-[10px] text-white font-bold uppercase">{product.terpenes}</p>
+                  <p className="text-[10px] text-brand-light font-bold uppercase">{product.terpenes}</p>
                 </div>
               )}
               {hasValue(product.farm) && (
                 <div className="p-3 bg-white/5 rounded-2xl border border-white/5">
                   <div className="flex gap-2 text-white/40 mb-1"><MapPin size={11}/><span className="text-[8px] font-black uppercase tracking-widest">Farm</span></div>
-                  <p className="text-[10px] text-white font-bold uppercase">{product.farm}</p>
+                  <p className="text-[10px] text-brand-light font-bold uppercase">{product.farm}</p>
                 </div>
               )}
               {hasValue(product.microns) && (
                 <div className="p-3 bg-white/5 rounded-2xl border border-white/5">
                   <div className="flex gap-2 text-white/40 mb-1"><Layers size={11}/><span className="text-[8px] font-black uppercase tracking-widest">Microns</span></div>
-                  <p className="text-[10px] text-white font-bold uppercase">{product.microns}</p>
+                  <p className="text-[10px] text-brand-light font-bold uppercase">{product.microns}</p>
                 </div>
               )}
             </div>
           </div>
 
           {promoInfo && !isExclusiveOrImport && (
-            <div className="relative py-3 px-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl overflow-hidden animate-pulse">
-              <p className="text-[10px] font-black uppercase tracking-tighter text-emerald-400 text-center">
-                Add <span className="text-white">{promoInfo.diff}g</span> more for <span className="text-white">{promoInfo.perGram}<Baht className="scale-75 inline-block" /></span> per gram!
+            {/* ✅ ИСПРАВЛЕНО: emerald → brand-secondary */}
+            <div className="relative py-3 px-4 bg-brand-secondary/10 border border-brand-secondary/20 rounded-2xl overflow-hidden animate-pulse">
+              <p className="text-[10px] font-black uppercase tracking-tighter text-brand-secondary text-center">
+                Add <span className="text-brand-light">{promoInfo.diff}g</span> more for <span className="text-brand-light">{promoInfo.perGram}<Baht className="scale-75 inline-block" /></span> per gram!
               </p>
             </div>
           )}
@@ -159,7 +162,8 @@ export function ProductModal({ product, style, onClose, t }: { product: any, sty
               setIsAdded(true); 
               setTimeout(() => {setIsAdded(false); onClose();}, 800); 
             }} 
-            className={`w-full py-2.5 rounded-2xl font-black uppercase text-[12px] tracking-[0.2em] transition-all active:scale-95 ${isAdded ? 'bg-emerald-400 text-black' : 'bg-white text-[#193D2E]'}`}
+            // ✅ ИСПРАВЛЕНО: bg-emerald-400 → bg-brand-secondary, text-[#193D2E] → text-brand-primary
+            className={`w-full py-2.5 rounded-2xl font-black uppercase text-[12px] tracking-[0.2em] transition-all active:scale-95 ${isAdded ? 'bg-brand-secondary text-brand-primary' : 'bg-brand-secondary text-brand-primary'}`}
           >
             {isAdded ? t.added : t.addToOrder}
           </button>
@@ -180,7 +184,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
   const [showSuccessPopup, setShowSuccessPopup] = React.useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
 
-  // Сквозная группировка веса по подкатегориям
   const categoryWeights = React.useMemo(() => {
     const weights: Record<string, number> = {};
     rawItems.forEach(item => {
@@ -195,7 +198,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
     return weights;
   }, [rawItems]);
 
-  // Расчет стоимости позиций на основе общего скомбинированного веса микса сортов одной линейки
   const processedItems = React.useMemo(() => {
     return rawItems.map((item, originalIndex) => {
       const numericW = parseFloat(item.weight) || 1;
@@ -318,7 +320,6 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
       const scriptUrl = siteConfig.apiUrl;
 
       if (scriptUrl) {
-        // Теневая фоновая отправка на бэкенд Google Таблицы
         await fetch(scriptUrl, {
           method: 'POST',
           mode: 'no-cors',
@@ -332,9 +333,7 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
         });
       }
 
-      // Корзина очищается сразу после отправки данных
       clearCart();
-
       triggerHaptic('success');
       setShowSuccessPopup(true);
     } catch (err) {
@@ -380,12 +379,14 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
 
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/40 backdrop-blur-lg" onClick={onClose}>
-      <div className="relative w-full max-w-[420px] bg-[#193D2E] rounded-[2.5rem] border border-white/10 overflow-hidden shadow-2xl max-h-[90vh] flex flex-col animate-fade-in" onClick={e => e.stopPropagation()}>
+      {/* ✅ ИСПРАВЛЕНО: bg-[#193D2E] → bg-brand-primary */}
+      <div className="relative w-full max-w-[420px] bg-brand-primary rounded-[2.5rem] border border-white/10 overflow-hidden shadow-2xl max-h-[90vh] flex flex-col animate-fade-in" onClick={e => e.stopPropagation()}>
         
         <div className="pt-2 px-6 pb-6 border-b border-white/5 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <ShoppingBag className="text-emerald-400" size={20} />
-            <h2 className="text-[16px] font-black uppercase tracking-wider text-white">{lang === 'ru' ? 'Ваш заказ' : 'Your Order'}</h2>
+            {/* ✅ ИСПРАВЛЕНО: text-emerald-400 → text-brand-secondary */}
+            <ShoppingBag className="text-brand-secondary" size={20} />
+            <h2 className="text-[16px] font-black uppercase tracking-wider text-brand-light">{lang === 'ru' ? 'Ваш заказ' : 'Your Order'}</h2>
           </div>
           <button onClick={onClose} className="p-1.5 bg-white/5 hover:bg-white/10 active:scale-90 rounded-full text-white/60 transition-all">
             <X size={16} />
@@ -403,7 +404,7 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
                     <BlurImage src={item.image} width={50} height={50} className="w-full h-full object-contain" alt={item.name} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-[12px] font-black uppercase text-white tracking-tight truncate leading-tight">{item.name}</h4>
+                    <h4 className="text-[12px] font-black uppercase text-brand-light tracking-tight truncate leading-tight">{item.name}</h4>
                     
                     <div className="flex items-center gap-3 mt-1">
                       <div className="flex items-center bg-black/20 rounded-lg border border-white/5 p-0.5">
@@ -415,7 +416,7 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
                         >
                           <Minus size={10} strokeWidth={3} />
                         </button>
-                        <span className="text-[10px] font-black text-white px-2 min-w-[32px] text-center uppercase tracking-tighter">{item.weight}</span>
+                        <span className="text-[10px] font-black text-brand-light px-2 min-w-[32px] text-center uppercase tracking-tighter">{item.weight}</span>
                         <button 
                           type="button" 
                           onClick={() => changeItemWeight(idx, 'inc')}
@@ -424,12 +425,13 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
                           <Plus size={10} strokeWidth={3} />
                         </button>
                       </div>
-                      <span className="text-[9px] font-black text-emerald-400/60 uppercase tracking-widest">{item.singlePrice}฿ / {unitLabel}</span>
+                      {/* ✅ ИСПРАВЛЕНО: text-emerald-400 → text-brand-secondary */}
+                      <span className="text-[9px] font-black text-brand-secondary/60 uppercase tracking-widest">{item.singlePrice}฿ / {unitLabel}</span>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-[13px] font-black text-white">{item.finalPrice}<Baht className="opacity-40" /></span>
+                    <span className="text-[13px] font-black text-brand-light">{item.finalPrice}<Baht className="opacity-40" /></span>
                     <button 
                       type="button"
                       onClick={() => { triggerHaptic('medium'); removeItem(item.originalIndex); }}
@@ -444,9 +446,10 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
           </div>
 
           {cartPromoInfo && (
-            <div className="py-2.5 px-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center gap-2">
-              <Sparkles size={14} className="text-amber-400 shrink-0" />
-              <p className="text-[10px] font-black uppercase tracking-tight text-amber-400 leading-normal">
+            // ✅ ИСПРАВЛЕНО: bg-amber-500 → bg-brand-secondary/10, text-amber-400 → text-brand-secondary
+            <div className="py-2.5 px-4 bg-brand-secondary/10 border border-brand-secondary/20 rounded-2xl flex items-center gap-2">
+              <Sparkles size={14} className="text-brand-secondary shrink-0" />
+              <p className="text-[10px] font-black uppercase tracking-tight text-brand-secondary leading-normal">
                 {lang === 'ru' 
                   ? `Добавь ${cartPromoInfo.diff}g «${cartPromoInfo.subcategoryName}», чтобы открыть цену ${cartPromoInfo.pricePerGram}฿/g` 
                   : `Add ${cartPromoInfo.diff}g of «${cartPromoInfo.subcategoryName}» to unlock price ${cartPromoInfo.pricePerGram}฿/g`}
@@ -457,7 +460,7 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
           <form id="checkout-form" onSubmit={handleFormSubmitAndPreSave} className="space-y-4 pt-2 border-t border-white/5">
             
             <div className="space-y-1.5">
-              <label className="text-[9px] font-black uppercase tracking-widest text-white/40 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-brand-light/40 block">
                 {lang === 'ru' ? 'Способ связи *' : 'Contact Method *'}
               </label>
               <div className="grid grid-cols-4 gap-1.5">
@@ -466,7 +469,8 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
                     key={m}
                     type="button"
                     onClick={() => { triggerHaptic('light'); setContactMethod(m); }}
-                    className={`py-2 px-1 rounded-xl font-black text-[10px] uppercase border transition-all truncate text-center ${contactMethod === m ? 'bg-emerald-400 border-emerald-400 text-black' : 'bg-white/5 border-white/5 text-white/60'}`}
+                    // ✅ ИСПРАВЛЕНО: bg-emerald-400 → bg-brand-secondary
+                    className={`py-2 px-1 rounded-xl font-black text-[10px] uppercase border transition-all truncate text-center ${contactMethod === m ? 'bg-brand-secondary border-brand-secondary text-brand-primary' : 'bg-white/5 border-white/5 text-brand-light/60'}`}
                   >
                     {m}
                   </button>
@@ -475,7 +479,7 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[9px] font-black uppercase tracking-widest text-white/40 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-brand-light/40 block">
                 {lang === 'ru' ? 'Номер телефона или Username *' : 'Phone Number or Username *'}
               </label>
               <div className="relative">
@@ -485,13 +489,14 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
                   placeholder={lang === 'ru' ? '@username или +66…' : '@username or +66…'}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full h-[44px] bg-white/5 border border-white/10 rounded-xl px-3 text-[13px] text-white font-medium placeholder:text-white/20 focus:outline-none focus:border-emerald-400/50 transition-colors"
+                  // ✅ ИСПРАВЛЕНО: border-emerald-400 → border-brand-secondary
+                  className="w-full h-[44px] bg-white/5 border border-white/10 rounded-xl px-3 text-[13px] text-brand-light font-medium placeholder:text-white/20 focus:outline-none focus:border-brand-secondary/50 transition-colors"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[9px] font-black uppercase tracking-widest text-white/40 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-brand-light/40 block">
                 {lang === 'ru' ? 'Способ оплаты' : 'Payment Method'}
               </label>
               <div className="grid grid-flow-col auto-cols-fr gap-1">
@@ -507,7 +512,7 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
                       key={p.id}
                       type="button"
                       onClick={() => { triggerHaptic('light'); setPaymentMethod(p.id); }}
-                      className={`py-1.5 px-0.5 rounded-xl font-black text-[9px] uppercase border transition-all text-center truncate ${paymentMethod === p.id ? 'bg-white border-white text-black' : 'bg-white/5 border-white/5 text-white/50'}`}
+                      className={`py-1.5 px-0.5 rounded-xl font-black text-[9px] uppercase border transition-all text-center truncate ${paymentMethod === p.id ? 'bg-brand-secondary border-brand-secondary text-brand-primary' : 'bg-white/5 border-white/5 text-brand-light/50'}`}
                     >
                       {lang === 'ru' ? p.ru : p.en}
                     </button>
@@ -517,81 +522,12 @@ export function CheckoutModal({ items: rawItems, total: initialTotal, t, lang, o
 
             <div className="space-y-1.5">
               <div className="flex justify-between items-center">
-                <label className="text-[9px] font-black uppercase tracking-widest text-white/40">
+                <label className="text-[9px] font-black uppercase tracking-widest text-brand-light/40">
                   {lang === 'ru' ? 'Адрес доставки' : 'Delivery Address'}
                 </label>
                 <button
                   type="button"
                   onClick={() => { triggerHaptic('light'); window.open('https://maps.google.com', '_blank'); }}
-                  className="text-[9px] font-black uppercase text-emerald-400 tracking-wider flex items-center gap-1 active:opacity-70"
+                  // ✅ ИСПРАВЛЕНО: text-emerald-400 → text-brand-secondary
+                  className="text-[9px] font-black uppercase text-brand-secondary tracking-wider flex items-center gap-1 active:opacity-70"
                 >
-                  <MapPin size={10} />
-                  {lang === 'ru' ? 'Открыть Карты' : 'Open Maps'}
-                </button>
-              </div>
-              <textarea
-                placeholder={lang === 'ru' ? 'Hotel name, google maps link or plus code...' : 'Hotel name, google maps link or plus code...'}
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                rows={2}
-                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-[12px] text-white font-medium placeholder:text-white/20 focus:outline-none focus:border-emerald-400/50 transition-colors resize-none leading-relaxed"
-              />
-            </div>
-          </form>
-        </div>
-
-        <div className="py-3 px-6 border-t border-white/5 bg-black/10 space-y-3 shrink-0">
-          <div className="flex justify-between items-end">
-            <span className="text-[11px] font-black uppercase tracking-widest text-white/40">{lang === 'ru' ? 'ИТОГО К ОПЛАТЕ' : 'TOTAL AMOUNT'}</span>
-            <span className="text-[26px] font-black tracking-tighter text-white leading-none">{finalCalculatedTotal}<Baht className="opacity-40" /></span>
-          </div>
-          <button 
-            type="submit"
-            form="checkout-form"
-            disabled={!isFormValid || isSubmitting}
-            className={`w-full h-[50px] rounded-2xl flex items-center justify-center gap-3 font-black uppercase text-[12px] tracking-[0.15em] transition-all shadow-lg ${isFormValid && !isSubmitting ? 'bg-white text-[#193D2E] active:scale-[0.98] hover:bg-emerald-400 hover:text-black' : 'bg-white/10 text-white/20 cursor-not-allowed'}`}
-          >
-            <span>{isSubmitting ? (lang === 'ru' ? 'Отправка...' : 'Sending...') : (lang === 'ru' ? 'Подтвердить заказ' : 'Confirm Order')}</span>
-            <SendHorizontal size={14} />
-          </button>
-        </div>
-
-        {showSuccessPopup && (
-          <div className="absolute inset-0 bg-[#112D21] z-50 flex flex-col items-center justify-center p-6 text-center animate-fade-in">
-            <div className="p-4 bg-emerald-500/10 rounded-full text-emerald-400 mb-4">
-              <CheckCircle2 size={42} strokeWidth={2.5} />
-            </div>
-            
-            <h3 className="text-[18px] font-black uppercase tracking-tight text-white mb-2">
-              {lang === 'ru' ? 'Заказ передан!' : 'Order Processed!'}
-            </h3>
-            
-            <p className="text-[12px] font-medium text-white/70 leading-relaxed max-w-xs mb-8">
-              {lang === 'ru' 
-                ? 'Чтобы ускорить оформление — отправьте сформированное сообщение нашему оператору в Telegram.' 
-                : 'To accelerate processing time — please forward the generated invoice text to our Telegram operator.'}
-            </p>
-
-            <div className="w-full space-y-2 max-w-xs">
-              <button
-                onClick={handleFinalTelegramSubmit}
-                className="w-full h-[52px] bg-emerald-400 text-black rounded-2xl flex items-center justify-center gap-3 font-black uppercase text-[12px] tracking-[0.15em] shadow-xl active:scale-95 transition-all"
-              >
-                <span>{lang === 'ru' ? 'Подтвердить в Telegram' : 'Confirm in Telegram'}</span>
-                <SendHorizontal size={15} />
-              </button>
-              
-              <button
-                onClick={() => setShowSuccessPopup(false)}
-                className="w-full py-2.5 text-[10px] font-black uppercase text-white/40 tracking-widest active:opacity-60"
-              >
-                {lang === 'ru' ? 'Вернуться назад' : 'Go Back'}
-              </button>
-            </div>
-          </div>
-        )}
-
-      </div>
-    </div>
-  );
-}
