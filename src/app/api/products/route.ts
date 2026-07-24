@@ -5,11 +5,23 @@ export async function GET() {
   try {
     const res = await fetch(siteConfig.apiUrl, {
       headers: { 'Accept': 'application/json' },
-      cache: 'no-store'
+      next: { revalidate: 60 }
     });
     const data = await res.json();
-    return NextResponse.json(data);
+
+    return NextResponse.json(data, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+      },
+    });
   } catch {
-    return NextResponse.json({ products: [], stories: [], descriptions: [] });
+    return NextResponse.json(
+      { products: [], stories: [], descriptions: [] },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
+        },
+      }
+    );
   }
 }
