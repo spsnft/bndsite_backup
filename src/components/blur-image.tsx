@@ -10,7 +10,6 @@ interface BlurImageProps extends ComponentProps<typeof Image> {}
 export function BlurImage({ className, alt, src, priority, ...props }: BlurImageProps) {
   const [isLoading, setLoading] = React.useState(!priority)
 
-  // Если это priority image, мы предполагаем, что она должна появиться максимально быстро
   React.useEffect(() => {
     if (priority) setLoading(false)
   }, [priority])
@@ -22,7 +21,7 @@ export function BlurImage({ className, alt, src, priority, ...props }: BlurImage
         src={src}
         alt={alt || ""}
         priority={priority}
-        // translateZ(0) включает аппаратное ускорение, убирая "дерганье" при скролле
+        unoptimized
         style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
         className={cn(
           "duration-700 ease-in-out transition-all",
