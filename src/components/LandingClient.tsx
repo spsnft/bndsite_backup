@@ -13,7 +13,7 @@ import { useCart } from "@/lib/cart-store"
 import { translations } from "@/lib/translations"
 import { ProductModal, CheckoutModal } from "@/components/modals"
 import { 
-  triggerHaptic, getFirstAvailablePrice, getInterpolatedPrice, isElite,
+  triggerHaptic, getFirstAvailablePrice,
   TYPE_COLORS, SELECTED_COLOR, GOLDEN_COLOR 
 } from "@/lib/utils"
 
@@ -57,8 +57,12 @@ const processProductData = (rawProducts: any[]) => {
       }
     });
 
+    const rawImage = p.image || p.photo || '';
+    const imageUrl = typeof rawImage === 'string' ? rawImage.trim() : '';
+
     return {
       ...p,
+      image: imageUrl || '/420/images/placeholder.webp',
       prices: Object.keys(prices).length ? prices : p.prices,
       old_prices: Object.keys(oldPrices).length ? oldPrices : p.old_prices
     };
@@ -106,7 +110,14 @@ const HighlightCard = React.memo(({ item, onClick, priority }: { item: any, onCl
           <h3 className="text-[12px] font-black uppercase tracking-tight leading-tight text-brand-light group-hover:text-brand-secondary transition-colors">{item.name}</h3>
         </div>
         <div className="relative flex-1 w-full min-h-0 flex items-center justify-center my-1">
-            <img src={item.image} width={160} height={160} className="max-w-full max-h-full object-contain transform group-hover:scale-105 transition-transform duration-300" alt={item.name} />
+            <img 
+              src={item.image} 
+              width={160} 
+              height={160} 
+              className="max-w-full max-h-full object-contain transform group-hover:scale-105 transition-transform duration-300" 
+              alt={item.name}
+              onError={(e) => { (e.target as HTMLImageElement).src = '/420/images/placeholder.webp'; }}
+            />
         </div>
       </div>
       <div className="relative z-10 flex justify-between items-end px-4 pb-3 mt-auto">
@@ -128,7 +139,14 @@ const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => void }) 
     <div onClick={() => { triggerHaptic('light'); onClick(); }} className="flex items-center justify-between gap-3 px-4 py-4 text-brand-light border-b border-white/10 last:border-b-0 active:bg-white/5 hover:bg-white/5 transition-colors cursor-pointer group">
         <div className="flex items-center gap-3 truncate flex-1">
           <div className="w-8 h-8 bg-black/10 rounded-xl overflow-hidden p-0.5 shrink-0">
-            <img src={p.image} width={32} height={32} className="w-full h-full object-contain" alt={p.name} />
+            <img 
+              src={p.image} 
+              width={32} 
+              height={32} 
+              className="w-full h-full object-contain" 
+              alt={p.name}
+              onError={(e) => { (e.target as HTMLImageElement).src = '/420/images/placeholder.webp'; }}
+            />
           </div>
           <div className="truncate">
             <span className="text-[13px] font-black uppercase tracking-tight text-brand-light/90 truncate leading-tight group-hover:text-brand-secondary transition-colors">{p.name}</span>
