@@ -17,6 +17,9 @@ import {
   TYPE_COLORS, SELECTED_COLOR, GOLDEN_COLOR 
 } from "@/lib/utils"
 
+// Встроенный SVG-плацехолдер в цветах бренда (гарантия защиты от 404)
+const FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231A2F30'/%3E%3Ccircle cx='50' cy='42' r='14' fill='%23A88444' opacity='0.4'/%3E%3Cpath d='M30 70 C 35 55, 65 55, 70 70' stroke='%23A88444' stroke-width='4' fill='none' opacity='0.4'/%3E%3C/svg%3E";
+
 // === ВСПОМОГАТЕЛЬНЫЕ КОМПОНЕНТЫ ===
 
 const InfoModal = ({ isOpen, onClose, title, children }: { isOpen: boolean, onClose: () => void, title: string, children: React.ReactNode }) => {
@@ -46,6 +49,7 @@ const processProductData = (rawProducts: any[]) => {
     if (!p) return p;
     const prices: any = {};
     const oldPrices: any = {};
+    
     Object.keys(p).forEach(key => {
       if (key.startsWith('price_')) {
         const weight = key.replace('price_', '').replace('g', '');
@@ -57,12 +61,33 @@ const processProductData = (rawProducts: any[]) => {
       }
     });
 
-    const rawImage = p.image || p.photo || '';
-    const imageUrl = typeof rawImage === 'string' ? rawImage.trim() : '';
+    // Поиск наименования поля с картинкой
+    let rawImage = '';
+    for (const k of Object.keys(p)) {
+      const lower = k.toLowerCase().trim();
+      if (['image', 'photo', 'img', 'picture', 'url'].includes(lower)) {
+        if (typeof p[k] === 'string' && p[k].trim()) {
+          rawImage = p[k].trim();
+          break;
+        }
+      }
+    }
+
+    // Очистка и кодирование URL
+    let cleanImage = rawImage.replace(/^["']|["']$/g, '').trim();
+    if (cleanImage.startsWith('http://') || cleanImage.startsWith('https://')) {
+      try {
+        cleanImage = encodeURI(decodeURI(cleanImage));
+      } catch {
+        // Оставляем как есть в случае ошибки декодирования
+      }
+    } else {
+      cleanImage = FALLBACK_IMAGE;
+    }
 
     return {
       ...p,
-      image: imageUrl || '/420/images/placeholder.webp',
+      image: cleanImage || FALLBACK_IMAGE,
       prices: Object.keys(prices).length ? prices : p.prices,
       old_prices: Object.keys(oldPrices).length ? oldPrices : p.old_prices
     };
@@ -116,7 +141,10 @@ const HighlightCard = React.memo(({ item, onClick, priority }: { item: any, onCl
               height={160} 
               className="max-w-full max-h-full object-contain transform group-hover:scale-105 transition-transform duration-300" 
               alt={item.name}
-              onError={(e) => { (e.target as HTMLImageElement).src = '/420/images/placeholder.webp'; }}
+              onError={(e) => { 
+                const target = e.target as HTMLImageElement;
+                if (target.src !== FALLBACK_IMAGE) target.src = FALLBACK_IMAGE;
+              }}
             />
         </div>
       </div>
@@ -145,7 +173,10 @@ const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => void }) 
               height={32} 
               className="w-full h-full object-contain" 
               alt={p.name}
-              onError={(e) => { (e.target as HTMLImageElement).src = '/420/images/placeholder.webp'; }}
+              onError={(e) => { 
+                const target = e.target as HTMLImageElement;
+                if (target.src !== FALLBACK_IMAGE) target.src = FALLBACK_IMAGE;
+              }}
             />
           </div>
           <div className="truncate">
@@ -280,7 +311,7 @@ export default function LandingClient({ initialProducts = [], initialDescription
         {/* === КАРУСЕЛЬ SALE === */}
         {flashSales.length > 0 && (
           <section className="mb-4 space-y-3 overflow-hidden">
-            <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{lang === 'ru' ? 'Распродажи' : 'Sales'}</h2></div>
+            <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{lang === 'ru' ? 'Рас распродажи' : 'Sales'}</h2></div>
             <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar mx-[-1rem] px-4 snap-x">
               {flashSales.map((p, idx) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
             </div>
