@@ -5,6 +5,6 @@ export const siteConfig = {
   telegramOperator: "spacenft",
   apiUrl: "https://script.google.com/macros/s/AKfycbw6Z-7mNkg4RneG_ZuXBllnUiDlQgKjC4CWjJSTtnFQJlR6WfMIPT4WWGlk8aOIKM1Jgw/exec",
   currencySymbol: "฿",
-  themeColor: "#233E3F",
+  themeColor: "#161819", // Обновлено под новый цвет фона
   locale: "en_US",
 };
