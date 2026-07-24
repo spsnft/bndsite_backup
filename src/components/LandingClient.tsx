@@ -1,6 +1,7 @@
 "use client"
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { 
   Plus, Tag, Zap, Leaf, ShoppingBag, Send, 
   MessageCircle, Phone, Instagram, ChevronDown, 
@@ -209,7 +210,14 @@ export default function LandingClient({ initialProducts = [], initialDescription
         <div className="flex items-center justify-between px-2 mb-[4px]"> 
            <div className="relative">
               <div className="absolute inset-0 bg-brand-secondary/10 rounded-full blur-[35px]"></div>
-              <BlurImage src="https://res.cloudinary.com/dpjwbcgrq/image/upload/v1774704686/IMG_0036_t5cnic.png" priority width={80} height={80} className="w-20 h-20 object-contain relative z-10" alt="Logo" />
+              <Image 
+                src="/420/images/logo.svg" 
+                priority 
+                width={80} 
+                height={80} 
+                className="w-20 h-20 object-contain relative z-10" 
+                alt="MPS Phuket" 
+              />
            </div>
            <div className="flex items-center flex-1 justify-end">
               <div className="flex gap-2">
