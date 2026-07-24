@@ -227,7 +227,7 @@ export default function LandingClient({ initialProducts = [], initialDescription
                 <Link href="https://wa.me/66612345678" target="_blank" className="w-[46px] h-[46px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-xl">
                   <Phone size={18} className="opacity-80"/>
                 </Link>
-                <Link href="https://www.instagram.com/boshkunadoroshku" target="_blank" className="w-[46px] h-[46px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-xl">
+                <Link href="https://www.instagram.com/mpsphuket" target="_blank" className="w-[46px] h-[46px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-xl">
                   <Instagram size={18} className="opacity-80"/>
                 </Link>
               </div>
