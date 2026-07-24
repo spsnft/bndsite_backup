@@ -17,8 +17,7 @@ import {
   TYPE_COLORS, SELECTED_COLOR, GOLDEN_COLOR 
 } from "@/lib/utils"
 
-// Встроенный SVG-плацехолдер в цветах бренда (гарантия защиты от 404)
-const FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231A2F30'/%3E%3Ccircle cx='50' cy='42' r='14' fill='%23A88444' opacity='0.4'/%3E%3Cpath d='M30 70 C 35 55, 65 55, 70 70' stroke='%23A88444' stroke-width='4' fill='none' opacity='0.4'/%3E%3C/svg%3E";
+const FALLBACK_IMAGE = "/420/images/logo.svg";
 
 // === ВСПОМОГАТЕЛЬНЫЕ КОМПОНЕНТЫ ===
 
@@ -61,33 +60,16 @@ const processProductData = (rawProducts: any[]) => {
       }
     });
 
-    // Поиск наименования поля с картинкой
-    let rawImage = '';
-    for (const k of Object.keys(p)) {
-      const lower = k.toLowerCase().trim();
-      if (['image', 'photo', 'img', 'picture', 'url'].includes(lower)) {
-        if (typeof p[k] === 'string' && p[k].trim()) {
-          rawImage = p[k].trim();
-          break;
-        }
-      }
-    }
+    // Берем photo из API Google Таблиц (или image для страховки)
+    const rawUrl = (typeof p.photo === 'string' && p.photo.trim())
+      ? p.photo.trim()
+      : (typeof p.image === 'string' && p.image.trim() ? p.image.trim() : '');
 
-    // Очистка и кодирование URL
-    let cleanImage = rawImage.replace(/^["']|["']$/g, '').trim();
-    if (cleanImage.startsWith('http://') || cleanImage.startsWith('https://')) {
-      try {
-        cleanImage = encodeURI(decodeURI(cleanImage));
-      } catch {
-        // Оставляем как есть в случае ошибки декодирования
-      }
-    } else {
-      cleanImage = FALLBACK_IMAGE;
-    }
+    const cleanUrl = rawUrl.replace(/^["']|["']$/g, '');
 
     return {
       ...p,
-      image: cleanImage || FALLBACK_IMAGE,
+      image: cleanUrl.length > 0 ? cleanUrl : FALLBACK_IMAGE,
       prices: Object.keys(prices).length ? prices : p.prices,
       old_prices: Object.keys(oldPrices).length ? oldPrices : p.old_prices
     };
@@ -142,8 +124,7 @@ const HighlightCard = React.memo(({ item, onClick, priority }: { item: any, onCl
               className="max-w-full max-h-full object-contain transform group-hover:scale-105 transition-transform duration-300" 
               alt={item.name}
               onError={(e) => { 
-                const target = e.target as HTMLImageElement;
-                if (target.src !== FALLBACK_IMAGE) target.src = FALLBACK_IMAGE;
+                (e.currentTarget as HTMLImageElement).src = FALLBACK_IMAGE;
               }}
             />
         </div>
@@ -166,7 +147,7 @@ const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => void }) 
   return (
     <div onClick={() => { triggerHaptic('light'); onClick(); }} className="flex items-center justify-between gap-3 px-4 py-4 text-brand-light border-b border-white/10 last:border-b-0 active:bg-white/5 hover:bg-white/5 transition-colors cursor-pointer group">
         <div className="flex items-center gap-3 truncate flex-1">
-          <div className="w-8 h-8 bg-black/10 rounded-xl overflow-hidden p-0.5 shrink-0">
+          <div className="w-8 h-8 bg-black/10 rounded-xl overflow-hidden p-0.5 shrink-0 flex items-center justify-center">
             <img 
               src={p.image} 
               width={32} 
@@ -174,8 +155,7 @@ const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => void }) 
               className="w-full h-full object-contain" 
               alt={p.name}
               onError={(e) => { 
-                const target = e.target as HTMLImageElement;
-                if (target.src !== FALLBACK_IMAGE) target.src = FALLBACK_IMAGE;
+                (e.currentTarget as HTMLImageElement).src = FALLBACK_IMAGE;
               }}
             />
           </div>
@@ -203,8 +183,9 @@ export default function LandingClient({ initialProducts = [], initialDescription
       fetch('/420/api/products')
         .then(res => res.json())
         .then(data => {
-          if (data.products && data.products.length > 0) {
-            setProducts(data.products);
+          const list = Array.isArray(data) ? data : (data.products || []);
+          if (list.length > 0) {
+            setProducts(list);
           }
           setIsLoading(false);
         })
@@ -311,7 +292,7 @@ export default function LandingClient({ initialProducts = [], initialDescription
         {/* === КАРУСЕЛЬ SALE === */}
         {flashSales.length > 0 && (
           <section className="mb-4 space-y-3 overflow-hidden">
-            <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{lang === 'ru' ? 'Рас распродажи' : 'Sales'}</h2></div>
+            <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{lang === 'ru' ? 'Распродажи' : 'Sales'}</h2></div>
             <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar mx-[-1rem] px-4 snap-x">
               {flashSales.map((p, idx) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
             </div>
