@@ -1,6 +1,93 @@
 export type Language = 'en' | 'ru' | 'th';
 
-export const translations = {
+export interface TranslationDictionary {
+  // Header & Navigation
+  delivery: string;
+  guarantees: string;
+  certificate: string;
+  updates: string;
+  sales: string;
+  accessories: string;
+  open: string;
+  close: string;
+  basket: string;
+  items: string;
+  total: string;
+  orderViaWhatsapp: string;
+
+  // Delivery Modal
+  deliveryPaymentTitle: string;
+  workingHours: string;
+  workingHoursVal: string;
+  minOrder: string;
+  minOrderVal: string;
+  paymentMethods: string;
+  paymentMethodsVal: string;
+  orderReceiving: string;
+  orderReceivingVal: string;
+
+  // Guarantees Modal
+  guaranteesTitle: string;
+  marketExp: string;
+  marketExpVal: string;
+  reputation: string;
+  reputationVal: string;
+  paymentOnDelivery: string;
+  paymentOnDeliveryVal: string;
+  directSourcing: string;
+  directSourcingVal: string;
+
+  // Medical Modal
+  medTitle: string;
+  medSubtitle: string;
+  medAdv1Title: string;
+  medAdv1Desc: string;
+  medAdv2Title: string;
+  medAdv2Desc: string;
+  medAdv3Title: string;
+  medAdv3Desc: string;
+  symptomsLabel: string;
+  symptomSleep: string;
+  symptomAnxiety: string;
+  symptomPain: string;
+  symptomAppetite: string;
+  namePlaceholder: string;
+  contactPlaceholder: string;
+  getPassWhatsapp: string;
+
+  // Checkout Modal
+  checkoutTitle: string;
+  emptyCart: string;
+  receiveMethod: string;
+  deliveryCourier: string;
+  selfPickup: string;
+  contactMethod: string;
+  phContact: string;
+  payMethod: string;
+  payCash: string;
+  payQR: string;
+  payRub: string;
+  addressLabel: string;
+  addressPlaceholder: string;
+  notesLabel: string;
+  notesPlaceholder: string;
+  checkoutSubmit: string;
+  checkoutSuccessMsg: string;
+
+  // Product Modal & Cards
+  thcContent: string;
+  typeIndica: string;
+  typeSativa: string;
+  typeHybrid: string;
+  selectAmount: string;
+  pricePerUnit: string;
+  addToCart: string;
+  saveDiscount: string;
+  upsellGoal: string;
+  outOfStock: string;
+}
+
+export const translations: Record<Language, TranslationDictionary> = {
   en: {
     // Header & Navigation
     delivery: "Delivery",
@@ -95,8 +182,8 @@ export const translations = {
     updates: "Новинки",
     sales: "Распродажа",
     accessories: "Аксессуары",
-    open: "Развернуть",
-    close: "Свернуть",
+    open: "Открыть",
+    close: "Закрыть",
     basket: "Корзина",
     items: "тов.",
     total: "Итого",
