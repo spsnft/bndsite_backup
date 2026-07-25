@@ -2,6 +2,7 @@ export type Language = 'en' | 'ru' | 'th';
 
 export const translations = {
   en: {
+    // Header & Navigation
     delivery: "Delivery",
     guarantees: "Guarantees",
     certificate: "Certificate",
@@ -54,13 +55,45 @@ export const translations = {
     namePlaceholder: "Your Name",
     contactPlaceholder: "Your Telegram / WhatsApp",
     getPassWhatsapp: "Get Free Pass via WhatsApp",
+
+    // Checkout Modal
+    checkoutTitle: "Your Order",
+    emptyCart: "Your cart is empty",
+    receiveMethod: "Receiving method",
+    deliveryCourier: "Delivery by Courier",
+    selfPickup: "Self-Pickup",
+    contactMethod: "Preferred contact method",
+    phContact: "@username or phone number",
+    payMethod: "Payment method",
+    payCash: "Cash on delivery",
+    payQR: "Thai QR / Bank Transfer",
+    payRub: "RUB Transfer (Tinkoff/Sber)",
+    addressLabel: "Delivery Address / Hotel / Room #",
+    addressPlaceholder: "e.g., Hilton Resort, Room 402 or Google Maps link",
+    notesLabel: "Order Comments",
+    notesPlaceholder: "Any special requests for the driver?",
+    checkoutSubmit: "Send Order via WhatsApp",
+    checkoutSuccessMsg: "Order sent successfully! Redirecting to WhatsApp...",
+
+    // Product Modal & Cards
+    thcContent: "THC",
+    typeIndica: "Indica",
+    typeSativa: "Sativa",
+    typeHybrid: "Hybrid",
+    selectAmount: "Select Quantity",
+    pricePerUnit: "price per unit",
+    addToCart: "Add to Cart",
+    saveDiscount: "Bulk Savings",
+    upsellGoal: "Add {amount} more to unlock lower price!",
+    outOfStock: "Out of Stock",
   },
   ru: {
+    // Header & Navigation
     delivery: "Доставка",
     guarantees: "Гарантии",
     certificate: "Справка",
     updates: "Новинки",
-    sales: "Рас распродажа",
+    sales: "Распродажа",
     accessories: "Аксессуары",
     open: "Развернуть",
     close: "Свернуть",
@@ -108,8 +141,40 @@ export const translations = {
     namePlaceholder: "Ваше имя",
     contactPlaceholder: "Ваш Telegram / WhatsApp",
     getPassWhatsapp: "Оформить бесплатно в WhatsApp",
+
+    // Checkout Modal
+    checkoutTitle: "Ваш заказ",
+    emptyCart: "Корзина пуста",
+    receiveMethod: "Способ получения",
+    deliveryCourier: "Доставка курьером",
+    selfPickup: "Самовывоз",
+    contactMethod: "Связь с вами",
+    phContact: "@username или номер телефона",
+    payMethod: "Способ оплаты",
+    payCash: "Наличные при получении",
+    payQR: "Тайский QR / Перевод",
+    payRub: "Перевод в рублях (Сбер/Т-Банк)",
+    addressLabel: "Адрес доставки / Отель / Номер комнаты",
+    addressPlaceholder: "Например: Hilton Resort, комната 402 или ссылка на карты",
+    notesLabel: "Комментарий к заказу",
+    notesPlaceholder: "Пожелания к доставке или курьеру...",
+    checkoutSubmit: "Отправить заказ в WhatsApp",
+    checkoutSuccessMsg: "Заказ сформирован! Переходим в WhatsApp...",
+
+    // Product Modal & Cards
+    thcContent: "ТГК",
+    typeIndica: "Индика",
+    typeSativa: "Сатива",
+    typeHybrid: "Гибрид",
+    selectAmount: "Выберите количество",
+    pricePerUnit: "цена за единицу",
+    addToCart: "В корзину",
+    saveDiscount: "Выгода от объема",
+    upsellGoal: "Добавьте еще {amount}, чтобы цена снизилась!",
+    outOfStock: "Нет в наличии",
   },
   th: {
+    // Header & Navigation
     delivery: "จัดส่ง",
     guarantees: "การรับประกัน",
     certificate: "ใบรับรองแพทย์",
@@ -162,5 +227,36 @@ export const translations = {
     namePlaceholder: "ชื่อของคุณ",
     contactPlaceholder: "Telegram / WhatsApp ของคุณ",
     getPassWhatsapp: "รับใบรับรองฟรีผ่าน WhatsApp",
+
+    // Checkout Modal
+    checkoutTitle: "รายการสั่งซื้อของคุณ",
+    emptyCart: "ตะกร้าสินค้าว่างเปล่า",
+    receiveMethod: "วิธีการรับสินค้า",
+    deliveryCourier: "จัดส่งโดยพนักงาน",
+    selfPickup: "รับสินค้าด้วยตนเอง",
+    contactMethod: "ช่องทางการติดต่อ",
+    phContact: "@username หรือเบอร์โทรศัพท์",
+    payMethod: "วิธีการชำระเงิน",
+    payCash: "ชำระเงินสดเมื่อได้รับสินค้า",
+    payQR: "สแกน QR / โอนเงินผ่านธนาคารไทย",
+    payRub: "โอนเงินรูเบิล (Sber / Tinkoff)",
+    addressLabel: "ที่อยู่จัดส่ง / โรงแรม / หมายเลขห้อง",
+    addressPlaceholder: "เช่น Hilton Resort ห้อง 402 หรือลิงก์ Google Maps",
+    notesLabel: "หมายเหตุการสั่งซื้อ",
+    notesPlaceholder: "คำขอเพิ่มเติมถึงพนักงานจัดส่ง...",
+    checkoutSubmit: "ส่งคำสั่งซื้อผ่าน WhatsApp",
+    checkoutSuccessMsg: "กำลังนำคุณไปยัง WhatsApp...",
+
+    // Product Modal & Cards
+    thcContent: "THC",
+    typeIndica: "อินดิก้า",
+    typeSativa: "ซาติว่า",
+    typeHybrid: "ไฮบริด",
+    selectAmount: "เลือกจำนวน",
+    pricePerUnit: "ราคาต่อหน่วย",
+    addToCart: "เพิ่มลงตะกร้า",
+    saveDiscount: "ส่วนลดตามจำนวน",
+    upsellGoal: "เพิ่มอีก {amount} เพื่อรับราคาพิเศษ!",
+    outOfStock: "สินค้าหมด",
   }
 };
