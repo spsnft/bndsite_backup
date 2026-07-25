@@ -11,9 +11,7 @@ import {
 
 import { useCart } from "@/lib/cart-store"
 import { translations } from "@/lib/translations"
-import { ProductModal, CheckoutModal } from "@/components/modals"
-import { InfoModal } from "@/components/modals/InfoModal"
-import { MedicalCertificateModal } from "@/components/modals/MedicalCertificateModal"
+import { ProductModal, CheckoutModal, InfoModal, MedicalCertificateModal } from "@/components/modals"
 import { HighlightCard, ProductRow, BadgeIcon, BahtSymbol } from "@/components/cards/ProductCards"
 import { triggerHaptic, GOLDEN_COLOR } from "@/lib/utils"
 
@@ -136,7 +134,7 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
       {/* CATALOG GRID */}
       <div className="max-w-5xl mx-auto space-y-0">
         {recentUpdates.length > 0 && (
-          <section className="mb-4 space-y-3 overflow-hidden">
+          <section className="mb-6 space-y-3 overflow-hidden">
             <div className="flex items-center gap-2 px-2"><BadgeIcon type="NEW" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{t.updates || 'New'}</h2></div>
             <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
               {recentUpdates.map((p, idx) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
@@ -145,18 +143,19 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
         )}
 
         {flashSales.length > 0 && (
-          <section className="mb-4 space-y-3 overflow-hidden">
-            <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{lang === 'ru' ? 'Рас распродажи' : 'Sales'}</h2></div>
+          <section className="mb-6 space-y-3 overflow-hidden">
+            <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{lang === 'ru' ? 'Распродажа' : 'Sales'}</h2></div>
             <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
               {flashSales.map((p, idx) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
             </div>
           </section>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-6">
+        {/* BUDS & JOINTS GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 md:mt-8">
           {buds.length > 0 && (
-            <section className="flex flex-col h-full mb-2 md:mb-0">
-              <div className="flex items-center gap-3 px-2 py-3">
+            <section className="flex flex-col h-full">
+              <div className="flex items-center gap-3 px-2 mb-4">
                 <Leaf size={22} className="text-brand-secondary" />
                 <h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">Buds</h2>
               </div>
@@ -167,9 +166,12 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
           )}
 
           {joints.length > 0 && (
-            <section className="flex flex-col h-full mb-2 md:mb-0">
-              <button onClick={() => toggleSection('joints')} className="w-full flex items-center justify-between px-3 py-3 active:bg-white/5 transition-colors md:cursor-default">
-                <div className="flex items-center gap-3"><Cigarette size={22} className="text-brand-secondary" /><h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">Joints</h2></div>
+            <section className="flex flex-col h-full mt-6 md:mt-0">
+              <button onClick={() => toggleSection('joints')} className="w-full flex items-center justify-between px-2 mb-4 active:bg-white/5 transition-colors md:cursor-default rounded-xl">
+                <div className="flex items-center gap-3">
+                  <Cigarette size={22} className="text-brand-secondary" />
+                  <h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">Joints</h2>
+                </div>
                 <div className="flex items-center gap-2 md:hidden">
                   <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">{openSections.includes('joints') ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}</span>
                   <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${openSections.includes('joints') ? 'rotate-180' : ''}`} />
@@ -184,18 +186,24 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
           )}
         </div>
 
+        {/* ACCESSORIES (HIGHLIGHT CARDS) */}
         {accessories.length > 0 && (
-          <section className="mt-4 md:mt-8 mb-2 w-full">
-            <button onClick={() => toggleSection('accessories')} className="w-full flex items-center justify-between px-3 py-3 active:bg-white/5 transition-colors">
-              <div className="flex items-center gap-3"><Layers size={22} className="text-brand-secondary" /><h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">{lang === 'ru' ? 'Аксессуары' : 'Accessories'}</h2></div>
+          <section className="mt-8 md:mt-10 mb-6 w-full">
+            <button onClick={() => toggleSection('accessories')} className="w-full flex items-center justify-between px-2 mb-4 active:bg-white/5 transition-colors rounded-xl">
+              <div className="flex items-center gap-3">
+                <Layers size={22} className="text-brand-secondary" />
+                <h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">{lang === 'ru' ? 'Аксессуары' : 'Accessories'}</h2>
+              </div>
               <div className="flex items-center gap-2">
                 <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">{openSections.includes('accessories') ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}</span>
                 <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${openSections.includes('accessories') ? 'rotate-180' : ''}`} />
               </div>
             </button>
-            <div className={`overflow-hidden transition-all duration-500 ${openSections.includes('accessories') ? 'max-h-[3000px]' : 'max-h-0'}`}>
-              <div className="rounded-[2rem] overflow-hidden border border-white/10 bg-brand-primary">
-                {accessories.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
+            <div className={`overflow-hidden transition-all duration-500 ${openSections.includes('accessories') ? 'max-h-[3000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-1 md:px-0">
+                {accessories.map((p: any) => (
+                  <HighlightCard key={p.id} item={p} onClick={() => setSelectedProduct(p)} />
+                ))}
               </div>
             </div>
           </section>
@@ -225,8 +233,8 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
       <InfoModal isOpen={isDeliveryModalOpen} onClose={() => setIsDeliveryModalOpen(false)} title={lang === 'ru' ? 'Доставка и Оплата' : 'Delivery & Payment'}>
         <div className="flex items-center gap-4"><Timer size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Часы работы' : 'Working hours'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">12:00 — 00:00</p></div></div>
         <div className="flex items-center gap-4"><Plus size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Минимальный заказ' : 'Minimum order'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{lang === 'ru' ? 'От 1000฿, Доставка бесплатная' : 'From 1000฿, Free delivery'}</p></div></div>
-        <div className="flex items-center gap-4"><Wallet size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Способы оплаты' : 'Payment methods'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{lang === 'ru' ? 'Наличные, перевод, крипта, рубли' : 'Cash, bank transfer, crypto'}</p></div></div>
-        <div className="flex items-center gap-4"><Bike size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Сроки доставки' : 'Delivery times'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{lang === 'ru' ? 'Пхукет: в течение 60 мин, Таиланд: 2-3 дня' : 'Phuket: within 60 min, Thailand: 2-3 days'}</p></div></div>
+        <div className="flex items-center gap-4"><Wallet size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Способы оплаты' : 'Payment methods'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{lang === 'ru' ? 'Наличные, перевод (QR), рубли' : 'Cash, bank transfer, ruble transfer'}</p></div></div>
+        <div className="flex items-center gap-4"><Bike size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Получение заказа' : 'Order receiving'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{lang === 'ru' ? 'Доставка от 60 мин. Есть удобный самовывоз.' : 'Delivery from 60 min. Easy pickup available.'}</p></div></div>
       </InfoModal>
 
       <InfoModal isOpen={isGuaranteesModalOpen} onClose={() => setIsGuaranteesModalOpen(false)} title={lang === 'ru' ? 'О нас и Гарантии' : 'Our Guarantees'}>
