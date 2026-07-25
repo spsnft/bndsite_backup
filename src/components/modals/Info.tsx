@@ -1,6 +1,8 @@
 "use client"
 import * as React from "react"
 import { X } from "lucide-react"
+import { useCart } from "@/lib/cart-store"
+import { translations, Language } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
 
 interface InfoModalProps {
@@ -11,46 +13,52 @@ interface InfoModalProps {
 }
 
 export const Info = ({ isOpen, onClose, title, children }: InfoModalProps) => {
-  if (!isOpen) return null;
+  const [isClosing, setIsClosing] = React.useState(false);
+  const { lang } = useCart();
+  const safeLang = (lang || 'en') as Language;
+  const t = translations[safeLang] || translations.en;
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     triggerHaptic('light');
-    onClose();
-  };
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsClosing(false);
+      onClose();
+    }, 300);
+  }, [onClose]);
+
+  if (!isOpen && !isClosing) return null;
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-fade-in">
-      {/* BACKDROP */}
-      <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-md" 
-        onClick={handleClose} 
-      />
+    <div className={`fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={handleClose} />
 
-      {/* MODAL CONTAINER */}
-      <div className="relative w-full max-w-sm bg-brand-primary border border-white/15 rounded-[2.5rem] p-6 text-brand-light shadow-2xl overflow-hidden z-10 max-h-[85vh] flex flex-col">
-        {/* GLOW BACKGROUND EFFECT */}
-        <div 
-          className="absolute inset-0 opacity-15 pointer-events-none" 
-          style={{ background: `radial-gradient(circle at 50% 0%, #A88444, transparent 70%)` }} 
-        />
+      <div className={`relative w-full max-w-lg bg-brand-primary border border-white/10 sm:rounded-[2.5rem] rounded-t-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col max-h-[85vh] transition-transform duration-300 ${isClosing ? 'translate-y-full sm:translate-y-12' : 'translate-y-0'}`}>
+        <div className="absolute inset-0 opacity-15 pointer-events-none rounded-[2.5rem]" style={{ background: `radial-gradient(circle at 50% 0%, #A88444, transparent 70%)` }} />
 
-        {/* HEADER */}
-        <div className="flex items-center justify-between mb-6 shrink-0 relative z-10">
-          <h3 className="text-[14px] font-black uppercase tracking-[0.15em] text-brand-light">
-            {title}
-          </h3>
-          <button 
-            onClick={handleClose} 
-            className="p-2 bg-white/5 hover:bg-white/10 active:scale-90 rounded-full border border-white/10 transition-all text-brand-light/60 hover:text-brand-light"
-          >
-            <X size={16} />
-          </button>
-        </div>
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
 
-        {/* CONTENT */}
-        <div className="overflow-y-auto pr-1 flex-1 relative z-10 space-y-5 no-scrollbar">
+        <button 
+          onClick={handleClose} 
+          className="absolute top-6 right-6 p-2 bg-white/5 hover:bg-white/10 active:scale-90 rounded-full border border-white/10 transition-all text-brand-light/60 hover:text-brand-light z-20"
+        >
+          <X size={18} />
+        </button>
+
+        <h3 className="text-xl font-black uppercase tracking-tight text-brand-light mb-6 pr-8 relative z-10">
+          {title}
+        </h3>
+
+        <div className="space-y-4 overflow-y-auto pr-1 flex-1 relative z-10 no-scrollbar">
           {children}
         </div>
+
+        <button 
+          onClick={handleClose}
+          className="w-full mt-6 py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl font-black uppercase text-xs text-brand-light tracking-wider transition-all relative z-10 shrink-0"
+        >
+          {t.close}
+        </button>
       </div>
     </div>
   );
