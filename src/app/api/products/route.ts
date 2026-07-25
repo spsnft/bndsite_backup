@@ -5,13 +5,13 @@ export async function GET() {
   try {
     const res = await fetch(siteConfig.apiUrl, {
       headers: { 'Accept': 'application/json' },
-      next: { revalidate: 30 } // Было 60 -> стало 30 секунд
+      next: { revalidate: 60 } // Запрос к Google Таблице раз в 60 сек
     });
     const data = await res.json();
 
     return NextResponse.json(data, {
       headers: {
-        'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=150', // Было 60/300 -> стало 30/150
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=60',
       },
     });
   } catch {
@@ -19,7 +19,7 @@ export async function GET() {
       { products: [], stories: [], descriptions: [] },
       {
         headers: {
-          'Cache-Control': 'public, s-maxage=15, stale-while-revalidate=30',
+          'Cache-Control': 'no-store',
         },
       }
     );
