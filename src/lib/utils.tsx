@@ -22,10 +22,10 @@ export function absoluteUrl(path: string) {
 export const SELECTED_COLOR = "#2DD4BF"; 
 export const IMPORT_COLOR = "#60A5FA";
 export const CONCENTRATES_COLOR = "#F59E0B"; 
-export const GOLDEN_COLOR = "#FEC107"; // Цвет для категории Classic
+export const GOLDEN_COLOR = "#A88444"; // Обновлен под Royal Concrete (Antique Gold)
 
 export const GRADES = [
-  { id: "classic", title: "CLASSIC GRADE", color: "#FEC107", icon: Star },
+  { id: "classic", title: "CLASSIC GRADE", color: "#A88444", icon: Star },
   { id: "premium", title: "PREMIUM GRADE", color: "#34D399", icon: Flame },
   { id: "selected", title: "SELECTED GRADE", color: "#A855F7", icon: Crown }
 ];
@@ -37,10 +37,14 @@ export const CONTACT_METHODS = [
   { id: "instagram", label: "Instagram", icon: Instagram, phKey: "contactPh" },
 ];
 
+// Приглушенная, глубокая палитра сортов под стиль Royal Concrete
 export const TYPE_COLORS: Record<string, string> = { 
-  "indica": "#A855F7", 
-  "sativa": "#FBBF24", 
-  "hybrid": "#2DD4BF" 
+  indica: "#8A5A96", // Amethyst / Глубокий фиолетовый
+  sativa: "#B65C3A", // Terracotta / Приглушенный бронзовый
+  hybrid: "#3A6B58", // Muted Emerald / Спокойный изумрудный
+  INDICA: "#8A5A96",
+  SATIVA: "#B65C3A",
+  HYBRID: "#3A6B58"
 };
 
 // --- HELPERS ---
@@ -54,7 +58,6 @@ export const triggerHaptic = (type: 'light' | 'medium' | 'success' = 'light') =>
 
 export const isElite = (product: any) => {
   const sub = product?.subcategory?.toLowerCase() || "";
-  // Теперь элитными считаются только импорт и эксклюзивы, Classic (бывшие Silver/Golden) сюда не входят
   return sub.includes('exclusive') || sub.includes('import');
 };
 
