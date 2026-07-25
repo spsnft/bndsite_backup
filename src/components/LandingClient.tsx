@@ -7,12 +7,12 @@ import {
   MessageCircle, Phone, Instagram, ChevronDown, 
   Sparkles, Bike, Wallet, Timer, 
   CreditCard, Trophy, Users, ShieldCheck, Cigarette, Layers, FileText,
-  Award, ExternalLink, ChevronRight, CheckCircle2
+  Award, CheckCircle2, ChevronRight
 } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
 import { translations, Language } from "@/lib/translations"
-import { Product, Checkout, Info, Medical } from "@/components/modals"
+import { Product, Checkout, Info, Medical, AgeGate } from "@/components/modals"
 import { HighlightCard, ProductRow, BadgeIcon, BahtSymbol } from "@/components/cards/ProductCards"
 import { triggerHaptic, GOLDEN_COLOR } from "@/lib/utils"
 
@@ -72,7 +72,6 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
   // Global Store
   const { items, getTotal, lang, setLang } = useCart();
   
-  // TypeScript fallback to ensure `lang` matches a key
   const safeLang = (lang || 'en') as Language;
   const t = translations[safeLang] || translations.en;
 
@@ -88,7 +87,6 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
     setOpenSections(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
   };
 
-  // Локализация для Бенто-баннера
   const bentoTexts = {
     ru: {
       medTitle: "Медицинский Паспорт PT.33",
@@ -138,23 +136,24 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
   return (
     <div className="min-h-screen bg-brand-primary text-brand-light p-4 pb-32 selection:bg-brand-secondary/30 font-sans">
       
+      {/* 20+ AGE GATE MODAL */}
+      <AgeGate />
+
       {/* HEADER */}
-      <header className="max-w-5xl mx-auto pt-0 mb-0 relative z-[100]">
-        <div className="flex items-center justify-between px-2 mb-[4px]"> 
-           <Image src="/420/images/logo.svg" priority width={80} height={80} className="w-20 h-20 object-contain relative z-10" alt="MPS Phuket" />
+      <header className="max-w-5xl mx-auto relative z-[100] mb-6">
+        <div className="flex items-center justify-between px-1 mb-3"> 
+           <Image src="/420/images/logo.svg" priority width={72} height={72} className="w-18 h-18 object-contain relative z-10" alt="MPS Phuket" />
            
-           <div className="flex items-center flex-1 justify-end">
-              <div className="flex gap-2">
-                <Link href="https://line.me/R/ti/p/@mpsphuket" target="_blank" className="w-[46px] h-[46px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-xl"><MessageCircle size={18} className="opacity-80"/></Link>
-                <Link href="https://wa.me/66612345678" target="_blank" className="w-[46px] h-[46px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-xl"><Phone size={18} className="opacity-80"/></Link>
-                <Link href="https://www.instagram.com/mpsphuket" target="_blank" className="w-[46px] h-[46px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-xl"><Instagram size={18} className="opacity-80"/></Link>
-              </div>
+           <div className="flex items-center gap-2">
+              <Link href="https://line.me/R/ti/p/@mpsphuket" target="_blank" className="w-[42px] h-[42px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-lg"><MessageCircle size={18} className="opacity-80"/></Link>
+              <Link href="https://wa.me/66612345678" target="_blank" className="w-[42px] h-[42px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-lg"><Phone size={18} className="opacity-80"/></Link>
+              <Link href="https://www.instagram.com/mpsphuket" target="_blank" className="w-[42px] h-[42px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-lg"><Instagram size={18} className="opacity-80"/></Link>
 
               {/* LANGUAGE DROPDOWN */}
               <div className="relative">
                 <button 
                   onClick={() => { triggerHaptic('light'); setIsLangMenuOpen(!isLangMenuOpen); }} 
-                  className="ml-2 h-[46px] px-3 flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 font-black text-[11px] text-brand-secondary active:scale-90 transition-all shrink-0 gap-1.5 shadow-xl"
+                  className="h-[42px] px-3 flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 font-black text-[11px] text-brand-secondary active:scale-90 transition-all gap-1 shadow-lg"
                 >
                   {safeLang.toUpperCase()} 
                   <ChevronDown size={14} className={`transition-transform duration-300 ${isLangMenuOpen ? 'rotate-180' : ''}`} />
@@ -188,132 +187,124 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
            </div>
         </div>
 
-        {/* HEADER ACTION BUTTONS WITH ENHANCED GLOW */}
-        <div className="flex flex-wrap sm:flex-nowrap gap-2 px-2 mb-4 mt-2 relative z-20">
-          <button onClick={() => { triggerHaptic('light'); setIsDeliveryModalOpen(true); }} className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-[1.5rem] border border-white/15 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden">
-            <Bike size={15} className="text-brand-secondary shrink-0" />
+        {/* QUICK ACTION BUTTONS */}
+        <div className="grid grid-cols-3 gap-2 mb-4">
+          <button onClick={() => { triggerHaptic('light'); setIsDeliveryModalOpen(true); }} className="flex items-center justify-center gap-1.5 h-[42px] px-2 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-2xl border border-white/10 transition-all text-ellipsis overflow-hidden">
+            <Bike size={14} className="text-brand-secondary shrink-0" />
             <span className="text-[10px] font-black uppercase tracking-wider text-brand-light/90 truncate">{t.delivery}</span>
           </button>
           
-          <button onClick={() => { triggerHaptic('light'); setIsGuaranteesModalOpen(true); }} className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-[1.5rem] border border-white/15 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden">
-            <ShieldCheck size={15} className="text-brand-secondary shrink-0" />
+          <button onClick={() => { triggerHaptic('light'); setIsGuaranteesModalOpen(true); }} className="flex items-center justify-center gap-1.5 h-[42px] px-2 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-2xl border border-white/10 transition-all text-ellipsis overflow-hidden">
+            <ShieldCheck size={14} className="text-brand-secondary shrink-0" />
             <span className="text-[10px] font-black uppercase tracking-wider text-brand-light/90 truncate">{t.guarantees}</span>
           </button>
 
-          {/* СВЕТЯЩАЯСЯ КНОПКА МЕДИЦИНСКОГО ПАСПОРТА */}
           <button 
             onClick={() => { triggerHaptic('light'); setIsMedicalModalOpen(true); }} 
-            className="relative flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-gradient-to-r from-brand-secondary/20 via-brand-secondary/35 to-brand-secondary/20 active:scale-[0.98] rounded-[1.5rem] border border-brand-secondary/60 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden shadow-[0_0_20px_rgba(200,158,88,0.35)] hover:shadow-[0_0_25px_rgba(200,158,88,0.5)] group"
+            className="relative flex items-center justify-center gap-1.5 h-[42px] px-2 bg-brand-secondary/20 active:scale-[0.98] rounded-2xl border border-brand-secondary/50 transition-all text-ellipsis overflow-hidden shadow-[0_0_15px_rgba(200,158,88,0.3)] hover:shadow-[0_0_20px_rgba(200,158,88,0.4)]"
           >
-            <span className="absolute inset-0 bg-brand-secondary/15 animate-pulse rounded-[1.5rem] pointer-events-none" />
-            <FileText size={15} className="text-brand-secondary shrink-0 relative z-10 animate-bounce" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-brand-secondary truncate relative z-10">{t.certificate}</span>
+            <FileText size={14} className="text-brand-secondary shrink-0 animate-bounce" />
+            <span className="text-[10px] font-black uppercase tracking-wider text-brand-secondary truncate">{t.certificate}</span>
           </button>
         </div>
 
         {/* BENTO BANNER SECTION */}
-        <div className="px-2 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            
-            {/* HERO BENTO CARD: MEDICAL CERTIFICATE */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div 
+            onClick={() => { triggerHaptic('light'); setIsMedicalModalOpen(true); }}
+            className="md:col-span-2 relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-secondary/20 via-black/40 to-black/80 border border-brand-secondary/40 p-5 shadow-2xl cursor-pointer active:scale-[0.99] transition-all group"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(200,158,88,0.25),transparent_70%)] pointer-events-none" />
+            <div className="relative z-10 flex flex-col justify-between h-full space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-secondary/20 border border-brand-secondary/40 text-brand-secondary text-[10px] font-black uppercase tracking-widest">
+                  <Award size={13} />
+                  <span>{bentoTexts.medBadge}</span>
+                </div>
+                <ChevronRight size={18} className="text-brand-secondary group-hover:translate-x-1 transition-transform" />
+              </div>
+
+              <div>
+                <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-brand-light leading-snug group-hover:text-brand-secondary transition-colors">
+                  {bentoTexts.medTitle}
+                </h3>
+                <p className="text-xs text-brand-light/70 mt-1 max-w-md leading-relaxed">
+                  {bentoTexts.medDesc}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-4 pt-1">
+                <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase text-emerald-400">
+                  <CheckCircle2 size={13} />
+                  <span>Form PT.33</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase text-brand-light/60">
+                  <ShieldCheck size={13} className="text-brand-secondary" />
+                  <span>100% Legal</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
             <div 
-              onClick={() => { triggerHaptic('light'); setIsMedicalModalOpen(true); }}
-              className="md:col-span-2 relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-secondary/20 via-black/40 to-black/80 border border-brand-secondary/40 p-5 shadow-2xl cursor-pointer active:scale-[0.99] transition-all group"
+              onClick={() => { triggerHaptic('light'); setIsDeliveryModalOpen(true); }}
+              className="p-4 rounded-[1.75rem] bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(200,158,88,0.25),transparent_70%)] pointer-events-none" />
-              <div className="relative z-10 flex flex-col justify-between h-full space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-brand-secondary/20 border border-brand-secondary/40 text-brand-secondary text-[10px] font-black uppercase tracking-widest">
-                    <Award size={13} />
-                    <span>{bentoTexts.medBadge}</span>
-                  </div>
-                  <ChevronRight size={18} className="text-brand-secondary group-hover:translate-x-1 transition-transform" />
-                </div>
-
-                <div>
-                  <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-brand-light leading-snug group-hover:text-brand-secondary transition-colors">
-                    {bentoTexts.medTitle}
-                  </h3>
-                  <p className="text-xs text-brand-light/70 mt-1 max-w-md leading-relaxed">
-                    {bentoTexts.medDesc}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-4 pt-1">
-                  <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase text-emerald-400">
-                    <CheckCircle2 size={13} />
-                    <span>Form PT.33</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase text-brand-light/60">
-                    <ShieldCheck size={13} className="text-brand-secondary" />
-                    <span>100% Legal</span>
-                  </div>
-                </div>
+              <div className="w-8 h-8 rounded-xl bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary mb-2">
+                <Bike size={16} />
+              </div>
+              <div>
+                <h4 className="text-xs font-black uppercase text-brand-light tracking-tight">{bentoTexts.deliveryTitle}</h4>
+                <p className="text-[10px] text-brand-light/60 leading-tight mt-0.5">{bentoTexts.deliveryDesc}</p>
               </div>
             </div>
 
-            {/* SMALL BENTO CARDS */}
-            <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
-              <div 
-                onClick={() => { triggerHaptic('light'); setIsDeliveryModalOpen(true); }}
-                className="p-4 rounded-[1.75rem] bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
-              >
-                <div className="w-8 h-8 rounded-xl bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary mb-2">
-                  <Bike size={16} />
-                </div>
-                <div>
-                  <h4 className="text-xs font-black uppercase text-brand-light tracking-tight">{bentoTexts.deliveryTitle}</h4>
-                  <p className="text-[10px] text-brand-light/60 leading-tight mt-0.5">{bentoTexts.deliveryDesc}</p>
-                </div>
+            <div 
+              onClick={() => { triggerHaptic('light'); setIsGuaranteesModalOpen(true); }}
+              className="p-4 rounded-[1.75rem] bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
+            >
+              <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-2">
+                <Leaf size={16} />
               </div>
-
-              <div 
-                onClick={() => { triggerHaptic('light'); setIsGuaranteesModalOpen(true); }}
-                className="p-4 rounded-[1.75rem] bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
-              >
-                <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-2">
-                  <Leaf size={16} />
-                </div>
-                <div>
-                  <h4 className="text-xs font-black uppercase text-brand-light tracking-tight">{bentoTexts.qualityTitle}</h4>
-                  <p className="text-[10px] text-brand-light/60 leading-tight mt-0.5">{bentoTexts.qualityDesc}</p>
-                </div>
+              <div>
+                <h4 className="text-xs font-black uppercase text-brand-light tracking-tight">{bentoTexts.qualityTitle}</h4>
+                <p className="text-[10px] text-brand-light/60 leading-tight mt-0.5">{bentoTexts.qualityDesc}</p>
               </div>
             </div>
-
           </div>
         </div>
       </header>
 
       {/* CATALOG GRID */}
-      <div className="max-w-5xl mx-auto space-y-0 relative z-10">
+      <main className="max-w-5xl mx-auto space-y-8 relative z-10">
         
         {/* CAROUSELS */}
         {recentUpdates.length > 0 && (
-          <section className="mb-6 space-y-3 overflow-hidden">
-            <div className="flex items-center gap-2 px-2"><BadgeIcon type="NEW" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{t.updates}</h2></div>
-            <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
+          <section className="space-y-3 overflow-hidden">
+            <div className="flex items-center gap-2 px-1"><BadgeIcon type="NEW" /><h2 className="text-[12px] font-black uppercase tracking-[0.2em] text-brand-light/80">{t.updates}</h2></div>
+            <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
               {recentUpdates.map((p, idx) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
             </div>
           </section>
         )}
 
         {flashSales.length > 0 && (
-          <section className="mb-6 space-y-3 overflow-hidden">
-            <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{t.sales}</h2></div>
-            <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
+          <section className="space-y-3 overflow-hidden">
+            <div className="flex items-center gap-2 px-1"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.2em] text-brand-light/80">{t.sales}</h2></div>
+            <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
               {flashSales.map((p, idx) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
             </div>
           </section>
         )}
 
         {/* BUDS & JOINTS GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 md:mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {buds.length > 0 && (
-            <section className="flex flex-col h-full">
-              <div className="flex items-center gap-3 px-2 mb-4">
-                <Leaf size={22} className="text-brand-secondary" />
-                <h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">Buds</h2>
+            <section className="flex flex-col h-full space-y-3">
+              <div className="flex items-center gap-2 px-1">
+                <Leaf size={20} className="text-brand-secondary" />
+                <h2 className="text-[16px] font-black uppercase tracking-tight text-brand-light">Buds</h2>
               </div>
               <div className="rounded-[2rem] overflow-hidden border border-white/10 bg-brand-primary h-full">
                 {buds.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
@@ -322,15 +313,15 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
           )}
 
           {joints.length > 0 && (
-            <section className="flex flex-col h-full mt-6 md:mt-0">
-              <button onClick={() => toggleSection('joints')} className="w-full flex items-center justify-between px-2 mb-4 active:bg-white/5 transition-colors md:cursor-default rounded-xl">
-                <div className="flex items-center gap-3">
-                  <Cigarette size={22} className="text-brand-secondary" />
-                  <h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">Joints</h2>
+            <section className="flex flex-col h-full space-y-3">
+              <button onClick={() => toggleSection('joints')} className="w-full flex items-center justify-between px-1 active:bg-white/5 transition-colors md:cursor-default rounded-xl">
+                <div className="flex items-center gap-2">
+                  <Cigarette size={20} className="text-brand-secondary" />
+                  <h2 className="text-[16px] font-black uppercase tracking-tight text-brand-light">Joints</h2>
                 </div>
                 <div className="flex items-center gap-2 md:hidden">
                   <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">{openSections.includes('joints') ? t.close : t.open}</span>
-                  <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${openSections.includes('joints') ? 'rotate-180' : ''}`} />
+                  <ChevronDown size={18} className={`opacity-40 transition-transform duration-300 ${openSections.includes('joints') ? 'rotate-180' : ''}`} />
                 </div>
               </button>
               <div className={`overflow-hidden transition-all duration-500 md:max-h-none ${openSections.includes('joints') ? 'max-h-[3000px]' : 'max-h-0 md:max-h-[3000px]'}`}>
@@ -344,19 +335,19 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
 
         {/* ACCESSORIES GRID */}
         {accessories.length > 0 && (
-          <section className="mt-8 md:mt-10 mb-6 w-full">
-            <button onClick={() => toggleSection('accessories')} className="w-full flex items-center justify-between px-2 mb-4 active:bg-white/5 transition-colors rounded-xl">
-              <div className="flex items-center gap-3">
-                <Layers size={22} className="text-brand-secondary" />
-                <h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">{t.accessories}</h2>
+          <section className="w-full space-y-3">
+            <button onClick={() => toggleSection('accessories')} className="w-full flex items-center justify-between px-1 active:bg-white/5 transition-colors rounded-xl">
+              <div className="flex items-center gap-2">
+                <Layers size={20} className="text-brand-secondary" />
+                <h2 className="text-[16px] font-black uppercase tracking-tight text-brand-light">{t.accessories}</h2>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">{openSections.includes('accessories') ? t.close : t.open}</span>
-                <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${openSections.includes('accessories') ? 'rotate-180' : ''}`} />
+                <ChevronDown size={18} className={`opacity-40 transition-transform duration-300 ${openSections.includes('accessories') ? 'rotate-180' : ''}`} />
               </div>
             </button>
             <div className={`overflow-hidden transition-all duration-500 ${openSections.includes('accessories') ? 'max-h-[3000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-1 md:px-0">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {accessories.map((p: any) => (
                   <HighlightCard key={p.id} item={p} onClick={() => setSelectedProduct(p)} />
                 ))}
@@ -364,22 +355,22 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
             </div>
           </section>
         )}
-      </div>
+      </main>
 
       {/* FLOATING CART BUTTON */}
       {items.length > 0 && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[90] w-full max-w-sm px-6">
-          <button onClick={() => { triggerHaptic('medium'); setIsCheckoutOpen(true); }} className="w-full bg-white/10 backdrop-blur-2xl text-brand-light py-3 px-7 rounded-[2.5rem] border border-white/20 shadow-2xl flex justify-between items-center active:scale-95 transition-all">
-            <div className="flex items-center gap-4 relative z-10">
-              <div className="p-2 bg-brand-secondary/20 rounded-xl"><ShoppingBag size={20} className="text-brand-secondary"/></div>
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] w-full max-w-sm px-4">
+          <button onClick={() => { triggerHaptic('medium'); setIsCheckoutOpen(true); }} className="w-full bg-white/10 backdrop-blur-2xl text-brand-light py-3.5 px-6 rounded-[2.5rem] border border-white/20 shadow-2xl flex justify-between items-center active:scale-95 transition-all">
+            <div className="flex items-center gap-3 relative z-10">
+              <div className="p-2 bg-brand-secondary/20 rounded-xl"><ShoppingBag size={18} className="text-brand-secondary"/></div>
               <div className="text-left">
-                <div className="font-black uppercase text-[18px] leading-none mb-0.5">{getTotal()}<BahtSymbol /></div>
+                <div className="font-black uppercase text-[16px] leading-none mb-0.5">{getTotal()}<BahtSymbol /></div>
                 <span className="font-black uppercase text-[9px] text-brand-secondary leading-none">{items.length} {t.items}</span>
               </div>
             </div>
-            <div className="flex items-center gap-3 text-brand-light opacity-70">
-              <span className="text-[12px] font-black uppercase">{t.basket}</span>
-              <span className="p-2 bg-white/10 rounded-full animate-pulse"><Send size={18}/></span>
+            <div className="flex items-center gap-2 text-brand-light opacity-80">
+              <span className="text-[11px] font-black uppercase tracking-wider">{t.basket}</span>
+              <span className="p-1.5 bg-white/10 rounded-full animate-pulse"><Send size={16}/></span>
             </div>
           </button>
         </div>
