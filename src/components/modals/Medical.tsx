@@ -1,6 +1,6 @@
 "use client"
 import * as React from "react"
-import { X, ShieldCheck, Gift, FileText, Send, Check } from "lucide-react"
+import { X, ShieldCheck, Gift, FileText, Send, Check, ExternalLink, Award, FileCheck } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { translations, Language } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
@@ -70,6 +70,13 @@ export const Medical = ({
     handleClose();
   };
 
+  // Тексты для MOPH и образцов
+  const mophTitle = safeLang === 'ru' ? 'Лицензия & MOPH Верификация' : (safeLang === 'th' ? 'ใบอนุญาตและการรับรอง MOPH' : 'License & MOPH Verification');
+  const mophDesc = safeLang === 'ru' ? 'Сертифицировано Департаментом тайской традиционной медицины (MOPH Thailand)' : (safeLang === 'th' ? 'ได้รับการรับรองจากกรมการแพทย์แผนไทยและแพทย์ทางเลือก' : 'Certified by Department of Thai Traditional Medicine (MOPH Thailand)');
+  const sampleCertText = safeLang === 'ru' ? 'Образец PT.33' : (safeLang === 'th' ? 'ตัวอย่าง PT.33' : 'Sample PT.33');
+  const sampleLicenseText = safeLang === 'ru' ? 'Лицензия клиники' : (safeLang === 'th' ? 'ใบอนุญาตคลินิก' : 'Clinic License');
+  const mophPortalLink = safeLang === 'ru' ? 'Реестр MOPH Thailand' : (safeLang === 'th' ? 'ระบบลงทะเบียน MOPH' : 'MOPH Official Portal');
+
   return (
     <div className={`fixed inset-0 z-[130] flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={handleClose} />
@@ -84,7 +91,7 @@ export const Medical = ({
 
         {/* HEADER */}
         <div className="relative z-10 flex flex-col items-center mb-6 text-center">
-          <div className="w-12 h-12 rounded-2xl bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary mb-3">
+          <div className="w-12 h-12 rounded-2xl bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary mb-3 shadow-lg">
             <ShieldCheck size={24} />
           </div>
           <h2 className="text-2xl font-black uppercase tracking-tight text-brand-light">
@@ -140,6 +147,66 @@ export const Medical = ({
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* MOPH & SAMPLES SECTION */}
+          <div className="p-4 bg-black/40 border border-emerald-500/20 rounded-2xl space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Award size={16} className="text-emerald-400" />
+                <span className="text-[11px] font-black uppercase tracking-wider text-emerald-400">
+                  {mophTitle}
+                </span>
+              </div>
+              <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                Official
+              </span>
+            </div>
+            
+            <p className="text-[11px] text-brand-light/60 leading-relaxed">
+              {mophDesc}
+            </p>
+
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <a 
+                href="/docs/sample-pt33.pdf" 
+                target="_blank" 
+                rel="noreferrer"
+                onClick={() => triggerHaptic('light')}
+                className="flex items-center justify-between p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[11px] font-bold text-brand-light transition-all active:scale-95"
+              >
+                <span className="flex items-center gap-1.5 truncate">
+                  <FileCheck size={14} className="text-brand-secondary shrink-0" />
+                  <span className="truncate">{sampleCertText}</span>
+                </span>
+                <ExternalLink size={12} className="text-brand-light/40 shrink-0 ml-1" />
+              </a>
+
+              <a 
+                href="/docs/clinic-license.pdf" 
+                target="_blank" 
+                rel="noreferrer"
+                onClick={() => triggerHaptic('light')}
+                className="flex items-center justify-between p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[11px] font-bold text-brand-light transition-all active:scale-95"
+              >
+                <span className="flex items-center gap-1.5 truncate">
+                  <Award size={14} className="text-blue-400 shrink-0" />
+                  <span className="truncate">{sampleLicenseText}</span>
+                </span>
+                <ExternalLink size={12} className="text-brand-light/40 shrink-0 ml-1" />
+              </a>
+            </div>
+
+            <a 
+              href="https://www.moph.go.th" 
+              target="_blank" 
+              rel="noreferrer"
+              onClick={() => triggerHaptic('light')}
+              className="mt-1 w-full py-2 flex items-center justify-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-brand-light/40 hover:text-brand-secondary transition-colors"
+            >
+              <span>{mophPortalLink}</span>
+              <ExternalLink size={10} />
+            </a>
           </div>
 
           {/* SYMPTOMS SELECTION */}
