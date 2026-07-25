@@ -6,7 +6,7 @@ import {
   Plus, Tag, Zap, Leaf, ShoppingBag, Send, 
   MessageCircle, Phone, Instagram, ChevronDown, 
   Sparkles, Bike, Wallet, Timer, 
-  CreditCard, X, Trophy, Users, ShieldCheck, Cigarette, Layers
+  CreditCard, X, Trophy, Users, ShieldCheck, Cigarette, Layers, FileText
 } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
@@ -42,6 +42,71 @@ const InfoModal = ({ isOpen, onClose, title, children }: { isOpen: boolean, onCl
   );
 };
 
+// Встроенная модалка для Medical Certificate
+const MedicalCertificateModal = ({ isOpen, onClose, lang }: { isOpen: boolean, onClose: () => void, lang: string }) => {
+  const [name, setName] = React.useState('');
+  const [symptom, setSymptom] = React.useState('Insomnia / Sleep Issues');
+
+  if (!isOpen) return null;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const message = `Hello! I would like to request a Medical Certificate.%0A%0A*Name:* ${name}%0A*Primary Symptom:* ${symptom}%0A%0A(I am ready to provide a photo of my ID/Passport to complete the registration).`;
+    const phoneNumber = '66955183783';
+    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+    onClose();
+  };
+  
+  return (
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-fade-in">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={onClose} />
+      <div className="relative w-full max-w-sm bg-brand-primary border border-brand-secondary/30 rounded-[2.5rem] p-6 text-brand-light shadow-2xl overflow-hidden z-10 flex flex-col">
+        <div className="absolute inset-0 opacity-15 pointer-events-none" style={{ background: `radial-gradient(circle at 50% 0%, #A88444, transparent 70%)` }} />
+        <div className="flex items-center justify-between mb-6 shrink-0 relative z-10">
+          <h3 className="text-[14px] font-black uppercase tracking-[0.15em] text-brand-secondary">{lang === 'ru' ? 'Мед. Справка' : 'Medical Certificate'}</h3>
+          <button onClick={onClose} className="p-2 bg-white/5 hover:bg-white/10 active:scale-90 rounded-full border border-white/10 transition-all text-brand-light/60 hover:text-brand-light">
+            <X size={16} />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 relative z-10">
+          <p className="text-[11px] uppercase tracking-wider text-brand-light/70 mb-2 font-bold">
+            {lang === 'ru' 
+              ? 'Обязательно по законам Таиланда. Заполните форму, и мы завершим оформление в WhatsApp.' 
+              : 'Required by Thai law. Fill out this form, and we will complete your registration via WhatsApp.'}
+          </p>
+          <div>
+            <label className="block text-[10px] uppercase tracking-wider text-brand-light/50 mb-2 font-bold">
+              {lang === 'ru' ? 'Имя (как в паспорте)' : 'Full Name (as in Passport)'}
+            </label>
+            <input 
+              type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="John Doe"
+              className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-sm text-brand-light focus:outline-none focus:border-brand-secondary transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] uppercase tracking-wider text-brand-light/50 mb-2 font-bold">
+              {lang === 'ru' ? 'Симптомы' : 'Primary Symptom'}
+            </label>
+            <select 
+              value={symptom} onChange={(e) => setSymptom(e.target.value)}
+              className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-sm text-brand-light focus:outline-none focus:border-brand-secondary appearance-none"
+            >
+              <option value="Insomnia / Sleep Issues">Insomnia / Sleep Issues</option>
+              <option value="Anxiety / Stress">Anxiety / Stress</option>
+              <option value="Chronic Pain / Back Pain">Chronic Pain / Back Pain</option>
+              <option value="Appetite Loss">Appetite Loss</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <button type="submit" className="w-full mt-2 bg-brand-secondary/20 text-brand-secondary border border-brand-secondary/50 font-black tracking-widest uppercase text-[12px] py-4 rounded-2xl active:scale-95 transition-all flex items-center justify-center gap-2">
+            <Send size={14} /> {lang === 'ru' ? 'Перейти в WhatsApp' : 'Continue in WhatsApp'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 const processProductData = (rawProducts: any[]) => {
   if (!Array.isArray(rawProducts)) return [];
   return rawProducts.map(p => {
@@ -60,7 +125,6 @@ const processProductData = (rawProducts: any[]) => {
       }
     });
 
-    // Берем photo из API Google Таблиц (или image для страховки)
     const rawUrl = (typeof p.photo === 'string' && p.photo.trim())
       ? p.photo.trim()
       : (typeof p.image === 'string' && p.image.trim() ? p.image.trim() : '');
@@ -98,8 +162,15 @@ const BadgeIcon = React.memo(({ type, isSmall }: { type: string, isSmall?: boole
 // Карточка для каруселей NEW/SALE
 const HighlightCard = React.memo(({ item, onClick, priority }: { item: any, onClick: () => void, priority?: boolean }) => {
   if (!item) return null;
-  const sub = item.subcategory?.toLowerCase() || "";
-  const accentColor = item.category === 'joints' ? GOLDEN_COLOR : (sub.includes('classic') ? '#10B981' : (sub === 'selected' ? SELECTED_COLOR : '#A855F7'));
+  
+  // Новая логика цветов свечения
+  const typeUpper = item.type?.toUpperCase() || "";
+  let accentColor = '#10B981'; // Изумрудный по умолчанию
+  if (item.category === 'joints') accentColor = GOLDEN_COLOR;
+  else if (typeUpper === 'SATIVA') accentColor = '#B65C3A'; // Терракота
+  else if (typeUpper === 'INDICA') accentColor = '#8A5A96'; // Аметист
+  else if (typeUpper === 'HYBRID') accentColor = '#3A6B58'; // Изумруд
+  
   const priceInfo = getFirstAvailablePrice(item) || { price: 0, weight: 0 };
   const currentPrice = priceInfo.price || 0;
 
@@ -110,7 +181,8 @@ const HighlightCard = React.memo(({ item, onClick, priority }: { item: any, onCl
       style={{ borderColor: `${accentColor}A0` }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/70 pointer-events-none" />
-      <div className="absolute inset-0 opacity-50 pointer-events-none transition-opacity group-hover:opacity-70" style={{ background: `radial-gradient(circle at 50% 100%, ${accentColor}, transparent 65%)` }} />
+      {/* Свечение уменьшено до 30% (было 50%), чтобы не перебивало золото */}
+      <div className="absolute inset-0 opacity-30 pointer-events-none transition-opacity group-hover:opacity-50" style={{ background: `radial-gradient(circle at 50% 100%, ${accentColor}, transparent 65%)` }} />
       
       <div className="relative z-10 px-4 py-3 pb-0 flex-1 flex flex-col min-h-0">
         <div className="min-w-0 pr-6">
@@ -130,7 +202,7 @@ const HighlightCard = React.memo(({ item, onClick, priority }: { item: any, onCl
         </div>
       </div>
       <div className="relative z-10 flex justify-between items-end px-4 pb-3 mt-auto">
-        <span className="text-[8px] font-black uppercase tracking-widest brightness-125" style={{ color: TYPE_COLORS[item.type?.toLowerCase()] || "#FFF" }}>{item.type}</span>
+        <span className="text-[8px] font-black uppercase tracking-widest brightness-125" style={{ color: accentColor }}>{item.type}</span>
         <p className="text-[16px] font-black tracking-tighter leading-none text-brand-light">{currentPrice > 0 ? (<>{currentPrice}<BahtSymbol /></>) : '—'}</p>
       </div>
     </div>
@@ -198,6 +270,7 @@ export default function LandingClient({ initialProducts = [], initialDescription
   const [isCheckoutOpen, setIsCheckoutOpen] = React.useState(false);
   const [isDeliveryModalOpen, setIsDeliveryModalOpen] = React.useState(false);
   const [isGuaranteesModalOpen, setIsGuaranteesModalOpen] = React.useState(false);
+  const [isMedicalModalOpen, setIsMedicalModalOpen] = React.useState(false); // Новый стейт
   const [openSections, setOpenSections] = React.useState<string[]>([]);
   
   const { items, getTotal, lang, setLang } = useCart();
@@ -235,10 +308,10 @@ export default function LandingClient({ initialProducts = [], initialDescription
     <div className="min-h-screen bg-brand-primary text-brand-light p-4 pb-32 selection:bg-brand-secondary/30 font-sans">
       
       {/* === ШАПКА === */}
-      <header className="max-w-xl mx-auto pt-0 mb-0">
+      <header className="max-w-5xl mx-auto pt-0 mb-0">
         <div className="flex items-center justify-between px-2 mb-[4px]"> 
            <div className="relative">
-              <div className="absolute inset-0 bg-brand-secondary/10 rounded-full blur-[35px]"></div>
+              {/* Ореол логотипа удален */}
               <Image 
                 src="/420/images/logo.svg" 
                 priority 
@@ -264,26 +337,30 @@ export default function LandingClient({ initialProducts = [], initialDescription
            </div>
         </div>
 
-        {/* Кнопки инфо */}
+        {/* Кнопки инфо + Мед справка */}
         <div className="flex flex-wrap sm:flex-nowrap gap-2 px-2 mb-4 mt-2 relative z-20">
           <button onClick={() => { triggerHaptic('light'); setIsDeliveryModalOpen(true); }} className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-[1.5rem] border border-white/15 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden">
             <Bike size={15} className="text-brand-secondary shrink-0" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-brand-light/90 truncate">{lang === 'ru' ? 'Доставка и оплата' : 'Delivery & Payment'}</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-brand-light/90 truncate">{lang === 'ru' ? 'Доставка' : 'Delivery'}</span>
           </button>
           <button onClick={() => { triggerHaptic('light'); setIsGuaranteesModalOpen(true); }} className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-[1.5rem] border border-white/15 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden">
             <ShieldCheck size={15} className="text-brand-secondary shrink-0" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-brand-light/90 truncate">{lang === 'ru' ? 'О нас и Гарантии' : 'Our Guarantees'}</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-brand-light/90 truncate">{lang === 'ru' ? 'Гарантии' : 'Guarantees'}</span>
+          </button>
+          <button onClick={() => { triggerHaptic('light'); setIsMedicalModalOpen(true); }} className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-brand-secondary/20 active:bg-brand-secondary/30 active:scale-[0.98] rounded-[1.5rem] border border-brand-secondary/50 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden">
+            <FileText size={15} className="text-brand-secondary shrink-0" />
+            <span className="text-[10px] font-black uppercase tracking-wider text-brand-secondary truncate">{lang === 'ru' ? 'Справка' : 'Certificate'}</span>
           </button>
         </div>
       </header>
 
-      <div className="max-w-xl mx-auto space-y-0">
+      <div className="max-w-5xl mx-auto space-y-0">
         
         {/* === КАРУСЕЛЬ NEW === */}
         {recentUpdates.length > 0 && (
           <section className="mb-4 space-y-3 overflow-hidden">
             <div className="flex items-center gap-2 px-2"><BadgeIcon type="NEW" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{t.updates || 'New'}</h2></div>
-            <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar mx-[-1rem] px-4 snap-x">
+            <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
               {recentUpdates.map((p, idx) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
             </div>
           </section>
@@ -293,54 +370,60 @@ export default function LandingClient({ initialProducts = [], initialDescription
         {flashSales.length > 0 && (
           <section className="mb-4 space-y-3 overflow-hidden">
             <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{lang === 'ru' ? 'Распродажи' : 'Sales'}</h2></div>
-            <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar mx-[-1rem] px-4 snap-x">
+            <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
               {flashSales.map((p, idx) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
             </div>
           </section>
         )}
 
-        {/* === BUDS (всегда раскрыт) === */}
-        {buds.length > 0 && (
-          <section className="mb-2">
-            <div className="flex items-center gap-3 px-2 py-3">
-              <Leaf size={22} className="text-brand-secondary" />
-              <h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">Buds</h2>
-            </div>
-            <div className="rounded-[2rem] overflow-hidden border border-white/10 bg-brand-primary">
-              {buds.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
-            </div>
-          </section>
-        )}
+        {/* === BENTO GRID (На ПК сетка из 2 колонок) === */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-6">
+          
+          {/* === BUDS === */}
+          {buds.length > 0 && (
+            <section className="flex flex-col h-full mb-2 md:mb-0">
+              <div className="flex items-center gap-3 px-2 py-3">
+                <Leaf size={22} className="text-brand-secondary" />
+                <h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">Buds</h2>
+              </div>
+              <div className="rounded-[2rem] overflow-hidden border border-white/10 bg-brand-primary h-full">
+                {buds.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
+              </div>
+            </section>
+          )}
 
-        {/* === JOINTS (аккордеон) === */}
-        {joints.length > 0 && (
-          <section className="mb-2">
-            <button 
-              onClick={() => toggleSection('joints')} 
-              className="w-full flex items-center justify-between px-3 py-3 active:bg-white/5 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <Cigarette size={22} className="text-brand-secondary" />
-                <h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">Joints</h2>
+          {/* === JOINTS === */}
+          {joints.length > 0 && (
+            <section className="flex flex-col h-full mb-2 md:mb-0">
+              <button 
+                onClick={() => toggleSection('joints')} 
+                className="w-full flex items-center justify-between px-3 py-3 active:bg-white/5 transition-colors md:cursor-default"
+              >
+                <div className="flex items-center gap-3">
+                  <Cigarette size={22} className="text-brand-secondary" />
+                  <h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">Joints</h2>
+                </div>
+                <div className="flex items-center gap-2 md:hidden">
+                  <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">
+                    {openSections.includes('joints') ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
+                  </span>
+                  <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${openSections.includes('joints') ? 'rotate-180' : ''}`} />
+                </div>
+              </button>
+              {/* На ПК всегда открыто, на мобилках работает аккордеон */}
+              <div className={`overflow-hidden transition-all duration-500 md:max-h-none ${openSections.includes('joints') ? 'max-h-[3000px]' : 'max-h-0 md:max-h-[3000px]'}`}>
+                <div className="rounded-[2rem] overflow-hidden border border-white/10 bg-brand-primary h-full">
+                  {joints.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">
-                  {openSections.includes('joints') ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}
-                </span>
-                <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${openSections.includes('joints') ? 'rotate-180' : ''}`} />
-              </div>
-            </button>
-            <div className={`overflow-hidden transition-all duration-500 ${openSections.includes('joints') ? 'max-h-[3000px]' : 'max-h-0'}`}>
-              <div className="rounded-[2rem] overflow-hidden border border-white/10 bg-brand-primary">
-                {joints.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
-              </div>
-            </div>
-          </section>
-        )}
+            </section>
+          )}
 
-        {/* === ACCESSORIES (аккордеон) === */}
+        </div>
+
+        {/* === ACCESSORIES (Во всю ширину внизу) === */}
         {accessories.length > 0 && (
-          <section className="mb-2">
+          <section className="mt-4 md:mt-8 mb-2 w-full">
             <button 
               onClick={() => toggleSection('accessories')} 
               className="w-full flex items-center justify-between px-3 py-3 active:bg-white/5 transition-colors"
@@ -461,6 +544,13 @@ export default function LandingClient({ initialProducts = [], initialDescription
           </div>
         </div>
       </InfoModal>
+
+      {/* Вызов новой модалки Мед Справки */}
+      <MedicalCertificateModal 
+        isOpen={isMedicalModalOpen} 
+        onClose={() => setIsMedicalModalOpen(false)} 
+        lang={lang} 
+      />
 
       {selectedProduct && (
         <ProductModal 
