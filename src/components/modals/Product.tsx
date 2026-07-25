@@ -8,7 +8,7 @@ export const BahtSymbol = React.memo(() => (
   <span className="font-sans text-[0.75em] ml-0.5 opacity-90 align-baseline">฿</span>
 ));
 
-export const ProductModal = ({ 
+export const Product = ({ 
   product, 
   onClose, 
   t, 
