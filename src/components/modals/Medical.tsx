@@ -43,16 +43,27 @@ export const Medical = ({
   const handleSend = () => {
     triggerHaptic('success');
     
-    let message = `📋 *ЗАЯВКА НА МЕДИЦИНСКИЙ СЕРТИФИКАТ (PT.33)*\n\n`;
-    if (fullName) message += `*Имя:* ${fullName}\n`;
-    if (contact) message += `*Контакт:* ${contact}\n`;
+    // Динамические локализованные ярлыки для сообщения WhatsApp
+    const certTitle = safeLang === 'ru' ? 'ЗАЯВКА НА МЕДИЦИНСКИЙ СЕРТИФИКАТ (PT.33)' : (safeLang === 'th' ? 'คำขอใบรับรองแพทย์ (PT.33)' : 'MEDICAL CERTIFICATE REQUEST (PT.33)');
+    const nameLabel = safeLang === 'ru' ? 'Имя' : (safeLang === 'th' ? 'ชื่อ' : 'Name');
+    const contactLabel = safeLang === 'ru' ? 'Контакт' : (safeLang === 'th' ? 'ช่องทางติดต่อ' : 'Contact');
+    const symptomsLabel = safeLang === 'ru' ? 'Симптомы' : (safeLang === 'th' ? 'อาการ' : 'Symptoms');
+    const footerNote = safeLang === 'ru' 
+      ? 'Заявка отправлена с сайта. Требуется бесплатное оформление PT.33.' 
+      : (safeLang === 'th' 
+        ? 'ส่งคำขอจากเว็บไซต์ ต้องการออกใบรับรอง PT.33 ฟรี' 
+        : 'Request sent from website. Free PT.33 issue required.');
+
+    let message = `📋 *${certTitle}*\n\n`;
+    if (fullName) message += `*${nameLabel}:* ${fullName}\n`;
+    if (contact) message += `*${contactLabel}:* ${contact}\n`;
     
     if (selectedSymptoms.length > 0) {
-      const symTexts = selectedSymptoms.map(id => symptomsList.find(s => s.id === id)?.label);
-      message += `*Симптомы:* ${symTexts.join(', ')}\n`;
+      const symTexts = selectedSymptoms.map(id => symptomsList.find(s => s.id === id)?.label).filter(Boolean);
+      message += `*${symptomsLabel}:* ${symTexts.join(', ')}\n`;
     }
     
-    message += `\n_Заявка отправлена с сайта. Требуется бесплатное оформление PT.33._`;
+    message += `\n_${footerNote}_`;
 
     const whatsappUrl = `https://wa.me/66612345678?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
