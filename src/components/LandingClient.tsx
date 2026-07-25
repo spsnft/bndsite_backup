@@ -11,7 +11,7 @@ import {
 
 import { useCart } from "@/lib/cart-store"
 import { translations } from "@/lib/translations"
-import { ProductModal, CheckoutModal, InfoModal, MedicalCertificateModal } from "@/components/modals"
+import { Product, Checkout, Info, Medical } from "@/components/modals"
 import { HighlightCard, ProductRow, BadgeIcon, BahtSymbol } from "@/components/cards/ProductCards"
 import { triggerHaptic, GOLDEN_COLOR } from "@/lib/utils"
 
@@ -144,7 +144,7 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
 
         {flashSales.length > 0 && (
           <section className="mb-6 space-y-3 overflow-hidden">
-            <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{lang === 'ru' ? 'Распродажа' : 'Sales'}</h2></div>
+            <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{lang === 'ru' ? 'Рас распродажа' : 'Sales'}</h2></div>
             <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
               {flashSales.map((p, idx) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
             </div>
@@ -230,32 +230,35 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
       )}
       
       {/* MODALS */}
-      <InfoModal isOpen={isDeliveryModalOpen} onClose={() => setIsDeliveryModalOpen(false)} title={lang === 'ru' ? 'Доставка и Оплата' : 'Delivery & Payment'}>
+      <Info isOpen={isDeliveryModalOpen} onClose={() => setIsDeliveryModalOpen(false)} title={lang === 'ru' ? 'Доставка и Оплата' : 'Delivery & Payment'}>
         <div className="flex items-center gap-4"><Timer size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Часы работы' : 'Working hours'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">12:00 — 00:00</p></div></div>
         <div className="flex items-center gap-4"><Plus size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Минимальный заказ' : 'Minimum order'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{lang === 'ru' ? 'От 1000฿, Доставка бесплатная' : 'From 1000฿, Free delivery'}</p></div></div>
         <div className="flex items-center gap-4"><Wallet size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Способы оплаты' : 'Payment methods'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{lang === 'ru' ? 'Наличные, перевод (QR), рубли' : 'Cash, bank transfer, ruble transfer'}</p></div></div>
         <div className="flex items-center gap-4"><Bike size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Получение заказа' : 'Order receiving'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{lang === 'ru' ? 'Доставка от 60 мин. Есть удобный самовывоз.' : 'Delivery from 60 min. Easy pickup available.'}</p></div></div>
-      </InfoModal>
+      </Info>
 
-      <InfoModal isOpen={isGuaranteesModalOpen} onClose={() => setIsGuaranteesModalOpen(false)} title={lang === 'ru' ? 'О нас и Гарантии' : 'Our Guarantees'}>
+      <Info isOpen={isGuaranteesModalOpen} onClose={() => setIsGuaranteesModalOpen(false)} title={lang === 'ru' ? 'О нас и Гарантии' : 'Our Guarantees'}>
         <div className="flex items-center gap-4"><Trophy size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Опыт на рынке' : 'Market Experience'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{lang === 'ru' ? '3 года стабильной работы' : '3 years of solid experience'}</p></div></div>
         <div className="flex items-center gap-4"><Users size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Репутация' : 'Reputation'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{lang === 'ru' ? 'Сотни довольных постоянных клиентов' : 'Hundreds of satisfied regular loyal clients'}</p></div></div>
         <div className="flex items-center gap-4"><CreditCard size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Расчет при получении' : 'Payment on Delivery'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{lang === 'ru' ? 'Наличные в руки курьеру' : 'Cash on delivery to the courier'}</p></div></div>
         <div className="flex items-center gap-4"><Sparkles size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Прямые поставки' : 'Direct Sourcing'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{lang === 'ru' ? 'Партнерство с лучшими фермерами и поставщиками' : 'Partnership with top-tier growers & suppliers'}</p></div></div>
-      </InfoModal>
+      </Info>
 
-      <MedicalCertificateModal isOpen={isMedicalModalOpen} onClose={() => setIsMedicalModalOpen(false)} lang={lang} />
+      {isMedicalModalOpen && (
+        <Medical onClose={() => setIsMedicalModalOpen(false)} />
+      )}
 
       {selectedProduct && (
-        <ProductModal 
+        <Product 
           product={{ ...selectedProduct, unitLabel: selectedProduct.category === 'accessories' ? 'pcs' : 'g' }} 
           t={t} 
           style={{ color: selectedProduct.category === 'joints' ? GOLDEN_COLOR : '#10B981' }} 
           onClose={() => setSelectedProduct(null)} 
         />
       )}
+
       {isCheckoutOpen && (
-        <CheckoutModal 
+        <Checkout 
           items={items.map(item => ({ ...item, unitLabel: item.category === 'accessories' ? 'pcs' : 'g' }))} 
           total={getTotal()} 
           t={t} 
