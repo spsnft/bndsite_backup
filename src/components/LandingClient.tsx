@@ -6,7 +6,8 @@ import {
   Plus, Leaf, ShoppingBag, Send, 
   MessageCircle, Phone, Instagram, ChevronDown, 
   Sparkles, Bike, Wallet, Timer, 
-  CreditCard, Trophy, Users, ShieldCheck, Cigarette, Layers, FileText
+  CreditCard, Trophy, Users, ShieldCheck, Cigarette, Layers, FileText,
+  Award, ExternalLink, ChevronRight, CheckCircle2
 } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
@@ -87,6 +88,45 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
     setOpenSections(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
   };
 
+  // Локализация для Бенто-баннера
+  const bentoTexts = {
+    ru: {
+      medTitle: "Медицинский Паспорт PT.33",
+      medDesc: "100% Легально в Таиланде. Оформляем бесплатно при любом заказе",
+      medBadge: "MOPH Thailand",
+      deliveryTitle: "Экспресс Доставка",
+      deliveryDesc: "По Пхукету за 30-60 минут",
+      qualityTitle: "Прямые поставки",
+      qualityDesc: "Органический премиум качество"
+    },
+    en: {
+      medTitle: "Medical Cannabis Pass PT.33",
+      medDesc: "100% Legal in Thailand. Issued for free with your order",
+      medBadge: "MOPH Certified",
+      deliveryTitle: "Express Delivery",
+      deliveryDesc: "Phuket wide in 30-60 mins",
+      qualityTitle: "Direct Sourcing",
+      qualityDesc: "Premium organic selection"
+    },
+    th: {
+      medTitle: "ใบรับรองแพทย์ PT.33",
+      medDesc: "ถูกกฎหมาย 100% ในไทย ออกให้ฟรีพร้อมคำสั่งซื้อของคุณ",
+      medBadge: "MOPH Thailand",
+      deliveryTitle: "จัดส่งด่วน",
+      deliveryDesc: "ทั่วภูเก็ตใน 30-60 นาที",
+      qualityTitle: "ส่งตรงจากฟาร์ม",
+      qualityDesc: "คัดสรรคุณภาพเกรดพรีเมียม"
+    }
+  }[safeLang] || {
+    medTitle: "Medical Cannabis Pass PT.33",
+    medDesc: "100% Legal in Thailand. Issued for free with your order",
+    medBadge: "MOPH Certified",
+    deliveryTitle: "Express Delivery",
+    deliveryDesc: "Phuket wide in 30-60 mins",
+    qualityTitle: "Direct Sourcing",
+    qualityDesc: "Premium organic selection"
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-brand-primary flex items-center justify-center">
@@ -148,20 +188,100 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
            </div>
         </div>
 
-        {/* HEADER ACTION BUTTONS */}
+        {/* HEADER ACTION BUTTONS WITH ENHANCED GLOW */}
         <div className="flex flex-wrap sm:flex-nowrap gap-2 px-2 mb-4 mt-2 relative z-20">
           <button onClick={() => { triggerHaptic('light'); setIsDeliveryModalOpen(true); }} className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-[1.5rem] border border-white/15 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden">
             <Bike size={15} className="text-brand-secondary shrink-0" />
             <span className="text-[10px] font-black uppercase tracking-wider text-brand-light/90 truncate">{t.delivery}</span>
           </button>
+          
           <button onClick={() => { triggerHaptic('light'); setIsGuaranteesModalOpen(true); }} className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-[1.5rem] border border-white/15 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden">
             <ShieldCheck size={15} className="text-brand-secondary shrink-0" />
             <span className="text-[10px] font-black uppercase tracking-wider text-brand-light/90 truncate">{t.guarantees}</span>
           </button>
-          <button onClick={() => { triggerHaptic('light'); setIsMedicalModalOpen(true); }} className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-brand-secondary/20 active:bg-brand-secondary/30 active:scale-[0.98] rounded-[1.5rem] border border-brand-secondary/50 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden shadow-[0_0_15px_rgba(200,158,88,0.2)]">
-            <FileText size={15} className="text-brand-secondary shrink-0" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-brand-secondary truncate">{t.certificate}</span>
+
+          {/* СВЕТЯЩАЯСЯ КНОПКА МЕДИЦИНСКОГО ПАСПОРТА */}
+          <button 
+            onClick={() => { triggerHaptic('light'); setIsMedicalModalOpen(true); }} 
+            className="relative flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-gradient-to-r from-brand-secondary/20 via-brand-secondary/35 to-brand-secondary/20 active:scale-[0.98] rounded-[1.5rem] border border-brand-secondary/60 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden shadow-[0_0_20px_rgba(200,158,88,0.35)] hover:shadow-[0_0_25px_rgba(200,158,88,0.5)] group"
+          >
+            <span className="absolute inset-0 bg-brand-secondary/15 animate-pulse rounded-[1.5rem] pointer-events-none" />
+            <FileText size={15} className="text-brand-secondary shrink-0 relative z-10 animate-bounce" />
+            <span className="text-[10px] font-black uppercase tracking-wider text-brand-secondary truncate relative z-10">{t.certificate}</span>
           </button>
+        </div>
+
+        {/* BENTO BANNER SECTION */}
+        <div className="px-2 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            
+            {/* HERO BENTO CARD: MEDICAL CERTIFICATE */}
+            <div 
+              onClick={() => { triggerHaptic('light'); setIsMedicalModalOpen(true); }}
+              className="md:col-span-2 relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-secondary/20 via-black/40 to-black/80 border border-brand-secondary/40 p-5 shadow-2xl cursor-pointer active:scale-[0.99] transition-all group"
+            >
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(200,158,88,0.25),transparent_70%)] pointer-events-none" />
+              <div className="relative z-10 flex flex-col justify-between h-full space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-brand-secondary/20 border border-brand-secondary/40 text-brand-secondary text-[10px] font-black uppercase tracking-widest">
+                    <Award size={13} />
+                    <span>{bentoTexts.medBadge}</span>
+                  </div>
+                  <ChevronRight size={18} className="text-brand-secondary group-hover:translate-x-1 transition-transform" />
+                </div>
+
+                <div>
+                  <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-brand-light leading-snug group-hover:text-brand-secondary transition-colors">
+                    {bentoTexts.medTitle}
+                  </h3>
+                  <p className="text-xs text-brand-light/70 mt-1 max-w-md leading-relaxed">
+                    {bentoTexts.medDesc}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-4 pt-1">
+                  <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase text-emerald-400">
+                    <CheckCircle2 size={13} />
+                    <span>Form PT.33</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase text-brand-light/60">
+                    <ShieldCheck size={13} className="text-brand-secondary" />
+                    <span>100% Legal</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* SMALL BENTO CARDS */}
+            <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
+              <div 
+                onClick={() => { triggerHaptic('light'); setIsDeliveryModalOpen(true); }}
+                className="p-4 rounded-[1.75rem] bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
+              >
+                <div className="w-8 h-8 rounded-xl bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary mb-2">
+                  <Bike size={16} />
+                </div>
+                <div>
+                  <h4 className="text-xs font-black uppercase text-brand-light tracking-tight">{bentoTexts.deliveryTitle}</h4>
+                  <p className="text-[10px] text-brand-light/60 leading-tight mt-0.5">{bentoTexts.deliveryDesc}</p>
+                </div>
+              </div>
+
+              <div 
+                onClick={() => { triggerHaptic('light'); setIsGuaranteesModalOpen(true); }}
+                className="p-4 rounded-[1.75rem] bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
+              >
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-2">
+                  <Leaf size={16} />
+                </div>
+                <div>
+                  <h4 className="text-xs font-black uppercase text-brand-light tracking-tight">{bentoTexts.qualityTitle}</h4>
+                  <p className="text-[10px] text-brand-light/60 leading-tight mt-0.5">{bentoTexts.qualityDesc}</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </header>
 
