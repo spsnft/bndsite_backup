@@ -2,6 +2,7 @@
 import * as React from "react"
 import { X, ShieldCheck, Gift, FileText, Send, Check } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
+import { translations, Language } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
 
 export const Medical = ({ 
@@ -17,7 +18,8 @@ export const Medical = ({
   const [contact, setContact] = React.useState('');
   
   const { lang } = useCart();
-  const accentColor = style?.color || '#10B981';
+  const safeLang = (lang || 'en') as Language;
+  const t = translations[safeLang] || translations.en;
 
   const handleClose = React.useCallback(() => {
     setIsClosing(true);
@@ -32,10 +34,10 @@ export const Medical = ({
   };
 
   const symptomsList = [
-    { id: 'sleep', ru: 'Бессонница / Сон', en: 'Insomnia / Sleep' },
-    { id: 'anxiety', ru: 'Тревожность / Стресс', en: 'Anxiety / Stress' },
-    { id: 'pain', ru: 'Боль / Напряжение', en: 'Chronic Pain' },
-    { id: 'appetite', ru: 'Потеря аппетита', en: 'Appetite Loss' },
+    { id: 'sleep', label: t.symptomSleep },
+    { id: 'anxiety', label: t.symptomAnxiety },
+    { id: 'pain', label: t.symptomPain },
+    { id: 'appetite', label: t.symptomAppetite },
   ];
 
   const handleSend = () => {
@@ -46,7 +48,7 @@ export const Medical = ({
     if (contact) message += `*Контакт:* ${contact}\n`;
     
     if (selectedSymptoms.length > 0) {
-      const symTexts = selectedSymptoms.map(id => symptomsList.find(s => s.id === id)?.[lang === 'ru' ? 'ru' : 'en']);
+      const symTexts = selectedSymptoms.map(id => symptomsList.find(s => s.id === id)?.label);
       message += `*Симптомы:* ${symTexts.join(', ')}\n`;
     }
     
@@ -75,12 +77,10 @@ export const Medical = ({
             <ShieldCheck size={24} />
           </div>
           <h2 className="text-2xl font-black uppercase tracking-tight text-brand-light">
-            {lang === 'ru' ? 'Медицинский рецепт PT.33' : 'Medical Pass PT.33'}
+            {t.medTitle}
           </h2>
           <p className="text-xs text-brand-light/60 mt-1 max-w-xs">
-            {lang === 'ru' 
-              ? 'Официальное врачебное назначение для полной легальности и спокойствия' 
-              : 'Official medical prescription for complete legal safety in Thailand'}
+            {t.medSubtitle}
           </p>
         </div>
 
@@ -94,12 +94,10 @@ export const Medical = ({
               </div>
               <div>
                 <h4 className="text-xs font-black uppercase text-brand-light tracking-wide">
-                  {lang === 'ru' ? '100% Защита и легальность' : '100% Legal Protection'}
+                  {t.medAdv1Title}
                 </h4>
                 <p className="text-[11px] text-brand-light/60 leading-snug mt-0.5">
-                  {lang === 'ru' 
-                    ? 'Официальный рецепт от лицензированного врача Минздрава Таиланда.' 
-                    : 'Official prescription issued by a licensed Thai medical practitioner.'}
+                  {t.medAdv1Desc}
                 </p>
               </div>
             </div>
@@ -110,12 +108,10 @@ export const Medical = ({
               </div>
               <div>
                 <h4 className="text-xs font-black uppercase text-brand-secondary tracking-wide">
-                  {lang === 'ru' ? 'Бесплатно для наших клиентов' : '100% Free For Our Clients'}
+                  {t.medAdv2Title}
                 </h4>
                 <p className="text-[11px] text-brand-light/70 leading-snug mt-0.5">
-                  {lang === 'ru' 
-                    ? 'Мы полностью оплачиваем консультацию врача и выпуск рецепта за вас.' 
-                    : 'We completely cover doctor consultation and prescription issuance fees.'}
+                  {t.medAdv2Desc}
                 </p>
               </div>
             </div>
@@ -126,12 +122,10 @@ export const Medical = ({
               </div>
               <div>
                 <h4 className="text-xs font-black uppercase text-brand-light tracking-wide">
-                  {lang === 'ru' ? 'Цифровой + Физический документ' : 'Digital & Physical Pass'}
+                  {t.medAdv3Title}
                 </h4>
                 <p className="text-[11px] text-brand-light/60 leading-snug mt-0.5">
-                  {lang === 'ru' 
-                    ? 'Электронный PDF в телефон сразу, оригинал с печатью врача — курьером.' 
-                    : 'Instant digital PDF on your phone, physical paper with doctor stamp via mail.'}
+                  {t.medAdv3Desc}
                 </p>
               </div>
             </div>
@@ -140,7 +134,7 @@ export const Medical = ({
           {/* SYMPTOMS SELECTION */}
           <div>
             <label className="text-[10px] font-black uppercase tracking-wider text-brand-light/50 block mb-2">
-              {lang === 'ru' ? 'Укажите поводы для обращения (опционально)' : 'Select symptoms (optional)'}
+              {t.symptomsLabel}
             </label>
             <div className="grid grid-cols-2 gap-2">
               {symptomsList.map(symptom => {
@@ -155,7 +149,7 @@ export const Medical = ({
                         : 'border-white/10 bg-white/5 text-brand-light/70 hover:text-brand-light'
                     }`}
                   >
-                    <span>{lang === 'ru' ? symptom.ru : symptom.en}</span>
+                    <span>{symptom.label}</span>
                     {active && <Check size={14} className="shrink-0 ml-1" />}
                   </button>
                 );
@@ -167,14 +161,14 @@ export const Medical = ({
           <div className="space-y-2">
             <input 
               type="text" 
-              placeholder={lang === 'ru' ? 'Ваше имя' : 'Your Name'} 
+              placeholder={t.namePlaceholder} 
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               className="w-full bg-black/40 border border-white/10 rounded-2xl px-4 py-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors"
             />
             <input 
               type="text" 
-              placeholder={lang === 'ru' ? 'Ваш Telegram / WhatsApp' : 'Your Telegram / WhatsApp'} 
+              placeholder={t.contactPlaceholder} 
               value={contact}
               onChange={(e) => setContact(e.target.value)}
               className="w-full bg-black/40 border border-white/10 rounded-2xl px-4 py-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors"
@@ -190,7 +184,7 @@ export const Medical = ({
             className="w-full h-14 bg-brand-secondary text-brand-primary font-black uppercase tracking-widest text-[12px] rounded-2xl active:scale-95 transition-all flex items-center justify-center gap-2 hover:bg-brand-secondary/90 shadow-xl"
           >
             <Send size={16} />
-            {lang === 'ru' ? 'Оформить бесплатно в WhatsApp' : 'Get Free Pass via WhatsApp'}
+            {t.getPassWhatsapp}
           </button>
         </div>
 
