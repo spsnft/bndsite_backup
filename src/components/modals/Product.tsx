@@ -2,6 +2,7 @@
 import * as React from "react"
 import { X, Plus, Minus, ShoppingBag } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
+import { translations, Language } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
 
 export const BahtSymbol = React.memo(() => (
@@ -16,12 +17,15 @@ export const Product = ({
 }: { 
   product: any, 
   onClose: () => void, 
-  t: any, 
-  style: any 
+  t?: any, 
+  style?: any 
 }) => {
   const [quantity, setQuantity] = React.useState(1);
   const [isClosing, setIsClosing] = React.useState(false);
   const { addItem, items, lang } = useCart();
+  
+  const currentLang = (lang || 'en') as Language;
+  const dict = translations[currentLang] || translations.en;
   
   const accentColor = style?.color || '#10B981';
   
@@ -54,6 +58,11 @@ export const Product = ({
   };
 
   const nextTier = getNextDiscountTier(product.category, totalQty);
+
+  // Определение единицы измерения из словаря
+  const unit = (product.category === 'accessories' || product.category === 'joints')
+    ? (dict.items || (currentLang === 'ru' ? 'шт' : 'pcs'))
+    : (currentLang === 'ru' ? 'г' : (currentLang === 'th' ? 'ก.' : 'g'));
 
   return (
     <div className={`fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
@@ -92,10 +101,10 @@ export const Product = ({
           <div className="mb-6 p-4 rounded-2xl border bg-brand-secondary/10 flex items-center justify-between relative z-10" style={{ borderColor: `${accentColor}30` }}>
             <div className="flex flex-col">
               <span className="text-[11px] font-black uppercase text-brand-light/70 tracking-wider">
-                {lang === 'ru' ? 'Добавь еще' : 'Add'} {nextTier.q - totalQty} {product.category === 'accessories' ? 'шт' : (product.category === 'joints' ? 'шт' : 'г')}
+                {currentLang === 'ru' ? 'Добавь еще' : (currentLang === 'th' ? 'เพิ่มอีก' : 'Add')} {nextTier.q - totalQty} {unit}
               </span>
               <span className="text-[14px] font-black text-brand-secondary mt-0.5 tracking-tight">
-                {lang === 'ru' ? 'чтобы получить цену' : 'to unlock price'} {nextTier.p}฿
+                {currentLang === 'ru' ? 'чтобы получить цену' : (currentLang === 'th' ? 'เพื่อรับราคา' : 'to unlock price')} {nextTier.p}฿
               </span>
             </div>
             <button 
