@@ -6,13 +6,13 @@ import {
   Plus, Leaf, ShoppingBag, Send, 
   MessageCircle, Phone, Instagram, ChevronDown, 
   Sparkles, Bike, Wallet, Timer, 
-  CreditCard, Trophy, Users, ShieldCheck, Cigarette, Layers, FileText,
-  Award, CheckCircle2, ChevronRight
+  CreditCard, Trophy, Users, ShieldCheck, Cigarette, Layers
 } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
 import { translations, Language } from "@/lib/translations"
 import { Product, Checkout, Info, Medical, AgeGate } from "@/components/modals"
+import { BentoBanner } from "@/components/BentoBanner"
 import { HighlightCard, ProductRow, BadgeIcon, BahtSymbol } from "@/components/cards/ProductCards"
 import { triggerHaptic, GOLDEN_COLOR } from "@/lib/utils"
 
@@ -87,44 +87,6 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
     setOpenSections(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
   };
 
-  const bentoTexts = {
-    ru: {
-      medTitle: "Медицинский Паспорт PT.33",
-      medDesc: "100% Легально в Таиланде. Оформляем бесплатно при любом заказе",
-      medBadge: "MOPH Thailand",
-      deliveryTitle: "Экспресс Доставка",
-      deliveryDesc: "По Пхукету за 30-60 минут",
-      qualityTitle: "Прямые поставки",
-      qualityDesc: "Органический премиум качество"
-    },
-    en: {
-      medTitle: "Medical Cannabis Pass PT.33",
-      medDesc: "100% Legal in Thailand. Issued for free with your order",
-      medBadge: "MOPH Certified",
-      deliveryTitle: "Express Delivery",
-      deliveryDesc: "Phuket wide in 30-60 mins",
-      qualityTitle: "Direct Sourcing",
-      qualityDesc: "Premium organic selection"
-    },
-    th: {
-      medTitle: "ใบรับรองแพทย์ PT.33",
-      medDesc: "ถูกกฎหมาย 100% ในไทย ออกให้ฟรีพร้อมคำสั่งซื้อของคุณ",
-      medBadge: "MOPH Thailand",
-      deliveryTitle: "จัดส่งด่วน",
-      deliveryDesc: "ทั่วภูเก็ตใน 30-60 นาที",
-      qualityTitle: "ส่งตรงจากฟาร์ม",
-      qualityDesc: "คัดสรรคุณภาพเกรดพรีเมียม"
-    }
-  }[safeLang] || {
-    medTitle: "Medical Cannabis Pass PT.33",
-    medDesc: "100% Legal in Thailand. Issued for free with your order",
-    medBadge: "MOPH Certified",
-    deliveryTitle: "Express Delivery",
-    deliveryDesc: "Phuket wide in 30-60 mins",
-    qualityTitle: "Direct Sourcing",
-    qualityDesc: "Premium organic selection"
-  };
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-brand-primary flex items-center justify-center">
@@ -141,8 +103,19 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
 
       {/* HEADER */}
       <header className="max-w-5xl mx-auto relative z-[100] mb-6">
-        <div className="flex items-center justify-between px-1 mb-3"> 
-           <Image src="/420/images/logo.svg" priority width={72} height={72} className="w-18 h-18 object-contain relative z-10" alt="MPS Phuket" />
+        <div className="flex items-center justify-between px-1 mb-4"> 
+           {/* LOGO & STORE TITLE */}
+           <div className="flex items-center gap-3">
+             <Image src="/420/images/logo.svg" priority width={72} height={72} className="w-14 h-14 sm:w-16 sm:h-16 object-contain relative z-10 shrink-0" alt="MPG StorePhuket" />
+             <div className="flex flex-col">
+               <span className="text-[12px] sm:text-[14px] font-black uppercase tracking-tight text-brand-light leading-tight">
+                 Marijuana Premium Grade
+               </span>
+               <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-brand-secondary">
+                 MPG StorePhuket
+               </span>
+             </div>
+           </div>
            
            <div className="flex items-center gap-2">
               <Link href="https://line.me/R/ti/p/@mpsphuket" target="_blank" className="w-[42px] h-[42px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-lg"><MessageCircle size={18} className="opacity-80"/></Link>
@@ -187,93 +160,13 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
            </div>
         </div>
 
-        {/* QUICK ACTION BUTTONS */}
-        <div className="grid grid-cols-3 gap-2 mb-4">
-          <button onClick={() => { triggerHaptic('light'); setIsDeliveryModalOpen(true); }} className="flex items-center justify-center gap-1.5 h-[42px] px-2 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-2xl border border-white/10 transition-all text-ellipsis overflow-hidden">
-            <Bike size={14} className="text-brand-secondary shrink-0" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-brand-light/90 truncate">{t.delivery}</span>
-          </button>
-          
-          <button onClick={() => { triggerHaptic('light'); setIsGuaranteesModalOpen(true); }} className="flex items-center justify-center gap-1.5 h-[42px] px-2 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-2xl border border-white/10 transition-all text-ellipsis overflow-hidden">
-            <ShieldCheck size={14} className="text-brand-secondary shrink-0" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-brand-light/90 truncate">{t.guarantees}</span>
-          </button>
-
-          <button 
-            onClick={() => { triggerHaptic('light'); setIsMedicalModalOpen(true); }} 
-            className="relative flex items-center justify-center gap-1.5 h-[42px] px-2 bg-brand-secondary/20 active:scale-[0.98] rounded-2xl border border-brand-secondary/50 transition-all text-ellipsis overflow-hidden shadow-[0_0_15px_rgba(200,158,88,0.3)] hover:shadow-[0_0_20px_rgba(200,158,88,0.4)]"
-          >
-            <FileText size={14} className="text-brand-secondary shrink-0 animate-bounce" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-brand-secondary truncate">{t.certificate}</span>
-          </button>
-        </div>
-
-        {/* BENTO BANNER SECTION */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div 
-            onClick={() => { triggerHaptic('light'); setIsMedicalModalOpen(true); }}
-            className="md:col-span-2 relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-secondary/20 via-black/40 to-black/80 border border-brand-secondary/40 p-5 shadow-2xl cursor-pointer active:scale-[0.99] transition-all group"
-          >
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(200,158,88,0.25),transparent_70%)] pointer-events-none" />
-            <div className="relative z-10 flex flex-col justify-between h-full space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-secondary/20 border border-brand-secondary/40 text-brand-secondary text-[10px] font-black uppercase tracking-widest">
-                  <Award size={13} />
-                  <span>{bentoTexts.medBadge}</span>
-                </div>
-                <ChevronRight size={18} className="text-brand-secondary group-hover:translate-x-1 transition-transform" />
-              </div>
-
-              <div>
-                <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-brand-light leading-snug group-hover:text-brand-secondary transition-colors">
-                  {bentoTexts.medTitle}
-                </h3>
-                <p className="text-xs text-brand-light/70 mt-1 max-w-md leading-relaxed">
-                  {bentoTexts.medDesc}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-4 pt-1">
-                <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase text-emerald-400">
-                  <CheckCircle2 size={13} />
-                  <span>Form PT.33</span>
-                </div>
-                <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase text-brand-light/60">
-                  <ShieldCheck size={13} className="text-brand-secondary" />
-                  <span>100% Legal</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
-            <div 
-              onClick={() => { triggerHaptic('light'); setIsDeliveryModalOpen(true); }}
-              className="p-4 rounded-[1.75rem] bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
-            >
-              <div className="w-8 h-8 rounded-xl bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary mb-2">
-                <Bike size={16} />
-              </div>
-              <div>
-                <h4 className="text-xs font-black uppercase text-brand-light tracking-tight">{bentoTexts.deliveryTitle}</h4>
-                <p className="text-[10px] text-brand-light/60 leading-tight mt-0.5">{bentoTexts.deliveryDesc}</p>
-              </div>
-            </div>
-
-            <div 
-              onClick={() => { triggerHaptic('light'); setIsGuaranteesModalOpen(true); }}
-              className="p-4 rounded-[1.75rem] bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
-            >
-              <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-2">
-                <Leaf size={16} />
-              </div>
-              <div>
-                <h4 className="text-xs font-black uppercase text-brand-light tracking-tight">{bentoTexts.qualityTitle}</h4>
-                <p className="text-[10px] text-brand-light/60 leading-tight mt-0.5">{bentoTexts.qualityDesc}</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* BENTO BANNER COMPONENT */}
+        <BentoBanner 
+          onOpenMedical={() => setIsMedicalModalOpen(true)}
+          onOpenDelivery={() => setIsDeliveryModalOpen(true)}
+          onOpenGuarantees={() => setIsGuaranteesModalOpen(true)}
+          safeLang={safeLang}
+        />
       </header>
 
       {/* CATALOG GRID */}
