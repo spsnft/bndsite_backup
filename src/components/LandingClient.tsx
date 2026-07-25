@@ -10,7 +10,7 @@ import {
 } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
-import { translations } from "@/lib/translations"
+import { translations, Language } from "@/lib/translations"
 import { Product, Checkout, Info, Medical } from "@/components/modals"
 import { HighlightCard, ProductRow, BadgeIcon, BahtSymbol } from "@/components/cards/ProductCards"
 import { triggerHaptic, GOLDEN_COLOR } from "@/lib/utils"
@@ -23,24 +23,12 @@ const processProductData = (rawProducts: any[]) => {
     if (!p) return p;
     const prices: any = {};
     const oldPrices: any = {};
-    
     Object.keys(p).forEach(key => {
-      if (key.startsWith('price_')) {
-        const weight = key.replace('price_', '').replace('g', '');
-        prices[weight] = p[key];
-      }
-      if (key.startsWith('oldprice_')) {
-        const weight = key.replace('oldprice_', '').replace('g', '');
-        oldPrices[weight] = p[key];
-      }
+      if (key.startsWith('price_')) prices[key.replace('price_', '').replace('g', '')] = p[key];
+      if (key.startsWith('oldprice_')) oldPrices[key.replace('oldprice_', '').replace('g', '')] = p[key];
     });
-
-    const rawUrl = (typeof p.photo === 'string' && p.photo.trim())
-      ? p.photo.trim()
-      : (typeof p.image === 'string' && p.image.trim() ? p.image.trim() : '');
-
+    const rawUrl = (typeof p.photo === 'string' && p.photo.trim()) ? p.photo.trim() : (typeof p.image === 'string' && p.image.trim() ? p.image.trim() : '');
     const cleanUrl = rawUrl.replace(/^["']|["']$/g, '');
-
     return {
       ...p,
       image: cleanUrl.length > 0 ? cleanUrl : FALLBACK_IMAGE,
@@ -69,14 +57,23 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
 
   const processedProducts = React.useMemo(() => processProductData(products), [products]);
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
+  
+  // Modals state
   const [isCheckoutOpen, setIsCheckoutOpen] = React.useState(false);
   const [isDeliveryModalOpen, setIsDeliveryModalOpen] = React.useState(false);
   const [isGuaranteesModalOpen, setIsGuaranteesModalOpen] = React.useState(false);
   const [isMedicalModalOpen, setIsMedicalModalOpen] = React.useState(false);
-  const [openSections, setOpenSections] = React.useState<string[]>([]);
   
+  // UI state
+  const [openSections, setOpenSections] = React.useState<string[]>([]);
+  const [isLangMenuOpen, setIsLangMenuOpen] = React.useState(false);
+  
+  // Global Store
   const { items, getTotal, lang, setLang } = useCart();
-  const t = translations[lang as keyof typeof translations];
+  
+  // TypeScript fallback to ensure `lang` matches a key
+  const safeLang = (lang || 'en') as Language;
+  const t = translations[safeLang] || translations.en;
 
   const recentUpdates = React.useMemo(() => processedProducts.filter(p => p && p.badge?.toUpperCase() === 'NEW').sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0)), [processedProducts]);
   const flashSales = React.useMemo(() => processedProducts.filter(p => p && p.badge?.toUpperCase() === 'SALE').sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0)), [processedProducts]);
@@ -102,40 +99,79 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
     <div className="min-h-screen bg-brand-primary text-brand-light p-4 pb-32 selection:bg-brand-secondary/30 font-sans">
       
       {/* HEADER */}
-      <header className="max-w-5xl mx-auto pt-0 mb-0">
+      <header className="max-w-5xl mx-auto pt-0 mb-0 relative z-[100]">
         <div className="flex items-center justify-between px-2 mb-[4px]"> 
            <Image src="/420/images/logo.svg" priority width={80} height={80} className="w-20 h-20 object-contain relative z-10" alt="MPS Phuket" />
+           
            <div className="flex items-center flex-1 justify-end">
               <div className="flex gap-2">
                 <Link href="https://line.me/R/ti/p/@mpsphuket" target="_blank" className="w-[46px] h-[46px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-xl"><MessageCircle size={18} className="opacity-80"/></Link>
                 <Link href="https://wa.me/66612345678" target="_blank" className="w-[46px] h-[46px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-xl"><Phone size={18} className="opacity-80"/></Link>
                 <Link href="https://www.instagram.com/mpsphuket" target="_blank" className="w-[46px] h-[46px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-xl"><Instagram size={18} className="opacity-80"/></Link>
               </div>
-              <button onClick={() => { triggerHaptic('light'); setLang(lang === 'en' ? 'ru' : 'en'); }} className="ml-2 w-[46px] h-[46px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 font-black text-[10px] text-brand-secondary active:scale-90 transition-all shrink-0">{lang === 'en' ? 'RU' : 'EN'}</button>
+
+              {/* LANGUAGE DROPDOWN */}
+              <div className="relative">
+                <button 
+                  onClick={() => { triggerHaptic('light'); setIsLangMenuOpen(!isLangMenuOpen); }} 
+                  className="ml-2 h-[46px] px-3 flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 font-black text-[11px] text-brand-secondary active:scale-90 transition-all shrink-0 gap-1.5 shadow-xl"
+                >
+                  {safeLang.toUpperCase()} 
+                  <ChevronDown size={14} className={`transition-transform duration-300 ${isLangMenuOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {isLangMenuOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setIsLangMenuOpen(false)} />
+                    <div className="absolute top-[calc(100%+8px)] right-0 w-36 bg-brand-primary border border-white/10 rounded-2xl shadow-2xl z-50 flex flex-col p-1.5 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
+                       {[
+                         { id: 'en', label: 'English', flag: '🇬🇧' },
+                         { id: 'ru', label: 'Русский', flag: '🇷🇺' },
+                         { id: 'th', label: 'ภาษาไทย', flag: '🇹🇭' }
+                       ].map(l => (
+                         <button 
+                           key={l.id}
+                           onClick={() => { 
+                             triggerHaptic('success'); 
+                             setLang(l.id as Language); 
+                             setIsLangMenuOpen(false); 
+                           }}
+                           className={`flex items-center gap-3 px-3 py-2.5 text-[11px] font-black uppercase rounded-xl transition-all ${safeLang === l.id ? 'bg-brand-secondary/20 text-brand-secondary' : 'text-brand-light/70 hover:bg-white/5 hover:text-brand-light'}`}
+                         >
+                           <span className="text-[14px]">{l.flag}</span> {l.label}
+                         </button>
+                       ))}
+                    </div>
+                  </>
+                )}
+              </div>
            </div>
         </div>
 
+        {/* HEADER ACTION BUTTONS */}
         <div className="flex flex-wrap sm:flex-nowrap gap-2 px-2 mb-4 mt-2 relative z-20">
           <button onClick={() => { triggerHaptic('light'); setIsDeliveryModalOpen(true); }} className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-[1.5rem] border border-white/15 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden">
             <Bike size={15} className="text-brand-secondary shrink-0" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-brand-light/90 truncate">{lang === 'ru' ? 'Доставка' : 'Delivery'}</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-brand-light/90 truncate">{t.delivery}</span>
           </button>
           <button onClick={() => { triggerHaptic('light'); setIsGuaranteesModalOpen(true); }} className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-white/5 active:bg-white/10 active:scale-[0.98] rounded-[1.5rem] border border-white/15 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden">
             <ShieldCheck size={15} className="text-brand-secondary shrink-0" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-brand-light/90 truncate">{lang === 'ru' ? 'Гарантии' : 'Guarantees'}</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-brand-light/90 truncate">{t.guarantees}</span>
           </button>
-          <button onClick={() => { triggerHaptic('light'); setIsMedicalModalOpen(true); }} className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-brand-secondary/20 active:bg-brand-secondary/30 active:scale-[0.98] rounded-[1.5rem] border border-brand-secondary/50 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden">
+          <button onClick={() => { triggerHaptic('light'); setIsMedicalModalOpen(true); }} className="flex-1 flex items-center justify-center gap-2 h-[44px] px-2.5 bg-brand-secondary/20 active:bg-brand-secondary/30 active:scale-[0.98] rounded-[1.5rem] border border-brand-secondary/50 backdrop-blur-md transition-all whitespace-nowrap overflow-hidden shadow-[0_0_15px_rgba(200,158,88,0.2)]">
             <FileText size={15} className="text-brand-secondary shrink-0" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-brand-secondary truncate">{lang === 'ru' ? 'Справка' : 'Certificate'}</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-brand-secondary truncate">{t.certificate}</span>
           </button>
         </div>
       </header>
 
       {/* CATALOG GRID */}
-      <div className="max-w-5xl mx-auto space-y-0">
+      <div className="max-w-5xl mx-auto space-y-0 relative z-10">
+        
+        {/* CAROUSELS */}
         {recentUpdates.length > 0 && (
           <section className="mb-6 space-y-3 overflow-hidden">
-            <div className="flex items-center gap-2 px-2"><BadgeIcon type="NEW" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{t.updates || 'New'}</h2></div>
+            <div className="flex items-center gap-2 px-2"><BadgeIcon type="NEW" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{t.updates}</h2></div>
             <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
               {recentUpdates.map((p, idx) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
             </div>
@@ -144,7 +180,7 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
 
         {flashSales.length > 0 && (
           <section className="mb-6 space-y-3 overflow-hidden">
-            <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{lang === 'ru' ? 'Рас распродажа' : 'Sales'}</h2></div>
+            <div className="flex items-center gap-2 px-2"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-light/80">{t.sales}</h2></div>
             <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
               {flashSales.map((p, idx) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
             </div>
@@ -173,7 +209,7 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
                   <h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">Joints</h2>
                 </div>
                 <div className="flex items-center gap-2 md:hidden">
-                  <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">{openSections.includes('joints') ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}</span>
+                  <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">{openSections.includes('joints') ? t.close : t.open}</span>
                   <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${openSections.includes('joints') ? 'rotate-180' : ''}`} />
                 </div>
               </button>
@@ -186,16 +222,16 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
           )}
         </div>
 
-        {/* ACCESSORIES (HIGHLIGHT CARDS) */}
+        {/* ACCESSORIES GRID */}
         {accessories.length > 0 && (
           <section className="mt-8 md:mt-10 mb-6 w-full">
             <button onClick={() => toggleSection('accessories')} className="w-full flex items-center justify-between px-2 mb-4 active:bg-white/5 transition-colors rounded-xl">
               <div className="flex items-center gap-3">
                 <Layers size={22} className="text-brand-secondary" />
-                <h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">{lang === 'ru' ? 'Аксессуары' : 'Accessories'}</h2>
+                <h2 className="text-[16px] font-black uppercase tracking-tighter text-brand-light">{t.accessories}</h2>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">{openSections.includes('accessories') ? (lang === 'ru' ? 'Свернуть' : 'Close') : (lang === 'ru' ? 'Развернуть' : 'Open')}</span>
+                <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">{openSections.includes('accessories') ? t.close : t.open}</span>
                 <ChevronDown size={20} className={`opacity-40 transition-transform duration-300 ${openSections.includes('accessories') ? 'rotate-180' : ''}`} />
               </div>
             </button>
@@ -212,17 +248,17 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
 
       {/* FLOATING CART BUTTON */}
       {items.length > 0 && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] w-full max-w-sm px-6">
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[90] w-full max-w-sm px-6">
           <button onClick={() => { triggerHaptic('medium'); setIsCheckoutOpen(true); }} className="w-full bg-white/10 backdrop-blur-2xl text-brand-light py-3 px-7 rounded-[2.5rem] border border-white/20 shadow-2xl flex justify-between items-center active:scale-95 transition-all">
             <div className="flex items-center gap-4 relative z-10">
               <div className="p-2 bg-brand-secondary/20 rounded-xl"><ShoppingBag size={20} className="text-brand-secondary"/></div>
               <div className="text-left">
                 <div className="font-black uppercase text-[18px] leading-none mb-0.5">{getTotal()}<BahtSymbol /></div>
-                <span className="font-black uppercase text-[9px] text-brand-secondary leading-none">{items.length} {t.items || 'items'}</span>
+                <span className="font-black uppercase text-[9px] text-brand-secondary leading-none">{items.length} {t.items}</span>
               </div>
             </div>
             <div className="flex items-center gap-3 text-brand-light opacity-70">
-              <span className="text-[12px] font-black uppercase">{t.basket || 'Basket'}</span>
+              <span className="text-[12px] font-black uppercase">{t.basket}</span>
               <span className="p-2 bg-white/10 rounded-full animate-pulse"><Send size={18}/></span>
             </div>
           </button>
@@ -230,18 +266,18 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
       )}
       
       {/* MODALS */}
-      <Info isOpen={isDeliveryModalOpen} onClose={() => setIsDeliveryModalOpen(false)} title={lang === 'ru' ? 'Доставка и Оплата' : 'Delivery & Payment'}>
-        <div className="flex items-center gap-4"><Timer size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Часы работы' : 'Working hours'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">12:00 — 00:00</p></div></div>
-        <div className="flex items-center gap-4"><Plus size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Минимальный заказ' : 'Minimum order'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{lang === 'ru' ? 'От 1000฿, Доставка бесплатная' : 'From 1000฿, Free delivery'}</p></div></div>
-        <div className="flex items-center gap-4"><Wallet size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Способы оплаты' : 'Payment methods'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{lang === 'ru' ? 'Наличные, перевод (QR), рубли' : 'Cash, bank transfer, ruble transfer'}</p></div></div>
-        <div className="flex items-center gap-4"><Bike size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Получение заказа' : 'Order receiving'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{lang === 'ru' ? 'Доставка от 60 мин. Есть удобный самовывоз.' : 'Delivery from 60 min. Easy pickup available.'}</p></div></div>
+      <Info isOpen={isDeliveryModalOpen} onClose={() => setIsDeliveryModalOpen(false)} title={t.deliveryPaymentTitle}>
+        <div className="flex items-center gap-4"><Timer size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.workingHours}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.workingHoursVal}</p></div></div>
+        <div className="flex items-center gap-4"><Plus size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.minOrder}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.minOrderVal}</p></div></div>
+        <div className="flex items-center gap-4"><Wallet size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.paymentMethods}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{t.paymentMethodsVal}</p></div></div>
+        <div className="flex items-center gap-4"><Bike size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.orderReceiving}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.orderReceivingVal}</p></div></div>
       </Info>
 
-      <Info isOpen={isGuaranteesModalOpen} onClose={() => setIsGuaranteesModalOpen(false)} title={lang === 'ru' ? 'О нас и Гарантии' : 'Our Guarantees'}>
-        <div className="flex items-center gap-4"><Trophy size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Опыт на рынке' : 'Market Experience'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{lang === 'ru' ? '3 года стабильной работы' : '3 years of solid experience'}</p></div></div>
-        <div className="flex items-center gap-4"><Users size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Репутация' : 'Reputation'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{lang === 'ru' ? 'Сотни довольных постоянных клиентов' : 'Hundreds of satisfied regular loyal clients'}</p></div></div>
-        <div className="flex items-center gap-4"><CreditCard size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Расчет при получении' : 'Payment on Delivery'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{lang === 'ru' ? 'Наличные в руки курьеру' : 'Cash on delivery to the courier'}</p></div></div>
-        <div className="flex items-center gap-4"><Sparkles size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{lang === 'ru' ? 'Прямые поставки' : 'Direct Sourcing'}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{lang === 'ru' ? 'Партнерство с лучшими фермерами и поставщиками' : 'Partnership with top-tier growers & suppliers'}</p></div></div>
+      <Info isOpen={isGuaranteesModalOpen} onClose={() => setIsGuaranteesModalOpen(false)} title={t.guaranteesTitle}>
+        <div className="flex items-center gap-4"><Trophy size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.marketExp}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.marketExpVal}</p></div></div>
+        <div className="flex items-center gap-4"><Users size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.reputation}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.reputationVal}</p></div></div>
+        <div className="flex items-center gap-4"><CreditCard size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.paymentOnDelivery}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{t.paymentOnDeliveryVal}</p></div></div>
+        <div className="flex items-center gap-4"><Sparkles size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.directSourcing}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{t.directSourcingVal}</p></div></div>
       </Info>
 
       {isMedicalModalOpen && (
