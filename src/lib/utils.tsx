@@ -3,26 +3,19 @@ import { twMerge } from "tailwind-merge"
 import * as React from "react"
 import { Star, Flame, Crown, SendHorizontal, Phone, MessageCircle, Instagram } from "lucide-react"
 
-/**
- * Утилита для объединения Tailwind классов
- */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-/**
- * Функция генерации абсолютных URL для robots.ts и sitemap
- */
 export function absoluteUrl(path: string) {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bnd.delivery"
   return `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`
 }
 
-// --- КОНСТАНТЫ ---
 export const SELECTED_COLOR = "#2DD4BF"; 
 export const IMPORT_COLOR = "#60A5FA";
 export const CONCENTRATES_COLOR = "#F59E0B"; 
-export const GOLDEN_COLOR = "#A88444"; // Обновлен под Royal Concrete (Antique Gold)
+export const GOLDEN_COLOR = "#A88444";
 
 export const GRADES = [
   { id: "classic", title: "CLASSIC GRADE", color: "#A88444", icon: Star },
@@ -37,22 +30,28 @@ export const CONTACT_METHODS = [
   { id: "instagram", label: "Instagram", icon: Instagram, phKey: "contactPh" },
 ];
 
-// Приглушенная, глубокая палитра сортов под стиль Royal Concrete
 export const TYPE_COLORS: Record<string, string> = { 
-  indica: "#8A5A96", // Amethyst / Глубокий фиолетовый
-  sativa: "#B65C3A", // Terracotta / Приглушенный бронзовый
-  hybrid: "#3A6B58", // Muted Emerald / Спокойный изумрудный
+  indica: "#8A5A96",
+  sativa: "#B65C3A",
+  hybrid: "#3A6B58",
   INDICA: "#8A5A96",
   SATIVA: "#B65C3A",
   HYBRID: "#3A6B58"
 };
 
-// --- HELPERS ---
-export const triggerHaptic = (type: 'light' | 'medium' | 'success' = 'light') => {
-  if (typeof window !== 'undefined' && (window as any).Telegram?.WebApp?.HapticFeedback) {
-    const haptic = (window as any).Telegram.WebApp.HapticFeedback;
-    if (type === 'success') haptic.notificationOccurred('success');
-    else haptic.impactOccurred(type);
+export const triggerHaptic = (type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' = 'light') => {
+  if (typeof window !== 'undefined') {
+    try {
+      const tgHaptic = (window as any).Telegram?.WebApp?.HapticFeedback;
+      if (tgHaptic) {
+        if (type === 'success' || type === 'warning') tgHaptic.notificationOccurred(type);
+        else tgHaptic.impactOccurred(type);
+      } else if ('vibrate' in navigator) {
+        navigator.vibrate(type === 'success' ? [10, 30, 10] : 10);
+      }
+    } catch {
+      // Игнорируем ошибки виброотклика
+    }
   }
 };
 
@@ -91,7 +90,6 @@ export const getFirstAvailablePrice = (product: any) => {
   return { price: 0, weight: 0 };
 };
 
-// Компонент иконки бата
 export const Baht = ({ className = "" }: { className?: string }) => (
   <span className={`inline-block text-[0.85em] -translate-y-[0.05em] ml-0.5 font-sans ${className}`}>฿</span>
 );
