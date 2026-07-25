@@ -18,8 +18,8 @@ interface CartItem {
 
 interface CartStore {
   items: CartItem[];
-  lang: 'en' | 'ru';
-  setLang: (lang: 'en' | 'ru') => void;
+  lang: 'en' | 'ru' | 'th'; // <-- ДОБАВЛЕН ТАЙСКИЙ
+  setLang: (lang: 'en' | 'ru' | 'th') => void; // <-- ДОБАВЛЕН ТАЙСКИЙ
   addItem: (newItem: any) => void;
   removeItem: (id: string, weight: string) => void;
   clearCart: () => void;
@@ -38,8 +38,6 @@ export const useCart = create<CartStore>()(
         if (!newItem) return state;
 
         const existingIndex = state.items.findIndex((i) => i.id === newItem.id);
-        
-        // Извлекаем числовое значение (например, "3.5G" -> 3.5)
         const addedWeightNum = parseFloat(newItem.weight) || 0;
 
         if (existingIndex > -1) {
@@ -47,16 +45,10 @@ export const useCart = create<CartStore>()(
           const currentWeightNum = parseFloat(existingItem.weight) || 0;
           const totalWeightNum = currentWeightNum + addedWeightNum;
 
-          // Безопасный фоллбек-объект для утилит, объединяющий старые данные и новые
           const safeItemForCheck = { ...newItem, ...existingItem };
-
-          // Определяем, является ли товар элитным/импортом
           const isEliteProduct = isElite(safeItemForCheck) && safeItemForCheck.subcategory?.toLowerCase() !== 'import loose';
 
-          // ПРОВЕРКА: Если цены передаются в newItem, используем их, иначе берем из существующего
           const priceData = existingItem.prices || newItem.prices;
-
-          // Пересчитываем цену. 
           let newTotalPrice = 0;
           try {
             newTotalPrice = Math.round(
@@ -66,7 +58,6 @@ export const useCart = create<CartStore>()(
             console.error("Price interpolation failed", e);
           }
 
-          // Если расчет не удался (вернул 0), просто плюсуем цены (защита от "цены 0")
           if (!newTotalPrice || newTotalPrice === 0) {
             newTotalPrice = (existingItem.price || 0) + (newItem.price || 0);
           }
