@@ -9,7 +9,7 @@ interface InfoModalProps {
   children: React.ReactNode;
 }
 
-export const InfoModal = ({ isOpen, onClose, title, children }: InfoModalProps) => {
+export const Info = ({ isOpen, onClose, title, children }: InfoModalProps) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-fade-in">
