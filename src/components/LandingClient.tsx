@@ -1,19 +1,14 @@
 "use client"
 import * as React from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { 
-  Plus, Leaf, ShoppingBag, Send, 
-  MessageCircle, Phone, Instagram, ChevronDown, 
-  Sparkles, Bike, Wallet, Timer, 
-  CreditCard, Trophy, Users, ShieldCheck, Cigarette, Layers
-} from "lucide-react"
+import { ShoppingBag, Send, Plus, Timer, Bike, Wallet, Sparkles, Trophy, Users, CreditCard } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
-import { translations, Language } from "@/lib/translations"
+import { translations, Language, TranslationDictionary } from "@/lib/translations"
 import { Product, Checkout, Info, Medical, AgeGate } from "@/components/modals"
-import { BentoBanner } from "@/components/BentoBanner"
-import { HighlightCard, ProductRow, BadgeIcon, BahtSymbol } from "@/components/cards/ProductCards"
+import { Header } from "@/components/layout/Header"
+import { ProductCarousel } from "@/components/catalog/ProductCarousel"
+import { ProductGrid } from "@/components/catalog/ProductGrid"
+import { BahtSymbol } from "@/components/cards/ProductCards"
 import { triggerHaptic, GOLDEN_COLOR } from "@/lib/utils"
 
 export default function LandingClient({ 
@@ -36,10 +31,10 @@ export default function LandingClient({
   const [isLangMenuOpen, setIsLangMenuOpen] = React.useState(false);
   
   // Global Store
-  const { items, getTotal, lang, setLang } = useCart();
+  const { items, getTotal, lang } = useCart();
   
   const safeLang = (lang || 'en') as Language;
-  const t = translations[safeLang] || translations.en;
+  const t: TranslationDictionary = translations[safeLang] || translations.en;
 
   const recentUpdates = React.useMemo(() => initialProducts.filter((p: any) => p && p.badge?.toUpperCase() === 'NEW').sort((a: any, b: any) => (Number(b.id) || 0) - (Number(a.id) || 0)), [initialProducts]);
   const flashSales = React.useMemo(() => initialProducts.filter((p: any) => p && p.badge?.toUpperCase() === 'SALE').sort((a: any, b: any) => (Number(b.id) || 0) - (Number(a.id) || 0)), [initialProducts]);
@@ -60,153 +55,28 @@ export default function LandingClient({
       <AgeGate />
 
       {/* HEADER */}
-      <header className="max-w-5xl mx-auto relative z-[100] mb-6">
-        <div className="flex items-center justify-between px-1 mb-4"> 
-           {/* LOGO & STORE TITLE */}
-           <div className="flex items-center gap-3">
-             <Image src="/420/images/logo.svg" priority width={72} height={72} className="w-14 h-14 sm:w-16 sm:h-16 object-contain relative z-10 shrink-0" alt="MPG StorePhuket" />
-             <div className="flex flex-col">
-               <span className="text-[12px] sm:text-[14px] font-black uppercase tracking-tight text-brand-light leading-tight">
-                 Marijuana Premium Grade
-               </span>
-               <span className="text-[11px] sm:text-[11px] font-extrabold uppercase tracking-wide text-brand-secondary">
-                 MPG StorePhuket
-               </span>
-             </div>
-           </div>
-           
-           <div className="flex items-center gap-2">
-              <Link href="https://line.me/R/ti/p/@mpsphuket" target="_blank" className="w-[42px] h-[42px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-lg"><MessageCircle size={18} className="opacity-80"/></Link>
-              <Link href="https://wa.me/66612345678" target="_blank" className="w-[42px] h-[42px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-lg"><Phone size={18} className="opacity-80"/></Link>
-              <Link href="https://www.instagram.com/mpsphuket" target="_blank" className="w-[42px] h-[42px] flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 active:scale-90 transition-all shadow-lg"><Instagram size={18} className="opacity-80"/></Link>
+      <Header
+        safeLang={safeLang}
+        isLangMenuOpen={isLangMenuOpen}
+        setIsLangMenuOpen={setIsLangMenuOpen}
+        onOpenMedical={() => setIsMedicalModalOpen(true)}
+        onOpenDelivery={() => setIsDeliveryModalOpen(true)}
+        onOpenGuarantees={() => setIsGuaranteesModalOpen(true)}
+      />
 
-              {/* LANGUAGE DROPDOWN */}
-              <div className="relative">
-                <button 
-                  onClick={() => { triggerHaptic('light'); setIsLangMenuOpen(!isLangMenuOpen); }} 
-                  className="h-[42px] px-3 flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 font-black text-[11px] text-brand-secondary active:scale-90 transition-all gap-1 shadow-lg"
-                >
-                  {safeLang.toUpperCase()} 
-                  <ChevronDown size={14} className={`transition-transform duration-300 ${isLangMenuOpen ? 'rotate-180' : ''}`} />
-                </button>
+      {/* CATALOG */}
+      <ProductCarousel type="NEW" title={t.updates} products={recentUpdates} onSelect={setSelectedProduct} />
+      <ProductCarousel type="SALE" title={t.sales} products={flashSales} onSelect={setSelectedProduct} />
 
-                {isLangMenuOpen && (
-                  <>
-                    <div className="fixed inset-0 z-40" onClick={() => setIsLangMenuOpen(false)} />
-                    <div className="absolute top-[calc(100%+8px)] right-0 w-36 bg-brand-primary border border-white/10 rounded-2xl shadow-2xl z-50 flex flex-col p-1.5 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
-                       {[
-                         { id: 'en', label: 'English', flag: '🇬🇧' },
-                         { id: 'ru', label: 'Русский', flag: '🇷🇺' },
-                         { id: 'th', label: 'ภาษาไทย', flag: '🇹🇭' }
-                       ].map(l => (
-                         <button 
-                           key={l.id}
-                           onClick={() => { 
-                             triggerHaptic('success'); 
-                             setLang(l.id as Language); 
-                             setIsLangMenuOpen(false); 
-                           }}
-                           className={`flex items-center gap-3 px-3 py-2.5 text-[11px] font-black uppercase rounded-xl transition-all ${safeLang === l.id ? 'bg-brand-secondary/20 text-brand-secondary' : 'text-brand-light/70 hover:bg-white/5 hover:text-brand-light'}`}
-                         >
-                           <span className="text-[14px]">{l.flag}</span> {l.label}
-                         </button>
-                       ))}
-                    </div>
-                  </>
-                )}
-              </div>
-           </div>
-        </div>
-
-        {/* BENTO BANNER COMPONENT */}
-        <BentoBanner 
-          onOpenMedical={() => setIsMedicalModalOpen(true)}
-          onOpenDelivery={() => setIsDeliveryModalOpen(true)}
-          onOpenGuarantees={() => setIsGuaranteesModalOpen(true)}
-          safeLang={safeLang}
-        />
-      </header>
-
-      {/* CATALOG GRID */}
-      <main className="max-w-5xl mx-auto space-y-8 relative z-10">
-        
-        {/* CAROUSELS */}
-        {recentUpdates.length > 0 && (
-          <section className="space-y-3 overflow-hidden">
-            <div className="flex items-center gap-2 px-1"><BadgeIcon type="NEW" /><h2 className="text-[12px] font-black uppercase tracking-[0.2em] text-brand-light/80">{t.updates}</h2></div>
-            <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
-              {recentUpdates.map((p: any, idx: number) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
-            </div>
-          </section>
-        )}
-
-        {flashSales.length > 0 && (
-          <section className="space-y-3 overflow-hidden">
-            <div className="flex items-center gap-2 px-1"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.2em] text-brand-light/80">{t.sales}</h2></div>
-            <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
-              {flashSales.map((p: any, idx: number) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
-            </div>
-          </section>
-        )}
-
-        {/* BUDS & JOINTS GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {buds.length > 0 && (
-            <section className="flex flex-col h-full space-y-3">
-              <div className="flex items-center gap-2 px-1">
-                <Leaf size={20} className="text-brand-secondary" />
-                <h2 className="text-[16px] font-black uppercase tracking-tight text-brand-light">Buds</h2>
-              </div>
-              <div className="rounded-[2rem] overflow-hidden border border-white/10 bg-brand-primary h-full">
-                {buds.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
-              </div>
-            </section>
-          )}
-
-          {joints.length > 0 && (
-            <section className="flex flex-col h-full space-y-3">
-              <button onClick={() => toggleSection('joints')} className="w-full flex items-center justify-between px-1 active:bg-white/5 transition-colors md:cursor-default rounded-xl">
-                <div className="flex items-center gap-2">
-                  <Cigarette size={20} className="text-brand-secondary" />
-                  <h2 className="text-[16px] font-black uppercase tracking-tight text-brand-light">Joints</h2>
-                </div>
-                <div className="flex items-center gap-2 md:hidden">
-                  <span className="text-[11px] font-black uppercase tracking-wide opacity-40 text-brand-light">{openSections.includes('joints') ? t.close : t.open}</span>
-                  <ChevronDown size={18} className={`opacity-40 transition-transform duration-300 ${openSections.includes('joints') ? 'rotate-180' : ''}`} />
-                </div>
-              </button>
-              <div className={`overflow-hidden transition-all duration-500 md:max-h-none ${openSections.includes('joints') ? 'max-h-[3000px]' : 'max-h-0 md:max-h-[3000px]'}`}>
-                <div className="rounded-[2rem] overflow-hidden border border-white/10 bg-brand-primary h-full">
-                  {joints.map((p: any) => (<ProductRow key={p.id} p={p} onClick={() => setSelectedProduct(p)} />))}
-                </div>
-              </div>
-            </section>
-          )}
-        </div>
-
-        {/* ACCESSORIES GRID */}
-        {accessories.length > 0 && (
-          <section className="w-full space-y-3">
-            <button onClick={() => toggleSection('accessories')} className="w-full flex items-center justify-between px-1 active:bg-white/5 transition-colors rounded-xl">
-              <div className="flex items-center gap-2">
-                <Layers size={20} className="text-brand-secondary" />
-                <h2 className="text-[16px] font-black uppercase tracking-tight text-brand-light">{t.accessories}</h2>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-black uppercase tracking-wide opacity-40 text-brand-light">{openSections.includes('accessories') ? t.close : t.open}</span>
-                <ChevronDown size={18} className={`opacity-40 transition-transform duration-300 ${openSections.includes('accessories') ? 'rotate-180' : ''}`} />
-              </div>
-            </button>
-            <div className={`overflow-hidden transition-all duration-500 ${openSections.includes('accessories') ? 'max-h-[3000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {accessories.map((p: any) => (
-                  <HighlightCard key={p.id} item={p} onClick={() => setSelectedProduct(p)} />
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-      </main>
+      <ProductGrid
+        buds={buds}
+        joints={joints}
+        accessories={accessories}
+        openSections={openSections}
+        toggleSection={toggleSection}
+        t={t}
+        onSelect={setSelectedProduct}
+      />
 
       {/* FLOATING CART BUTTON */}
       {items.length > 0 && (
