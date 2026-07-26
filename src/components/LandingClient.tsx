@@ -12,11 +12,12 @@ import { BahtSymbol } from "@/components/cards/ProductCards"
 import { triggerHaptic, GOLDEN_COLOR } from "@/lib/utils"
 
 export default function LandingClient({ 
-  initialProducts = [], 
-  initialDescriptions = [] 
+  initialProducts = [],
+  categories = {},
 }: { 
-  initialProducts: any[], 
-  initialDescriptions?: any[] 
+  initialProducts: any[],
+  initialDescriptions?: any[],
+  categories?: Record<string, any[]>,
 }) {
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
   
@@ -39,10 +40,6 @@ export default function LandingClient({
   const recentUpdates = React.useMemo(() => initialProducts.filter((p: any) => p && p.badge?.toUpperCase() === 'NEW').sort((a: any, b: any) => (Number(b.id) || 0) - (Number(a.id) || 0)), [initialProducts]);
   const flashSales = React.useMemo(() => initialProducts.filter((p: any) => p && p.badge?.toUpperCase() === 'SALE').sort((a: any, b: any) => (Number(b.id) || 0) - (Number(a.id) || 0)), [initialProducts]);
 
-  const buds = React.useMemo(() => initialProducts.filter((p: any) => p && p.category === 'buds'), [initialProducts]);
-  const joints = React.useMemo(() => initialProducts.filter((p: any) => p && p.category === 'joints'), [initialProducts]);
-  const accessories = React.useMemo(() => initialProducts.filter((p: any) => p && p.category === 'accessories'), [initialProducts]);
-
   const toggleSection = (id: string) => {
     triggerHaptic('light');
     setOpenSections(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
@@ -51,10 +48,8 @@ export default function LandingClient({
   return (
     <div className="min-h-screen bg-brand-primary text-brand-light p-4 pb-32 selection:bg-brand-secondary/30 font-sans">
       
-      {/* 20+ AGE GATE MODAL */}
       <AgeGate />
 
-      {/* HEADER */}
       <Header
         safeLang={safeLang}
         isLangMenuOpen={isLangMenuOpen}
@@ -64,14 +59,11 @@ export default function LandingClient({
         onOpenGuarantees={() => setIsGuaranteesModalOpen(true)}
       />
 
-      {/* CATALOG */}
       <ProductCarousel type="NEW" title={t.updates} products={recentUpdates} onSelect={setSelectedProduct} />
       <ProductCarousel type="SALE" title={t.sales} products={flashSales} onSelect={setSelectedProduct} />
 
       <ProductGrid
-        buds={buds}
-        joints={joints}
-        accessories={accessories}
+        categories={categories}
         openSections={openSections}
         toggleSection={toggleSection}
         t={t}
