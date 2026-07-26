@@ -51,7 +51,7 @@ export const AgeGate = () => {
   };
 
   const handleDeny = () => {
-    triggerHaptic('error');
+    triggerHaptic('warning');
     setIsDenied(true);
   };
 
