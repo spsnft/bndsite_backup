@@ -1,5 +1,6 @@
 "use client"
 import * as React from "react"
+import Image from "next/image"
 import { Plus, Tag, Zap } from "lucide-react"
 import { 
   triggerHaptic, 
@@ -40,6 +41,8 @@ export const BadgeIcon = React.memo(({ type, isSmall }: { type: string, isSmall?
 export const HighlightCard = React.memo(({ item, onClick, priority }: { item: any, onClick: () => void, priority?: boolean }) => {
   if (!item) return null;
   
+  const [imgSrc, setImgSrc] = React.useState(item.image || FALLBACK_IMAGE);
+
   const typeUpper = item.type?.toUpperCase() || "";
   let accentColor = '#3A6B58';
   if (item.category === 'joints') accentColor = GOLDEN_COLOR;
@@ -66,15 +69,14 @@ export const HighlightCard = React.memo(({ item, onClick, priority }: { item: an
           </h3>
         </div>
         <div className="relative flex-1 w-full min-h-0 flex items-center justify-center my-1">
-          <img 
-            src={item.image} 
-            width={160} 
-            height={160} 
-            className="max-w-full max-h-full object-contain transform group-hover:scale-105 transition-transform duration-300 filter drop-shadow-lg" 
-            alt={item.name}
-            onError={(e) => { 
-              (e.currentTarget as HTMLImageElement).src = FALLBACK_IMAGE;
-            }}
+          <Image
+            src={imgSrc}
+            alt={item.name || "Product"}
+            fill
+            className="object-contain transform group-hover:scale-105 transition-transform duration-300 filter drop-shadow-lg"
+            sizes="160px"
+            priority={priority}
+            onError={() => setImgSrc(FALLBACK_IMAGE)}
           />
         </div>
       </div>
@@ -93,6 +95,9 @@ export const HighlightCard = React.memo(({ item, onClick, priority }: { item: an
 
 export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => void }) => {
   if (!p) return null;
+  
+  const [imgSrc, setImgSrc] = React.useState(p.image || FALLBACK_IMAGE);
+  
   const typeKey = p.type?.toLowerCase() || "";
   const priceInfo = getFirstAvailablePrice(p) || { price: 0 };
   const displayPrice = priceInfo.price || 0;
@@ -103,16 +108,14 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
       className="flex items-center justify-between gap-3 px-4 py-4 text-brand-light border-b border-white/10 last:border-b-0 active:bg-white/5 hover:bg-white/5 transition-colors cursor-pointer group"
     >
       <div className="flex items-center gap-3 truncate flex-1">
-        <div className="w-8 h-8 bg-black/10 rounded-xl overflow-hidden p-0.5 shrink-0 flex items-center justify-center border border-white/5">
-          <img 
-            src={p.image} 
-            width={32} 
-            height={32} 
-            className="w-full h-full object-contain" 
-            alt={p.name}
-            onError={(e) => { 
-              (e.currentTarget as HTMLImageElement).src = FALLBACK_IMAGE;
-            }}
+        <div className="w-8 h-8 bg-black/10 rounded-xl overflow-hidden p-0.5 shrink-0 flex items-center justify-center border border-white/5 relative">
+          <Image
+            src={imgSrc}
+            alt={p.name || "Product"}
+            fill
+            className="object-contain"
+            sizes="32px"
+            onError={() => setImgSrc(FALLBACK_IMAGE)}
           />
         </div>
         <div className="truncate">
