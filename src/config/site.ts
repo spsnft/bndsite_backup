@@ -1,10 +1,10 @@
 export const siteConfig = {
   name: "MPS Phuket",
   description: "Premium 420 Store — Phuket",
-  url: "https://tsvetkov.site/420",
-  telegramOperator: "spacenft",
-  apiUrl: "https://script.google.com/macros/s/AKfycbw6Z-7mNkg4RneG_ZuXBllnUiDlQgKjC4CWjJSTtnFQJlR6WfMIPT4WWGlk8aOIKM1Jgw/exec",
+  url: process.env.NEXT_PUBLIC_APP_URL || "https://tsvetkov.site/420",
+  telegramOperator: process.env.NEXT_PUBLIC_TELEGRAM_OPERATOR || "spacenft",
+  apiUrl: process.env.NEXT_PUBLIC_API_URL || "",
   currencySymbol: "฿",
-  themeColor: "#161819", // Обновлено под новый цвет фона
+  themeColor: "#161819",
   locale: "en_US",
 };
