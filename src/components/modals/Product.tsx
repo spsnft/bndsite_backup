@@ -70,7 +70,7 @@ export const Product = ({
 
   const handleAdd = () => {
     triggerHaptic('success');
-    addItem({ ...product, price: currentPrice, weight: '1' }, quantity);
+    addItem({ ...product, price: currentPrice, weight: String(quantity) });
     handleClose();
   };
 
