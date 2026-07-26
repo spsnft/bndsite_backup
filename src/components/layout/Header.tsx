@@ -94,3 +94,8 @@ export const Header: React.FC<HeaderProps> = ({
         onOpenMedical={onOpenMedical}
         onOpenDelivery={onOpenDelivery}
         onOpenGuarantees={onOpenGuarantees}
+        safeLang={safeLang}
+      />
+    </header>
+  );
+};
