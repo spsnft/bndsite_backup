@@ -16,29 +16,6 @@ import { BentoBanner } from "@/components/BentoBanner"
 import { HighlightCard, ProductRow, BadgeIcon, BahtSymbol } from "@/components/cards/ProductCards"
 import { triggerHaptic, GOLDEN_COLOR } from "@/lib/utils"
 
-const FALLBACK_IMAGE = "/420/images/logo.svg";
-
-const processProductData = (rawProducts: any[]) => {
-  if (!Array.isArray(rawProducts)) return [];
-  return rawProducts.map(p => {
-    if (!p) return p;
-    const prices: any = {};
-    const oldPrices: any = {};
-    Object.keys(p).forEach(key => {
-      if (key.startsWith('price_')) prices[key.replace('price_', '').replace('g', '')] = p[key];
-      if (key.startsWith('oldprice_')) oldPrices[key.replace('oldprice_', '').replace('g', '')] = p[key];
-    });
-    const rawUrl = (typeof p.photo === 'string' && p.photo.trim()) ? p.photo.trim() : (typeof p.image === 'string' && p.image.trim() ? p.image.trim() : '');
-    const cleanUrl = rawUrl.replace(/^["']|["']$/g, '');
-    return {
-      ...p,
-      image: cleanUrl.length > 0 ? cleanUrl : FALLBACK_IMAGE,
-      prices: Object.keys(prices).length ? prices : p.prices,
-      old_prices: Object.keys(oldPrices).length ? oldPrices : p.old_prices
-    };
-  });
-};
-
 export default function LandingClient({ 
   initialProducts = [], 
   initialDescriptions = [] 
@@ -46,7 +23,6 @@ export default function LandingClient({
   initialProducts: any[], 
   initialDescriptions?: any[] 
 }) {
-  const processedProducts = React.useMemo(() => processProductData(initialProducts), [initialProducts]);
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
   
   // Modals state
@@ -65,12 +41,12 @@ export default function LandingClient({
   const safeLang = (lang || 'en') as Language;
   const t = translations[safeLang] || translations.en;
 
-  const recentUpdates = React.useMemo(() => processedProducts.filter(p => p && p.badge?.toUpperCase() === 'NEW').sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0)), [processedProducts]);
-  const flashSales = React.useMemo(() => processedProducts.filter(p => p && p.badge?.toUpperCase() === 'SALE').sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0)), [processedProducts]);
+  const recentUpdates = React.useMemo(() => initialProducts.filter((p: any) => p && p.badge?.toUpperCase() === 'NEW').sort((a: any, b: any) => (Number(b.id) || 0) - (Number(a.id) || 0)), [initialProducts]);
+  const flashSales = React.useMemo(() => initialProducts.filter((p: any) => p && p.badge?.toUpperCase() === 'SALE').sort((a: any, b: any) => (Number(b.id) || 0) - (Number(a.id) || 0)), [initialProducts]);
 
-  const buds = React.useMemo(() => processedProducts.filter(p => p && p.category === 'buds'), [processedProducts]);
-  const joints = React.useMemo(() => processedProducts.filter(p => p && p.category === 'joints'), [processedProducts]);
-  const accessories = React.useMemo(() => processedProducts.filter(p => p && p.category === 'accessories'), [processedProducts]);
+  const buds = React.useMemo(() => initialProducts.filter((p: any) => p && p.category === 'buds'), [initialProducts]);
+  const joints = React.useMemo(() => initialProducts.filter((p: any) => p && p.category === 'joints'), [initialProducts]);
+  const accessories = React.useMemo(() => initialProducts.filter((p: any) => p && p.category === 'accessories'), [initialProducts]);
 
   const toggleSection = (id: string) => {
     triggerHaptic('light');
@@ -159,7 +135,7 @@ export default function LandingClient({
           <section className="space-y-3 overflow-hidden">
             <div className="flex items-center gap-2 px-1"><BadgeIcon type="NEW" /><h2 className="text-[12px] font-black uppercase tracking-[0.2em] text-brand-light/80">{t.updates}</h2></div>
             <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
-              {recentUpdates.map((p, idx) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
+              {recentUpdates.map((p: any, idx: number) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
             </div>
           </section>
         )}
@@ -168,7 +144,7 @@ export default function LandingClient({
           <section className="space-y-3 overflow-hidden">
             <div className="flex items-center gap-2 px-1"><BadgeIcon type="SALE" /><h2 className="text-[12px] font-black uppercase tracking-[0.2em] text-brand-light/80">{t.sales}</h2></div>
             <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar md:mx-0 mx-[-1rem] px-4 md:px-0 snap-x">
-              {flashSales.map((p, idx) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
+              {flashSales.map((p: any, idx: number) => (<div key={p?.id || idx} className="w-[160px] shrink-0 snap-start"><HighlightCard item={p} onClick={() => setSelectedProduct(p)} priority={idx < 4} /></div>))}
             </div>
           </section>
         )}
