@@ -1,9 +1,12 @@
 "use client"
 import * as React from "react"
+import Image from "next/image"
 import { X, Plus, Minus, ShoppingBag, Sparkles } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
-import { translations, Language, TranslationDictionary } from "@/lib/translations"
+import { Language, TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic, Baht } from "@/lib/utils"
+
+const FALLBACK_IMAGE = "/420/images/logo.svg";
 
 interface ProductModalProps {
   isOpen?: boolean;
@@ -22,6 +25,9 @@ export const Product = ({
 }: ProductModalProps) => {
   const [quantity, setQuantity] = React.useState(1);
   const [isClosing, setIsClosing] = React.useState(false);
+  const [imgSrc, setImgSrc] = React.useState(
+    product?.image || FALLBACK_IMAGE
+  );
   
   const { addItem, items, lang } = useCart();
   
@@ -101,13 +107,14 @@ export const Product = ({
         {/* Заголовок и фото товара */}
         <div className="relative z-10 flex flex-col items-center mb-6">
           <div className="w-32 h-32 mb-4 relative flex items-center justify-center">
-            {product.image && (
-              <img 
-                src={product.image} 
-                alt={product.name} 
-                className="max-w-full max-h-full object-contain filter drop-shadow-2xl" 
-              />
-            )}
+            <Image
+              src={imgSrc}
+              alt={product.name || "Product"}
+              fill
+              className="object-contain filter drop-shadow-2xl"
+              sizes="128px"
+              onError={() => setImgSrc(FALLBACK_IMAGE)}
+            />
           </div>
           
           <span 
