@@ -90,7 +90,7 @@ export const Medical = ({
         initial={{ y: "100%" }}
         animate={{ y: isClosing ? "100%" : 0 }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
-        className="relative w-full max-w-lg bg-brand-primary border border-white/10 sm:rounded-modal rounded-t-modal p-6 pt-8 shadow-2xl flex flex-col max-h-[90vh]"
+        className="relative w-full max-w-lg bg-brand-primary rim-border sm:rounded-modal rounded-t-modal p-6 pt-8 shadow-2xl flex flex-col max-h-[90vh]"
       >
         <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
 
@@ -113,7 +113,7 @@ export const Medical = ({
         <div className="overflow-y-auto space-y-5 pr-1 no-scrollbar flex-1">
           
           <div className="grid grid-cols-1 gap-2.5">
-            <div className="p-3.5 bg-white/5 border border-white/10 rounded-button flex items-start gap-3">
+            <div className="p-3.5 bg-white/5 rim-border rounded-button flex items-start gap-3">
               <div className="p-2 bg-emerald-500/10 text-emerald-400 rounded-badge shrink-0 mt-0.5">
                 <ShieldCheck size={18} />
               </div>
@@ -141,7 +141,7 @@ export const Medical = ({
               </div>
             </div>
 
-            <div className="p-3.5 bg-white/5 border border-white/10 rounded-button flex items-start gap-3">
+            <div className="p-3.5 bg-white/5 rim-border rounded-button flex items-start gap-3">
               <div className="p-2 bg-blue-500/10 text-blue-400 rounded-badge shrink-0 mt-0.5">
                 <FileText size={18} />
               </div>
@@ -179,7 +179,7 @@ export const Medical = ({
                 target="_blank" 
                 rel="noreferrer"
                 onClick={() => triggerHaptic('light')}
-                className="flex items-center justify-between p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-badge text-[11px] font-bold text-brand-light transition-all active:scale-95"
+                className="flex items-center justify-between p-2.5 bg-white/5 hover:bg-white/10 rim-border rounded-badge text-[11px] font-bold text-brand-light transition-all active:scale-95"
               >
                 <span className="flex items-center gap-1.5 truncate">
                   <FileCheck size={14} className="text-brand-secondary shrink-0" />
@@ -193,7 +193,7 @@ export const Medical = ({
                 target="_blank" 
                 rel="noreferrer"
                 onClick={() => triggerHaptic('light')}
-                className="flex items-center justify-between p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-badge text-[11px] font-bold text-brand-light transition-all active:scale-95"
+                className="flex items-center justify-between p-2.5 bg-white/5 hover:bg-white/10 rim-border rounded-badge text-[11px] font-bold text-brand-light transition-all active:scale-95"
               >
                 <span className="flex items-center gap-1.5 truncate">
                   <Award size={14} className="text-blue-400 shrink-0" />
@@ -229,7 +229,7 @@ export const Medical = ({
                     className={`py-2.5 px-3 rounded-badge border text-[11px] font-bold transition-all flex items-center justify-between text-left ${
                       active 
                         ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' 
-                        : 'border-white/10 bg-white/5 text-brand-light/70 hover:text-brand-light'
+                        : 'rim-border bg-white/5 text-brand-light/70 hover:text-brand-light'
                     }`}
                   >
                     <span>{symptom.label}</span>
@@ -246,14 +246,14 @@ export const Medical = ({
               placeholder={t.namePlaceholder} 
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full bg-black/40 border border-white/10 rounded-button px-4 py-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors"
+              className="w-full bg-black/40 rim-border rounded-button px-4 py-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors"
             />
             <input 
               type="text" 
               placeholder={t.contactPlaceholder} 
               value={contact}
               onChange={(e) => setContact(e.target.value)}
-              className="w-full bg-black/40 border border-white/10 rounded-button px-4 py-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors"
+              className="w-full bg-black/40 rim-border rounded-button px-4 py-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors"
             />
           </div>
 
@@ -262,7 +262,7 @@ export const Medical = ({
         <div className="pt-4 border-t border-white/10 mt-4">
           <button 
             onClick={handleSend}
-            className="w-full h-14 bg-brand-secondary text-brand-primary font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 hover:bg-brand-secondary/90 shadow-xl"
+            className="w-full h-14 btn-metal font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 hover:brightness-110 shadow-xl"
           >
             <Send size={16} />
             {t.getPassWhatsapp}
