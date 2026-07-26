@@ -1,5 +1,6 @@
 "use client"
 import * as React from "react"
+import { motion } from "framer-motion"
 import { X, ShieldCheck, Gift, FileText, Send, Check, ExternalLink, Award, FileCheck } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { translations, Language } from "@/lib/translations"
@@ -43,7 +44,6 @@ export const Medical = ({
   const handleSend = () => {
     triggerHaptic('success');
     
-    // Динамические локализованные ярлыки для сообщения WhatsApp
     const certTitle = safeLang === 'ru' ? 'ЗАЯВКА НА МЕДИЦИНСКИЙ СЕРТИФИКАТ (PT.33)' : (safeLang === 'th' ? 'คำขอใบรับรองแพทย์ (PT.33)' : 'MEDICAL CERTIFICATE REQUEST (PT.33)');
     const nameLabel = safeLang === 'ru' ? 'Имя' : (safeLang === 'th' ? 'ชื่อ' : 'Name');
     const contactLabel = safeLang === 'ru' ? 'Контакт' : (safeLang === 'th' ? 'ช่องทางติดต่อ' : 'Contact');
@@ -70,7 +70,6 @@ export const Medical = ({
     handleClose();
   };
 
-  // Тексты для MOPH и образцов
   const mophTitle = safeLang === 'ru' ? 'Лицензия & MOPH Верификация' : (safeLang === 'th' ? 'ใบอนุญาตและการรับรอง MOPH' : 'License & MOPH Verification');
   const mophDesc = safeLang === 'ru' ? 'Сертифицировано Департаментом тайской традиционной медицины (MOPH Thailand)' : (safeLang === 'th' ? 'ได้รับการรับรองจากกรมการแพทย์แผนไทยและแพทย์ทางเลือก' : 'Certified by Department of Thai Traditional Medicine (MOPH Thailand)');
   const sampleCertText = safeLang === 'ru' ? 'Образец PT.33' : (safeLang === 'th' ? 'ตัวอย่าง PT.33' : 'Sample PT.33');
@@ -81,8 +80,18 @@ export const Medical = ({
     <div className={`fixed inset-0 z-[130] flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={handleClose} />
 
-      <div className={`relative w-full max-w-lg bg-brand-primary border border-white/10 sm:rounded-[2.5rem] rounded-t-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col max-h-[90vh] transition-transform duration-300 ${isClosing ? 'translate-y-full sm:translate-y-12' : 'translate-y-0'}`}>
-        
+      <motion.div
+        drag="y"
+        dragConstraints={{ top: 0 }}
+        dragElastic={0.2}
+        onDragEnd={(_: any, info: any) => {
+          if (info.offset.y > 100) handleClose();
+        }}
+        initial={{ y: "100%" }}
+        animate={{ y: isClosing ? "100%" : 0 }}
+        transition={{ type: "spring", damping: 30, stiffness: 300 }}
+        className="relative w-full max-w-lg bg-brand-primary border border-white/10 sm:rounded-[2.5rem] rounded-t-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col max-h-[90vh]"
+      >
         <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
 
         <button onClick={handleClose} className="absolute top-6 right-6 p-2 bg-white/5 hover:bg-white/10 active:scale-90 rounded-full border border-white/10 transition-all text-brand-light z-20">
@@ -266,7 +275,7 @@ export const Medical = ({
           </button>
         </div>
 
-      </div>
+      </motion.div>
     </div>
   );
 };
