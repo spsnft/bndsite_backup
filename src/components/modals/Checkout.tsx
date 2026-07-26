@@ -2,13 +2,14 @@
 import * as React from "react"
 import { X, Trash2, SendHorizontal, CreditCard, ShoppingBag } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
-import { translations, Language } from "@/lib/translations"
+import { TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic, CONTACT_METHODS, Baht } from "@/lib/utils"
 
 interface CheckoutProps {
   isOpen?: boolean;
   items: any[];
   total: number;
+  t: TranslationDictionary;
   onClose: () => void;
   onEditItem?: (item: any) => void;
   whatsappNumber?: string;
@@ -17,14 +18,13 @@ interface CheckoutProps {
 export const Checkout = ({ 
   isOpen = true,
   items, 
-  total, 
+  total,
+  t,
   onClose, 
   onEditItem,
   whatsappNumber = "66612345678"
 }: CheckoutProps) => {
-  const { removeItem, clearCart, lang } = useCart();
-  const safeLang = (lang || 'en') as Language;
-  const t = translations[safeLang] || translations.en;
+  const { removeItem, clearCart } = useCart();
 
   const [deliveryType, setDeliveryType] = React.useState<'delivery' | 'pickup'>('delivery');
   const [selectedContact, setSelectedContact] = React.useState('telegram');
