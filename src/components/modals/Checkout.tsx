@@ -1,5 +1,6 @@
 "use client"
 import * as React from "react"
+import { motion } from "framer-motion"
 import { X, Trash2, SendHorizontal, CreditCard, ShoppingBag } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { TranslationDictionary } from "@/lib/translations"
@@ -77,8 +78,18 @@ export const Checkout = ({
     <div className={`fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={handleClose} />
 
-      <div className={`relative w-full max-w-lg bg-brand-primary border border-white/10 sm:rounded-[2.5rem] rounded-t-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col max-h-[90vh] transition-transform duration-300 ${isClosing ? 'translate-y-full sm:translate-y-12' : 'translate-y-0'}`}>
-        
+      <motion.div
+        drag="y"
+        dragConstraints={{ top: 0 }}
+        dragElastic={0.2}
+        onDragEnd={(_: any, info: any) => {
+          if (info.offset.y > 100) handleClose();
+        }}
+        initial={{ y: "100%" }}
+        animate={{ y: isClosing ? "100%" : 0 }}
+        transition={{ type: "spring", damping: 30, stiffness: 300 }}
+        className="relative w-full max-w-lg bg-brand-primary border border-white/10 sm:rounded-[2.5rem] rounded-t-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col max-h-[90vh]"
+      >
         {/* Мобильный индикатор свайпа */}
         <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
 
@@ -250,7 +261,7 @@ export const Checkout = ({
           </div>
         )}
 
-      </div>
+      </motion.div>
     </div>
   );
 };
