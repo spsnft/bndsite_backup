@@ -1,5 +1,6 @@
 "use client"
 import * as React from "react"
+import { motion } from "framer-motion"
 import { X } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { translations, Language } from "@/lib/translations"
@@ -33,7 +34,18 @@ export const Info = ({ isOpen, onClose, title, children }: InfoModalProps) => {
     <div className={`fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={handleClose} />
 
-      <div className={`relative w-full max-w-lg bg-brand-primary border border-white/10 sm:rounded-[2.5rem] rounded-t-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col max-h-[85vh] transition-transform duration-300 ${isClosing ? 'translate-y-full sm:translate-y-12' : 'translate-y-0'}`}>
+      <motion.div
+        drag="y"
+        dragConstraints={{ top: 0 }}
+        dragElastic={0.2}
+        onDragEnd={(_: any, info: any) => {
+          if (info.offset.y > 100) handleClose();
+        }}
+        initial={{ y: "100%" }}
+        animate={{ y: isClosing ? "100%" : 0 }}
+        transition={{ type: "spring", damping: 30, stiffness: 300 }}
+        className="relative w-full max-w-lg bg-brand-primary border border-white/10 sm:rounded-[2.5rem] rounded-t-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col max-h-[85vh]"
+      >
         <div className="absolute inset-0 opacity-15 pointer-events-none rounded-[2.5rem]" style={{ background: `radial-gradient(circle at 50% 0%, #A88444, transparent 70%)` }} />
 
         <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
@@ -59,7 +71,7 @@ export const Info = ({ isOpen, onClose, title, children }: InfoModalProps) => {
         >
           {t.close}
         </button>
-      </div>
+      </motion.div>
     </div>
   );
 };
