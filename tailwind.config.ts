@@ -8,16 +8,19 @@ module.exports = {
       fontFamily: {
         sans: ['var(--font-montserrat)', 'system-ui', 'sans-serif'],
       },
+      borderRadius: {
+        'button': '1rem',
+        'card': '2rem',
+        'modal': '2.5rem',
+        'badge': '0.75rem',
+      },
       colors: {
         brand: {
-          // Главные цвета
-          primary: "#161819",    // Обсидиановый фон
-          secondary: "#C89E58",  // Античное тайское золото
-          wood: "#4A3320",       // Резное дерево
-          dark: "#0F1112",       // Тени и глубокие элементы
-          light: "#E3DDD1",      // Цвет крафта/пергамента для текста
-          
-          // Оттенки для градиентов и эффектов наведения
+          primary: "#161819",
+          secondary: "#C89E58",
+          wood: "#4A3320",
+          dark: "#0F1112",
+          light: "#E3DDD1",
           gold: {
             50: "#FDF9F1",
             100: "#F6EBD5",
@@ -29,7 +32,7 @@ module.exports = {
           green: {
             50: "#4D6B53",
             100: "#3A543F",
-            200: "#2C4631", // Глубокий Jade из логотипа
+            200: "#2C4631",
             300: "#1E3322",
           },
           parchment: {
