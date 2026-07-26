@@ -56,7 +56,7 @@ export const HighlightCard = React.memo(({ item, onClick, priority }: { item: an
   return (
     <div 
       onClick={() => { triggerHaptic('light'); onClick(); }} 
-      className="relative rounded-[2rem] active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden border h-[200px] bg-brand-primary hover:border-white/30" 
+      className="relative rounded-card active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden border h-[200px] bg-brand-primary hover:border-white/30" 
       style={{ borderColor: `${accentColor}A0` }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/70 pointer-events-none" />
@@ -108,7 +108,7 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
       className="flex items-center justify-between gap-3 px-4 py-4 text-brand-light border-b border-white/10 last:border-b-0 active:bg-white/5 hover:bg-white/5 transition-colors cursor-pointer group"
     >
       <div className="flex items-center gap-3 truncate flex-1">
-        <div className="w-8 h-8 bg-black/10 rounded-xl overflow-hidden p-0.5 shrink-0 flex items-center justify-center border border-white/5 relative">
+        <div className="w-8 h-8 bg-black/10 rounded-badge overflow-hidden p-0.5 shrink-0 flex items-center justify-center border border-white/5 relative">
           <Image
             src={imgSrc}
             alt={p.name || "Product"}
