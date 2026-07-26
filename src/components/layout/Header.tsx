@@ -8,6 +8,8 @@ import { Language } from "@/lib/translations"
 import { BentoBanner } from "@/components/BentoBanner"
 import { triggerHaptic } from "@/lib/utils"
 
+const rimButton = "bg-white/5 border border-transparent [border-image:linear-gradient(135deg,rgba(200,158,88,0.3),rgba(255,255,255,0.05))_1]";
+
 interface HeaderProps {
   safeLang: Language;
   isLangMenuOpen: boolean;
@@ -43,20 +45,20 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <Link href="https://line.me/R/ti/p/@mpsphuket" target="_blank" className="w-[42px] h-[42px] flex items-center justify-center bg-white/5 rounded-button border border-white/10 active:scale-90 transition-all shadow-lg">
+          <Link href="https://line.me/R/ti/p/@mpsphuket" target="_blank" className={`w-[42px] h-[42px] flex items-center justify-center rounded-button ${rimButton} active:scale-90 transition-all shadow-lg`}>
             <MessageCircle size={18} className="opacity-80" />
           </Link>
-          <Link href="https://wa.me/66612345678" target="_blank" className="w-[42px] h-[42px] flex items-center justify-center bg-white/5 rounded-button border border-white/10 active:scale-90 transition-all shadow-lg">
+          <Link href="https://wa.me/66612345678" target="_blank" className={`w-[42px] h-[42px] flex items-center justify-center rounded-button ${rimButton} active:scale-90 transition-all shadow-lg`}>
             <Phone size={18} className="opacity-80" />
           </Link>
-          <Link href="https://www.instagram.com/mpsphuket" target="_blank" className="w-[42px] h-[42px] flex items-center justify-center bg-white/5 rounded-button border border-white/10 active:scale-90 transition-all shadow-lg">
+          <Link href="https://www.instagram.com/mpsphuket" target="_blank" className={`w-[42px] h-[42px] flex items-center justify-center rounded-button ${rimButton} active:scale-90 transition-all shadow-lg`}>
             <Instagram size={18} className="opacity-80" />
           </Link>
 
           <div className="relative">
             <button
               onClick={() => { triggerHaptic('light'); setIsLangMenuOpen(!isLangMenuOpen); }}
-              className="h-[42px] px-3 flex items-center justify-center bg-white/5 rounded-button border border-white/10 font-black text-[11px] text-brand-secondary active:scale-90 transition-all gap-1 shadow-lg"
+              className={`h-[42px] px-3 flex items-center justify-center rounded-button ${rimButton} font-black text-[11px] text-brand-secondary active:scale-90 transition-all gap-1 shadow-lg`}
             >
               {safeLang.toUpperCase()}
               <ChevronDown size={14} className={`transition-transform duration-300 ${isLangMenuOpen ? 'rotate-180' : ''}`} />
