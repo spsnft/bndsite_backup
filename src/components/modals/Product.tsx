@@ -126,7 +126,7 @@ export const Product = ({
           </div>
           
           <span 
-            className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border mb-3" 
+            className="text-[11px] font-black uppercase tracking-wide px-3 py-1 rounded-full border mb-3" 
             style={{ borderColor: `${accentColor}50`, color: accentColor, backgroundColor: `${accentColor}10` }}
           >
             {product.type || product.category}
@@ -137,7 +137,7 @@ export const Product = ({
           </h2>
 
           {product.farm && product.farm !== "-" && (
-            <p className="text-[10px] font-bold uppercase tracking-widest text-brand-light/40 mt-2">
+            <p className="text-[11px] font-bold uppercase tracking-wide text-brand-light/40 mt-2">
               {product.farm}
             </p>
           )}
