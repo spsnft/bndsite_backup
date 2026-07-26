@@ -21,17 +21,14 @@ export default function LandingClient({
 }) {
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
   
-  // Modals state
   const [isCheckoutOpen, setIsCheckoutOpen] = React.useState(false);
   const [isDeliveryModalOpen, setIsDeliveryModalOpen] = React.useState(false);
   const [isGuaranteesModalOpen, setIsGuaranteesModalOpen] = React.useState(false);
   const [isMedicalModalOpen, setIsMedicalModalOpen] = React.useState(false);
   
-  // UI state
   const [openSections, setOpenSections] = React.useState<string[]>([]);
   const [isLangMenuOpen, setIsLangMenuOpen] = React.useState(false);
   
-  // Global Store
   const { items, getTotal, lang } = useCart();
   
   const safeLang = (lang || 'en') as Language;
@@ -70,12 +67,11 @@ export default function LandingClient({
         onSelect={setSelectedProduct}
       />
 
-      {/* FLOATING CART BUTTON */}
       {items.length > 0 && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] w-full max-w-sm px-4">
-          <button onClick={() => { triggerHaptic('medium'); setIsCheckoutOpen(true); }} className="w-full bg-white/10 backdrop-blur-2xl text-brand-light py-3.5 px-6 rounded-[2.5rem] border border-white/20 shadow-2xl flex justify-between items-center active:scale-95 transition-all">
+          <button onClick={() => { triggerHaptic('medium'); setIsCheckoutOpen(true); }} className="w-full bg-white/10 backdrop-blur-2xl text-brand-light py-3.5 px-6 rounded-modal border border-white/20 shadow-2xl flex justify-between items-center active:scale-95 transition-all">
             <div className="flex items-center gap-3 relative z-10">
-              <div className="p-2 bg-brand-secondary/20 rounded-xl"><ShoppingBag size={18} className="text-brand-secondary"/></div>
+              <div className="p-2 bg-brand-secondary/20 rounded-badge"><ShoppingBag size={18} className="text-brand-secondary"/></div>
               <div className="text-left">
                 <div className="font-black uppercase text-[16px] leading-none mb-0.5">{getTotal()}<BahtSymbol /></div>
                 <span className="font-black uppercase text-[11px] text-brand-secondary leading-none">{items.length} {t.items}</span>
@@ -89,7 +85,6 @@ export default function LandingClient({
         </div>
       )}
       
-      {/* MODALS */}
       <Info isOpen={isDeliveryModalOpen} onClose={() => setIsDeliveryModalOpen(false)} title={t.deliveryPaymentTitle}>
         <div className="flex items-center gap-4"><Timer size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-1">{t.workingHours}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.workingHoursVal}</p></div></div>
         <div className="flex items-center gap-4"><Plus size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-1">{t.minOrder}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.minOrderVal}</p></div></div>
