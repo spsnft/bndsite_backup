@@ -65,7 +65,7 @@ export const BentoBanner: React.FC<BentoBannerProps> = ({
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(200,158,88,0.25),transparent_70%)] pointer-events-none" />
         <div className="relative z-10 flex flex-col justify-between h-full space-y-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-secondary/20 border border-brand-secondary/40 text-brand-secondary text-[10px] font-black uppercase tracking-widest">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-secondary/20 border border-brand-secondary/40 text-brand-secondary text-[11px] font-black uppercase tracking-wide">
               <Award size={13} />
               <span>{bentoTexts.medBadge}</span>
             </div>
@@ -82,11 +82,11 @@ export const BentoBanner: React.FC<BentoBannerProps> = ({
           </div>
 
           <div className="flex items-center gap-4 pt-1">
-            <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase text-emerald-400">
+            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-emerald-400">
               <CheckCircle2 size={13} />
               <span>Form PT.33</span>
             </div>
-            <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase text-brand-light/60">
+            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-brand-light/60">
               <ShieldCheck size={13} className="text-brand-secondary" />
               <span>100% Legal</span>
             </div>
@@ -105,7 +105,7 @@ export const BentoBanner: React.FC<BentoBannerProps> = ({
           </div>
           <div>
             <h4 className="text-xs font-black uppercase text-brand-light tracking-tight">{bentoTexts.deliveryTitle}</h4>
-            <p className="text-[10px] text-brand-light/60 leading-tight mt-0.5">{bentoTexts.deliveryDesc}</p>
+            <p className="text-[11px] text-brand-light/60 leading-tight mt-0.5">{bentoTexts.deliveryDesc}</p>
           </div>
         </div>
 
@@ -118,7 +118,7 @@ export const BentoBanner: React.FC<BentoBannerProps> = ({
           </div>
           <div>
             <h4 className="text-xs font-black uppercase text-brand-light tracking-tight">{bentoTexts.qualityTitle}</h4>
-            <p className="text-[10px] text-brand-light/60 leading-tight mt-0.5">{bentoTexts.qualityDesc}</p>
+            <p className="text-[11px] text-brand-light/60 leading-tight mt-0.5">{bentoTexts.qualityDesc}</p>
           </div>
         </div>
       </div>
