@@ -68,7 +68,6 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   t,
   onSelect,
 }) => {
-  // Порядок: buds, joints, всё остальное (кроме accessories), accessories
   const priorityOrder = ["buds", "joints"];
   const accessoryKey = "accessories";
 
@@ -83,13 +82,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     return a.localeCompare(b);
   });
 
-  // Отделяем buds+joints в двухколоночную сетку
   const specialListKeys = priorityOrder.filter(k => categories[k]?.length > 0);
   const restKeys = sortedKeys.filter(k => !priorityOrder.includes(k));
 
   return (
     <main className="max-w-5xl mx-auto space-y-8 relative z-10">
-      {/* BUDS & JOINTS — двухколоночная сетка */}
       {specialListKeys.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {specialListKeys.map(cat => {
@@ -102,7 +99,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                 {config.collapsible ? (
                   <button
                     onClick={() => toggleSection(cat)}
-                    className="w-full flex items-center justify-between px-1 active:bg-white/5 transition-colors md:cursor-default rounded-xl"
+                    className="w-full flex items-center justify-between px-1 active:bg-white/5 transition-colors md:cursor-default rounded-badge"
                   >
                     <div className="flex items-center gap-2">
                       {config.icon}
@@ -123,7 +120,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                 )}
 
                 <div className={`overflow-hidden transition-all duration-500 ${config.collapsible && !isOpen ? 'max-h-0 md:max-h-[3000px]' : 'max-h-[3000px]'}`}>
-                  <div className={`rounded-[2rem] overflow-hidden border border-white/10 bg-brand-primary h-full ${!isList(config.layout) ? 'p-3 ' + gridClass(config.layout) : ''}`}>
+                  <div className={`rounded-card overflow-hidden border border-white/10 bg-brand-primary h-full ${!isList(config.layout) ? 'p-3 ' + gridClass(config.layout) : ''}`}>
                     {products.map((p: any) => (
                       isList(config.layout)
                         ? <ProductRow key={p.id} p={p} onClick={() => onSelect(p)} />
@@ -137,7 +134,6 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         </div>
       )}
 
-      {/* ОСТАЛЬНЫЕ КАТЕГОРИИ (включая accessories) */}
       {restKeys.map(cat => {
         const config = getCategoryConfig(cat, t);
         const products = categories[cat];
@@ -147,7 +143,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           <section key={cat} className="w-full space-y-3">
             <button
               onClick={() => toggleSection(cat)}
-              className="w-full flex items-center justify-between px-1 active:bg-white/5 transition-colors rounded-xl"
+              className="w-full flex items-center justify-between px-1 active:bg-white/5 transition-colors rounded-badge"
             >
               <div className="flex items-center gap-2">
                 {config.icon}
