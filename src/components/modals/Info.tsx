@@ -44,9 +44,9 @@ export const Info = ({ isOpen, onClose, title, children }: InfoModalProps) => {
         initial={{ y: "100%" }}
         animate={{ y: isClosing ? "100%" : 0 }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
-        className="relative w-full max-w-lg bg-brand-primary border border-white/10 sm:rounded-[2.5rem] rounded-t-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col max-h-[85vh]"
+        className="relative w-full max-w-lg bg-brand-primary border border-white/10 sm:rounded-modal rounded-t-modal p-6 pt-8 shadow-2xl flex flex-col max-h-[85vh]"
       >
-        <div className="absolute inset-0 opacity-15 pointer-events-none rounded-[2.5rem]" style={{ background: `radial-gradient(circle at 50% 0%, #A88444, transparent 70%)` }} />
+        <div className="absolute inset-0 opacity-15 pointer-events-none rounded-modal" style={{ background: `radial-gradient(circle at 50% 0%, #A88444, transparent 70%)` }} />
 
         <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
 
@@ -67,7 +67,7 @@ export const Info = ({ isOpen, onClose, title, children }: InfoModalProps) => {
 
         <button 
           onClick={handleClose}
-          className="w-full mt-6 py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl font-black uppercase text-xs text-brand-light tracking-wider transition-all relative z-10 shrink-0"
+          className="w-full mt-6 py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-button font-black uppercase text-xs text-brand-light tracking-wider transition-all relative z-10 shrink-0"
         >
           {t.close}
         </button>
