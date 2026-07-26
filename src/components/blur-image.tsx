@@ -32,7 +32,6 @@ export function BlurImage({ className, alt, src, priority, ...props }: BlurImage
         src={imgSrc}
         alt={alt || ""}
         priority={priority}
-        unoptimized
         style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
         className={cn(
           "duration-700 ease-in-out transition-all",
@@ -49,7 +48,7 @@ export function BlurImage({ className, alt, src, priority, ...props }: BlurImage
       />
       
       {isLoading && (
-        <div className="absolute inset-0 bg-white/5 animate-pulse z-[-1]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-white/10 to-white/5 animate-shimmer bg-[length:200%_100%] z-[-1]" />
       )}
     </div>
   )
