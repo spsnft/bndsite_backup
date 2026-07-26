@@ -1,7 +1,6 @@
 import "@/styles/globals.css"
 import type { Metadata, Viewport } from "next"
 import { siteConfig } from "@/config/site"
-import { fontHeading } from "@/lib/fonts"
 
 export const viewport: Viewport = {
   themeColor: siteConfig.themeColor,
@@ -56,7 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" />
       </head>
-      <body className={`${fontHeading.variable} min-h-screen bg-brand-primary text-brand-light antialiased selection:bg-brand-secondary/30`}>
+      <body className="min-h-screen bg-brand-primary text-brand-light antialiased selection:bg-brand-secondary/30">
         {children}
       </body>
     </html>
