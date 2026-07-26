@@ -98,7 +98,7 @@ export const BentoBanner: React.FC<BentoBannerProps> = ({
       <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
         <div 
           onClick={() => { triggerHaptic('light'); onOpenDelivery(); }}
-          className="p-4 rounded-card bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
+          className="p-4 rounded-card bg-white/5 border border-transparent [border-image:linear-gradient(135deg,rgba(200,158,88,0.4),rgba(255,255,255,0.05))_1] hover:[border-image:linear-gradient(135deg,rgba(200,158,88,0.6),rgba(255,255,255,0.1))_1] transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
         >
           <div className="w-8 h-8 rounded-badge bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary mb-2">
             <Bike size={16} />
@@ -111,7 +111,7 @@ export const BentoBanner: React.FC<BentoBannerProps> = ({
 
         <div 
           onClick={() => { triggerHaptic('light'); onOpenGuarantees(); }}
-          className="p-4 rounded-card bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
+          className="p-4 rounded-card bg-white/5 border border-transparent [border-image:linear-gradient(135deg,rgba(200,158,88,0.4),rgba(255,255,255,0.05))_1] hover:[border-image:linear-gradient(135deg,rgba(200,158,88,0.6),rgba(255,255,255,0.1))_1] transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
         >
           <div className="w-8 h-8 rounded-badge bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-2">
             <Leaf size={16} />
