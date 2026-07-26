@@ -60,7 +60,7 @@ export const BentoBanner: React.FC<BentoBannerProps> = ({
       {/* HERO BENTO CARD: MEDICAL CERTIFICATE */}
       <div 
         onClick={() => { triggerHaptic('light'); onOpenMedical(); }}
-        className="md:col-span-2 relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-secondary/20 via-black/40 to-black/80 border border-brand-secondary/40 p-5 shadow-2xl cursor-pointer active:scale-[0.99] transition-all group"
+        className="md:col-span-2 relative overflow-hidden rounded-card bg-gradient-to-br from-brand-secondary/20 via-black/40 to-black/80 border border-brand-secondary/40 p-5 shadow-2xl cursor-pointer active:scale-[0.99] transition-all group"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(200,158,88,0.25),transparent_70%)] pointer-events-none" />
         <div className="relative z-10 flex flex-col justify-between h-full space-y-3">
@@ -98,9 +98,9 @@ export const BentoBanner: React.FC<BentoBannerProps> = ({
       <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
         <div 
           onClick={() => { triggerHaptic('light'); onOpenDelivery(); }}
-          className="p-4 rounded-[1.75rem] bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
+          className="p-4 rounded-card bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
         >
-          <div className="w-8 h-8 rounded-xl bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary mb-2">
+          <div className="w-8 h-8 rounded-badge bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary mb-2">
             <Bike size={16} />
           </div>
           <div>
@@ -111,9 +111,9 @@ export const BentoBanner: React.FC<BentoBannerProps> = ({
 
         <div 
           onClick={() => { triggerHaptic('light'); onOpenGuarantees(); }}
-          className="p-4 rounded-[1.75rem] bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
+          className="p-4 rounded-card bg-white/5 border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95 flex flex-col justify-between"
         >
-          <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-2">
+          <div className="w-8 h-8 rounded-badge bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-2">
             <Leaf size={16} />
           </div>
           <div>
