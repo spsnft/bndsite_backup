@@ -1,10 +1,10 @@
 "use client"
 import * as React from "react"
 import { motion } from "framer-motion"
-import { X, Trash2, SendHorizontal, CreditCard, ShoppingBag } from "lucide-react"
+import { X, Trash2, SendHorizontal, CreditCard, ShoppingBag, Phone, MessageCircle } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { TranslationDictionary } from "@/lib/translations"
-import { triggerHaptic, CONTACT_METHODS, Baht } from "@/lib/utils"
+import { triggerHaptic, Baht } from "@/lib/utils"
 
 interface CheckoutProps {
   isOpen?: boolean;
@@ -15,6 +15,16 @@ interface CheckoutProps {
   onEditItem?: (item: any) => void;
   whatsappNumber?: string;
 }
+
+const PAYMENT_METHODS = [
+  { id: 'cash', icon: null },
+  { id: 'qr', icon: null },
+] as const;
+
+const CONTACT_METHODS_DELIVERY = [
+  { id: 'phone', icon: Phone },
+  { id: 'whatsapp', icon: MessageCircle },
+] as const;
 
 export const Checkout = ({ 
   isOpen = true,
@@ -27,12 +37,11 @@ export const Checkout = ({
 }: CheckoutProps) => {
   const { removeItem, clearCart } = useCart();
 
-  const [deliveryType, setDeliveryType] = React.useState<'delivery' | 'pickup'>('delivery');
-  const [selectedContact, setSelectedContact] = React.useState('telegram');
-  const [contactInfo, setContactInfo] = React.useState('');
+  const [deliveryType, setDeliveryType] = React.useState<'pickup' | 'delivery'>('pickup');
+  const [phone, setPhone] = React.useState('');
   const [paymentMethod, setPaymentMethod] = React.useState('cash');
+  const [contactMethod, setContactMethod] = React.useState('phone');
   const [address, setAddress] = React.useState('');
-  const [notes, setNotes] = React.useState('');
   const [isClosing, setIsClosing] = React.useState(false);
 
   const handleClose = React.useCallback(() => {
@@ -58,21 +67,23 @@ export const Checkout = ({
 
     msg += `\n💵 *${t.total}: ${total}฿*\n`;
     msg += `🚚 *${t.receiveMethod}:* ${deliveryType === 'delivery' ? t.deliveryCourier : t.selfPickup}\n`;
-    msg += `💬 *${t.contactMethod}:* ${selectedContact.toUpperCase()} (${contactInfo || 'Not specified'})\n`;
-    msg += `💳 *${t.payMethod}:* ${paymentMethod === 'cash' ? t.payCash : paymentMethod === 'qr' ? t.payQR : t.payRub}\n`;
 
-    if (deliveryType === 'delivery' && address) {
-      msg += `📍 *${t.addressLabel}:* ${address}\n`;
+    if (deliveryType === 'delivery') {
+      msg += `💳 *${t.payMethod}:* ${paymentMethod === 'cash' ? t.payCash : t.payQR}\n`;
+      msg += `💬 *${t.contactMethod}:* ${contactMethod === 'phone' ? 'Phone/SMS' : 'WhatsApp'}\n`;
+      if (address) msg += `📍 *${t.addressLabel}:* ${address}\n`;
     }
-    if (notes) {
-      msg += `📝 *${t.notesLabel}:* ${notes}\n`;
-    }
+
+    msg += `📞 *${safeLang === 'ru' ? 'Телефон' : (safeLang === 'th' ? 'โทรศัพท์' : 'Phone')}:* ${phone}`;
 
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
     window.open(whatsappUrl, '_blank');
     clearCart();
     handleClose();
   };
+
+  const { lang } = useCart();
+  const safeLang = (lang || 'en') as string;
 
   return (
     <div className={`fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
@@ -117,6 +128,7 @@ export const Checkout = ({
             </div>
           ) : (
             <>
+              {/* CART ITEMS */}
               <div className="space-y-2">
                 {items.map((item) => (
                   <div key={`${item.id}-${item.weight}`} className="p-3 bg-white/5 rim-border rounded-button flex items-center justify-between gap-3">
@@ -138,16 +150,10 @@ export const Checkout = ({
                 ))}
               </div>
 
+              {/* RECEIVE METHOD */}
               <div>
                 <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">{t.receiveMethod}</label>
                 <div className="grid grid-cols-2 gap-2">
-                  <button 
-                    type="button"
-                    onClick={() => { triggerHaptic('light'); setDeliveryType('delivery'); }}
-                    className={`py-3 px-4 rounded-button border text-xs font-black uppercase transition-all ${deliveryType === 'delivery' ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' : 'rim-border bg-white/5 text-brand-light/60'}`}
-                  >
-                    {t.deliveryCourier}
-                  </button>
                   <button 
                     type="button"
                     onClick={() => { triggerHaptic('light'); setDeliveryType('pickup'); }}
@@ -155,80 +161,84 @@ export const Checkout = ({
                   >
                     {t.selfPickup}
                   </button>
+                  <button 
+                    type="button"
+                    onClick={() => { triggerHaptic('light'); setDeliveryType('delivery'); }}
+                    className={`py-3 px-4 rounded-button border text-xs font-black uppercase transition-all ${deliveryType === 'delivery' ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' : 'rim-border bg-white/5 text-brand-light/60'}`}
+                  >
+                    {t.deliveryCourier}
+                  </button>
                 </div>
               </div>
 
+              {/* PHONE (always) */}
               <div>
-                <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">{t.contactMethod}</label>
-                <div className="grid grid-cols-4 gap-1.5 mb-2">
-                  {(CONTACT_METHODS || []).map((m: any) => {
-                    const IconComponent = m.icon;
-                    return (
-                      <button
-                        key={m.id}
-                        type="button"
-                        onClick={() => { triggerHaptic('light'); setSelectedContact(m.id); }}
-                        className={`py-2 px-2 rounded-badge border text-[11px] font-bold uppercase transition-all flex flex-col items-center gap-1 ${selectedContact === m.id ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' : 'rim-border bg-white/5 text-brand-light/60'}`}
-                      >
-                        {IconComponent && <IconComponent size={14} />}
-                        <span>{m.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+                <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">
+                  {safeLang === 'ru' ? 'Телефон' : (safeLang === 'th' ? 'โทรศัพท์' : 'Phone')}
+                </label>
                 <input 
-                  type="text" 
-                  placeholder={t.phContact}
-                  value={contactInfo}
-                  onChange={(e) => setContactInfo(e.target.value)}
+                  type="tel" 
+                  placeholder="+66 123 456 789"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                   className="w-full bg-black/40 rim-border rounded-button px-4 py-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors"
                 />
               </div>
 
-              <div>
-                <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">{t.payMethod}</label>
-                <div className="space-y-1.5">
-                  {[
-                    { id: 'cash', label: t.payCash },
-                    { id: 'qr', label: t.payQR },
-                    { id: 'rub', label: t.payRub }
-                  ].map((p) => (
-                    <button
-                      key={p.id}
-                      type="button"
-                      onClick={() => { triggerHaptic('light'); setPaymentMethod(p.id); }}
-                      className={`w-full py-3 px-4 rounded-button border text-xs font-bold transition-all text-left flex items-center justify-between ${paymentMethod === p.id ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' : 'rim-border bg-white/5 text-brand-light/70'}`}
-                    >
-                      <span>{p.label}</span>
-                      <CreditCard size={16} className="opacity-50" />
-                    </button>
-                  ))}
-                </div>
-              </div>
-
+              {/* DELIVERY FIELDS */}
               {deliveryType === 'delivery' && (
-                <div>
-                  <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">{t.addressLabel}</label>
-                  <textarea 
-                    rows={2}
-                    placeholder={t.addressPlaceholder}
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    className="w-full bg-black/40 rim-border rounded-button p-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors resize-none"
-                  />
-                </div>
-              )}
+                <>
+                  {/* PAYMENT METHOD */}
+                  <div>
+                    <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">{t.payMethod}</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {PAYMENT_METHODS.map((p) => (
+                        <button
+                          key={p.id}
+                          type="button"
+                          onClick={() => { triggerHaptic('light'); setPaymentMethod(p.id); }}
+                          className={`py-3 px-4 rounded-button border text-xs font-black uppercase transition-all ${paymentMethod === p.id ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' : 'rim-border bg-white/5 text-brand-light/60'}`}
+                        >
+                          {p.id === 'cash' ? t.payCash : t.payQR}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
-              <div>
-                <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">{t.notesLabel}</label>
-                <input 
-                  type="text" 
-                  placeholder={t.notesPlaceholder}
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  className="w-full bg-black/40 rim-border rounded-button px-4 py-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors"
-                />
-              </div>
+                  {/* CONTACT METHOD (for delivery) */}
+                  <div>
+                    <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">{t.contactMethod}</label>
+                    <div className="grid grid-cols-2 gap-2 mb-2">
+                      {CONTACT_METHODS_DELIVERY.map((m) => {
+                        const IconComponent = m.icon;
+                        return (
+                          <button
+                            key={m.id}
+                            type="button"
+                            onClick={() => { triggerHaptic('light'); setContactMethod(m.id); }}
+                            className={`py-3 px-4 rounded-button border text-xs font-black uppercase transition-all flex items-center justify-center gap-2 ${contactMethod === m.id ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' : 'rim-border bg-white/5 text-brand-light/60'}`}
+                          >
+                            {IconComponent && <IconComponent size={16} />}
+                            {m.id === 'phone' ? 'Phone/SMS' : 'WhatsApp'}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* ADDRESS */}
+                  <div>
+                    <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">{t.addressLabel}</label>
+                    <textarea 
+                      rows={2}
+                      placeholder={t.addressPlaceholder}
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      className="w-full bg-black/40 rim-border rounded-button p-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors resize-none"
+                    />
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>
