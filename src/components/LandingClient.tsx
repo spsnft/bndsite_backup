@@ -302,7 +302,6 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
           items={items.map(item => ({ ...item, unitLabel: item.category === 'accessories' ? 'pcs' : 'g' }))} 
           total={getTotal()} 
           t={t} 
-          lang={lang} 
           onClose={() => setIsCheckoutOpen(false)} 
           onEditItem={(p) => { setSelectedProduct(p); setIsCheckoutOpen(false); }} 
         />
