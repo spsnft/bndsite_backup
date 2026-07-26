@@ -39,24 +39,14 @@ const processProductData = (rawProducts: any[]) => {
   });
 };
 
-export default function LandingClient({ initialProducts = [] }: { initialProducts: any[], initialDescriptions?: any[] }) {
-  const [products, setProducts] = React.useState(initialProducts);
-  const [isLoading, setIsLoading] = React.useState(initialProducts.length === 0);
-
-  React.useEffect(() => {
-    if (initialProducts.length === 0) {
-      fetch('/420/api/products')
-        .then(res => res.json())
-        .then(data => {
-          const list = Array.isArray(data) ? data : (data.products || []);
-          if (list.length > 0) setProducts(list);
-          setIsLoading(false);
-        })
-        .catch(() => setIsLoading(false));
-    }
-  }, [initialProducts]);
-
-  const processedProducts = React.useMemo(() => processProductData(products), [products]);
+export default function LandingClient({ 
+  initialProducts = [], 
+  initialDescriptions = [] 
+}: { 
+  initialProducts: any[], 
+  initialDescriptions?: any[] 
+}) {
+  const processedProducts = React.useMemo(() => processProductData(initialProducts), [initialProducts]);
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
   
   // Modals state
@@ -86,14 +76,6 @@ export default function LandingClient({ initialProducts = [] }: { initialProduct
     triggerHaptic('light');
     setOpenSections(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-brand-primary flex items-center justify-center">
-        <p className="text-brand-light/60 font-black uppercase tracking-widest text-sm animate-pulse">Loading...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-brand-primary text-brand-light p-4 pb-32 selection:bg-brand-secondary/30 font-sans">
