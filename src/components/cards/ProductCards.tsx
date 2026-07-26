@@ -71,12 +71,17 @@ export const HighlightCard = React.memo(({ item, onClick, priority }: { item: an
             {item.name}
           </h3>
         </div>
+        {/* 3D ореол под фото — мягкий, для превью */}
         <div className="relative flex-1 w-full min-h-0 flex items-center justify-center my-1">
+          <div 
+            className="absolute inset-0 rounded-full blur-xl opacity-20 group-hover:opacity-35 transition-opacity duration-500"
+            style={{ background: `radial-gradient(circle at 50% 50%, ${accentColor}60, transparent 70%)` }}
+          />
           <Image
             src={imgSrc}
             alt={item.name || "Product"}
             fill
-            className="object-contain transform group-hover:scale-105 transition-transform duration-300 filter drop-shadow-lg"
+            className="object-contain transform group-hover:scale-105 transition-transform duration-300 filter drop-shadow-lg relative z-10"
             sizes="160px"
             priority={priority}
             onError={() => setImgSrc(FALLBACK_IMAGE)}
