@@ -88,12 +88,10 @@ export const Checkout = ({
         initial={{ y: "100%" }}
         animate={{ y: isClosing ? "100%" : 0 }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
-        className="relative w-full max-w-lg bg-brand-primary border border-white/10 sm:rounded-[2.5rem] rounded-t-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col max-h-[90vh]"
+        className="relative w-full max-w-lg bg-brand-primary border border-white/10 sm:rounded-modal rounded-t-modal p-6 pt-8 shadow-2xl flex flex-col max-h-[90vh]"
       >
-        {/* Мобильный индикатор свайпа */}
         <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
 
-        {/* Кнопка закрытия */}
         <button 
           type="button"
           onClick={handleClose} 
@@ -102,9 +100,8 @@ export const Checkout = ({
           <X size={18} />
         </button>
 
-        {/* HEADER */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-3 bg-brand-secondary/20 rounded-2xl text-brand-secondary">
+          <div className="p-3 bg-brand-secondary/20 rounded-button text-brand-secondary">
             <ShoppingBag size={22} />
           </div>
           <div>
@@ -113,7 +110,6 @@ export const Checkout = ({
           </div>
         </div>
 
-        {/* ITEMS LIST & FORM */}
         <div className="overflow-y-auto space-y-5 pr-1 no-scrollbar flex-1">
           {items.length === 0 ? (
             <div className="py-12 text-center text-brand-light/40 font-bold uppercase tracking-wider text-xs">
@@ -121,10 +117,9 @@ export const Checkout = ({
             </div>
           ) : (
             <>
-              {/* CART ITEMS */}
               <div className="space-y-2">
                 {items.map((item) => (
-                  <div key={`${item.id}-${item.weight}`} className="p-3 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-between gap-3">
+                  <div key={`${item.id}-${item.weight}`} className="p-3 bg-white/5 border border-white/10 rounded-button flex items-center justify-between gap-3">
                     <div className="flex-1 min-w-0 cursor-pointer" onClick={() => onEditItem && onEditItem(item)}>
                       <h4 className="text-xs font-black uppercase text-brand-light truncate">{item.name}</h4>
                       <div className="flex items-center gap-2 mt-0.5">
@@ -135,7 +130,7 @@ export const Checkout = ({
                     <button 
                       type="button"
                       onClick={() => { triggerHaptic('warning'); removeItem(item.id, item.weight); }}
-                      className="p-2 text-red-400/60 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all"
+                      className="p-2 text-red-400/60 hover:text-red-400 hover:bg-red-500/10 rounded-badge transition-all"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -143,28 +138,26 @@ export const Checkout = ({
                 ))}
               </div>
 
-              {/* RECEIVE METHOD */}
               <div>
                 <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">{t.receiveMethod}</label>
                 <div className="grid grid-cols-2 gap-2">
                   <button 
                     type="button"
                     onClick={() => { triggerHaptic('light'); setDeliveryType('delivery'); }}
-                    className={`py-3 px-4 rounded-2xl border text-xs font-black uppercase transition-all ${deliveryType === 'delivery' ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' : 'border-white/10 bg-white/5 text-brand-light/60'}`}
+                    className={`py-3 px-4 rounded-button border text-xs font-black uppercase transition-all ${deliveryType === 'delivery' ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' : 'border-white/10 bg-white/5 text-brand-light/60'}`}
                   >
                     {t.deliveryCourier}
                   </button>
                   <button 
                     type="button"
                     onClick={() => { triggerHaptic('light'); setDeliveryType('pickup'); }}
-                    className={`py-3 px-4 rounded-2xl border text-xs font-black uppercase transition-all ${deliveryType === 'pickup' ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' : 'border-white/10 bg-white/5 text-brand-light/60'}`}
+                    className={`py-3 px-4 rounded-button border text-xs font-black uppercase transition-all ${deliveryType === 'pickup' ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' : 'border-white/10 bg-white/5 text-brand-light/60'}`}
                   >
                     {t.selfPickup}
                   </button>
                 </div>
               </div>
 
-              {/* CONTACT METHOD */}
               <div>
                 <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">{t.contactMethod}</label>
                 <div className="grid grid-cols-4 gap-1.5 mb-2">
@@ -175,7 +168,7 @@ export const Checkout = ({
                         key={m.id}
                         type="button"
                         onClick={() => { triggerHaptic('light'); setSelectedContact(m.id); }}
-                        className={`py-2 px-2 rounded-xl border text-[11px] font-bold uppercase transition-all flex flex-col items-center gap-1 ${selectedContact === m.id ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' : 'border-white/10 bg-white/5 text-brand-light/60'}`}
+                        className={`py-2 px-2 rounded-badge border text-[11px] font-bold uppercase transition-all flex flex-col items-center gap-1 ${selectedContact === m.id ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' : 'border-white/10 bg-white/5 text-brand-light/60'}`}
                       >
                         {IconComponent && <IconComponent size={14} />}
                         <span>{m.label}</span>
@@ -188,11 +181,10 @@ export const Checkout = ({
                   placeholder={t.phContact}
                   value={contactInfo}
                   onChange={(e) => setContactInfo(e.target.value)}
-                  className="w-full bg-black/40 border border-white/10 rounded-2xl px-4 py-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors"
+                  className="w-full bg-black/40 border border-white/10 rounded-button px-4 py-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors"
                 />
               </div>
 
-              {/* PAYMENT METHOD */}
               <div>
                 <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">{t.payMethod}</label>
                 <div className="space-y-1.5">
@@ -205,7 +197,7 @@ export const Checkout = ({
                       key={p.id}
                       type="button"
                       onClick={() => { triggerHaptic('light'); setPaymentMethod(p.id); }}
-                      className={`w-full py-3 px-4 rounded-2xl border text-xs font-bold transition-all text-left flex items-center justify-between ${paymentMethod === p.id ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' : 'border-white/10 bg-white/5 text-brand-light/70'}`}
+                      className={`w-full py-3 px-4 rounded-button border text-xs font-bold transition-all text-left flex items-center justify-between ${paymentMethod === p.id ? 'border-brand-secondary bg-brand-secondary/20 text-brand-secondary' : 'border-white/10 bg-white/5 text-brand-light/70'}`}
                     >
                       <span>{p.label}</span>
                       <CreditCard size={16} className="opacity-50" />
@@ -214,7 +206,6 @@ export const Checkout = ({
                 </div>
               </div>
 
-              {/* ADDRESS (IF DELIVERY) */}
               {deliveryType === 'delivery' && (
                 <div>
                   <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">{t.addressLabel}</label>
@@ -223,12 +214,11 @@ export const Checkout = ({
                     placeholder={t.addressPlaceholder}
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="w-full bg-black/40 border border-white/10 rounded-2xl p-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors resize-none"
+                    className="w-full bg-black/40 border border-white/10 rounded-button p-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors resize-none"
                   />
                 </div>
               )}
 
-              {/* NOTES */}
               <div>
                 <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">{t.notesLabel}</label>
                 <input 
@@ -236,14 +226,13 @@ export const Checkout = ({
                   placeholder={t.notesPlaceholder}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="w-full bg-black/40 border border-white/10 rounded-2xl px-4 py-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors"
+                  className="w-full bg-black/40 border border-white/10 rounded-button px-4 py-3 text-xs text-brand-light placeholder:text-white/30 focus:outline-none focus:border-brand-secondary transition-colors"
                 />
               </div>
             </>
           )}
         </div>
 
-        {/* FOOTER CTA */}
         {items.length > 0 && (
           <div className="pt-4 border-t border-white/10 mt-4 flex items-center justify-between gap-4 shrink-0">
             <div>
@@ -253,7 +242,7 @@ export const Checkout = ({
             <button 
               type="button"
               onClick={handleSubmit}
-              className="flex-1 h-14 bg-brand-secondary text-brand-primary font-black uppercase tracking-widest text-[11px] rounded-2xl active:scale-95 transition-all flex items-center justify-center gap-2 hover:bg-brand-secondary/90 shadow-xl"
+              className="flex-1 h-14 bg-brand-secondary text-brand-primary font-black uppercase tracking-widest text-[11px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 hover:bg-brand-secondary/90 shadow-xl"
             >
               <SendHorizontal size={16} />
               {t.checkoutSubmit}
