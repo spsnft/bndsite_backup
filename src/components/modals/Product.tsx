@@ -110,12 +110,17 @@ export const Product = ({
         </button>
 
         <div className="relative z-10 flex flex-col items-center mb-6">
+          {/* 3D ореол под фото — яркий, для модалки */}
           <div className="w-32 h-32 mb-4 relative flex items-center justify-center">
+            <div 
+              className="absolute inset-0 rounded-full blur-2xl opacity-40"
+              style={{ background: `radial-gradient(circle at 50% 50%, ${accentColor}80, transparent 70%)` }}
+            />
             <Image
               src={imgSrc}
               alt={product.name || "Product"}
               fill
-              className="object-contain filter drop-shadow-2xl"
+              className="object-contain filter drop-shadow-2xl relative z-10"
               sizes="128px"
               onError={() => setImgSrc(FALLBACK_IMAGE)}
             />
