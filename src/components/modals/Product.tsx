@@ -92,18 +92,15 @@ export const Product = ({
         initial={{ y: "100%" }}
         animate={{ y: isClosing ? "100%" : 0 }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
-        className={`relative w-full max-w-md bg-brand-primary border border-white/10 sm:rounded-[2.5rem] rounded-t-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col`}
+        className={`relative w-full max-w-md bg-brand-primary border border-white/10 sm:rounded-modal rounded-t-modal p-6 pt-8 shadow-2xl flex flex-col`}
       >
-        {/* Мобильная плашка свайпа */}
         <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
 
-        {/* Фоновое динамическое свечение сорта */}
         <div 
-          className="absolute inset-0 opacity-20 pointer-events-none rounded-t-[2.5rem] sm:rounded-[2.5rem]" 
+          className="absolute inset-0 opacity-20 pointer-events-none rounded-t-modal sm:rounded-modal" 
           style={{ background: `radial-gradient(circle at 50% 0%, ${accentColor}, transparent 60%)` }} 
         />
         
-        {/* Кнопка закрытия */}
         <button 
           type="button"
           onClick={handleClose} 
@@ -112,7 +109,6 @@ export const Product = ({
           <X size={18} />
         </button>
 
-        {/* Заголовок и фото товара */}
         <div className="relative z-10 flex flex-col items-center mb-6">
           <div className="w-32 h-32 mb-4 relative flex items-center justify-center">
             <Image
@@ -126,93 +122,4 @@ export const Product = ({
           </div>
           
           <span 
-            className="text-[11px] font-black uppercase tracking-wide px-3 py-1 rounded-full border mb-3" 
-            style={{ borderColor: `${accentColor}50`, color: accentColor, backgroundColor: `${accentColor}10` }}
-          >
-            {product.type || product.category}
-          </span>
-          
-          <h2 className="text-2xl font-black uppercase tracking-tighter text-brand-light text-center leading-none mb-1">
-            {product.name}
-          </h2>
-
-          {product.farm && product.farm !== "-" && (
-            <p className="text-[11px] font-bold uppercase tracking-wide text-brand-light/40 mt-2">
-              {product.farm}
-            </p>
-          )}
-        </div>
-
-        {/* БАННЕР ВЫГОДЫ / АПСЕЛЛ */}
-        {nextTier && (
-          <div 
-            className="mb-6 p-4 rounded-2xl border bg-brand-secondary/10 flex items-center justify-between relative z-10" 
-            style={{ borderColor: `${accentColor}30` }}
-          >
-            <div className="flex flex-col">
-              <span className="text-[11px] font-black uppercase text-brand-light/70 tracking-wider flex items-center gap-1.5">
-                <Sparkles size={13} className="text-brand-secondary" />
-                {safeLang === 'ru' && `Добавь еще ${nextTier.q - totalQty} ${unitLabel}`}
-                {safeLang === 'th' && `เพิ่มอีก ${nextTier.q - totalQty} ${unitLabel}`}
-                {safeLang === 'en' && `Add ${nextTier.q - totalQty} ${unitLabel} more`}
-              </span>
-              <span className="text-[14px] font-black text-brand-secondary mt-0.5 tracking-tight">
-                {safeLang === 'ru' && `чтобы цена стала ${nextTier.p}฿`}
-                {safeLang === 'th' && `เพื่อรับราคา ${nextTier.p}฿`}
-                {safeLang === 'en' && `to unlock ${nextTier.p}฿ price`}
-              </span>
-            </div>
-
-            <button 
-              type="button"
-              onClick={() => {
-                triggerHaptic('light');
-                setQuantity(q => q + (nextTier.q - totalQty));
-              }}
-              className="w-10 h-10 rounded-full flex items-center justify-center active:scale-90 transition-transform shadow-md"
-              style={{ backgroundColor: `${accentColor}20`, color: accentColor }}
-            >
-              <Plus size={18} strokeWidth={3} />
-            </button>
-          </div>
-        )}
-
-        {/* НИЖНЯЯ ПАНЕЛЬ С СЧЕТЧИКОМ И КНОПКОЙ */}
-        <div className="flex items-center justify-between gap-4 relative z-10">
-          <div className="flex items-center gap-4 bg-black/40 border border-white/10 rounded-2xl p-2 h-14">
-            <button 
-              type="button"
-              onClick={() => { triggerHaptic('light'); setQuantity(Math.max(1, quantity - 1)); }} 
-              className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl active:bg-white/10 transition-colors text-brand-light/70"
-            >
-              <Minus size={16} />
-            </button>
-
-            <span className="text-[16px] font-black w-4 text-center text-brand-light">
-              {quantity}
-            </span>
-
-            <button 
-              type="button"
-              onClick={() => { triggerHaptic('light'); setQuantity(quantity + 1); }} 
-              className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl active:bg-white/10 transition-colors text-brand-light"
-            >
-              <Plus size={16} />
-            </button>
-          </div>
-
-          <button 
-            type="button"
-            onClick={handleAdd} 
-            className="flex-1 h-14 bg-brand-secondary text-brand-primary font-black uppercase tracking-widest text-[13px] rounded-2xl active:scale-95 transition-all flex items-center justify-center gap-3 hover:bg-brand-secondary/90 shadow-xl"
-          >
-            <ShoppingBag size={18} />
-            <span>{currentPrice * quantity}</span>
-            <Baht />
-          </button>
-        </div>
-
-      </motion.div>
-    </div>
-  );
-};
+            className="text-[11px] font-black uppercase tracking-wide px-
