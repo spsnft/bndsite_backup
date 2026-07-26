@@ -7,7 +7,6 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['var(--font-montserrat)', 'system-ui', 'sans-serif'],
-        display: ['var(--font-heading)', 'var(--font-montserrat)', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         'button': '1rem',
