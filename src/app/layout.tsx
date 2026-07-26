@@ -1,39 +1,64 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { CalendlyScript } from "@/src/components/CalendlyScript";
+import "@/styles/globals.css"
+import type { Metadata, Viewport } from "next"
+import { siteConfig } from "@/config/site"
+
+export const viewport: Viewport = {
+  themeColor: siteConfig.themeColor,
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
 
 export const metadata: Metadata = {
-  title: "Fedor Tsvetkov — Growth Architect & Performance Marketer",
-  description:
-    "We build high-ticket growth engines. No fluff, just architecture that scales.",
-  openGraph: {
-    title: "Fedor Tsvetkov — Growth Architect & Performance Marketer",
-    description:
-      "Managing $500K+ annual media budgets. Scaled monthly revenue 7×. 1,000+ qualified B2B leads per month.",
-    url: "https://tsvetkov.site",
-    siteName: "Fedor Tsvetkov",
-    locale: "en_US",
-    type: "website",
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: siteConfig.name,
+    template: `%s - ${siteConfig.name}`,
   },
-};
+  description: siteConfig.description,
+  other: {
+    "dns-prefetch": "https://res.cloudinary.com",
+  },
+  openGraph: {
+    type: "website",
+    locale: siteConfig.locale || "en_US",
+    url: siteConfig.url,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: ["/opengraph-image.png"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+}
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
+        <link rel="preconnect" href="https://res.cloudinary.com" />
       </head>
-      <body>
+      {/* ✅ ИСПРАВЛЕНО: заменяем хардкод на brand-цвета */}
+      <body className="min-h-screen bg-brand-primary text-brand-light antialiased selection:bg-brand-secondary/30">
         {children}
-        <CalendlyScript />
       </body>
     </html>
-  );
+  )
 }
