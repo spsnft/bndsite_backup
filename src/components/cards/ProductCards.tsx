@@ -56,11 +56,14 @@ export const HighlightCard = React.memo(({ item, onClick, priority }: { item: an
   return (
     <div 
       onClick={() => { triggerHaptic('light'); onClick(); }} 
-      className="relative rounded-card active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden border h-[200px] bg-brand-primary hover:border-white/30" 
-      style={{ borderColor: `${accentColor}A0` }}
+      className="relative rounded-card active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden h-[200px] bg-brand-primary"
+      style={{
+        border: '1px solid transparent',
+        background: `linear-gradient(#161819, #161819) padding-box, linear-gradient(135deg, ${accentColor}60, rgba(255,255,255,0.05)) border-box`,
+      }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/70 pointer-events-none" />
-      <div className="absolute inset-0 opacity-30 pointer-events-none transition-opacity group-hover:opacity-50" style={{ background: `radial-gradient(circle at 50% 100%, ${accentColor}, transparent 65%)` }} />
+      <div className="absolute inset-0 opacity-30 pointer-events-none transition-opacity duration-500 group-hover:opacity-50" style={{ background: `radial-gradient(ellipse at 50% 80%, ${accentColor}15, transparent 70%)` }} />
       
       <div className="relative z-10 px-4 py-3 pb-0 flex-1 flex flex-col min-h-0">
         <div className="min-w-0 pr-6">
