@@ -27,10 +27,6 @@
   span, p, div, h1, h2, h3 {
     font-variant-numeric: tabular-nums;
   }
-
-  h1, h2, h3, h4 {
-    font-family: var(--font-heading), var(--font-montserrat), system-ui, sans-serif;
-  }
 }
 
 @layer utilities {
