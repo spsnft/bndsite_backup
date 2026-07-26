@@ -82,7 +82,7 @@ export const HighlightCard = React.memo(({ item, onClick, priority }: { item: an
       </div>
 
       <div className="relative z-10 flex justify-between items-end px-4 pb-3 mt-auto">
-        <span className="text-[8px] font-black uppercase tracking-widest brightness-125" style={{ color: accentColor }}>
+        <span className="text-[11px] font-black uppercase tracking-wide brightness-125" style={{ color: accentColor }}>
           {item.type}
         </span>
         <p className="text-[16px] font-black tracking-tighter leading-none text-brand-light">
@@ -123,7 +123,7 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
             {p.name}
           </span>
           {p.farm && p.farm !== "-" && (
-            <span className="text-[9px] font-bold text-brand-light/40 uppercase tracking-widest block truncate">
+            <span className="text-[11px] font-bold text-brand-light/40 uppercase tracking-wide block truncate">
               {p.farm}
             </span>
           )}
@@ -131,7 +131,7 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
       </div>
       
       <div className="flex items-center gap-4 shrink-0">
-        <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: TYPE_COLORS[typeKey] || '#10B981' }}>
+        <span className="text-[11px] font-black uppercase tracking-wide" style={{ color: TYPE_COLORS[typeKey] || '#10B981' }}>
           {p.type}
         </span>
         <span className="text-[14px] font-black text-brand-light">
