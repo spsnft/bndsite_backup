@@ -69,7 +69,7 @@ export default function LandingClient({
                <span className="text-[12px] sm:text-[14px] font-black uppercase tracking-tight text-brand-light leading-tight">
                  Marijuana Premium Grade
                </span>
-               <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-brand-secondary">
+               <span className="text-[11px] sm:text-[11px] font-extrabold uppercase tracking-wide text-brand-secondary">
                  MPG StorePhuket
                </span>
              </div>
@@ -171,7 +171,7 @@ export default function LandingClient({
                   <h2 className="text-[16px] font-black uppercase tracking-tight text-brand-light">Joints</h2>
                 </div>
                 <div className="flex items-center gap-2 md:hidden">
-                  <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">{openSections.includes('joints') ? t.close : t.open}</span>
+                  <span className="text-[11px] font-black uppercase tracking-wide opacity-40 text-brand-light">{openSections.includes('joints') ? t.close : t.open}</span>
                   <ChevronDown size={18} className={`opacity-40 transition-transform duration-300 ${openSections.includes('joints') ? 'rotate-180' : ''}`} />
                 </div>
               </button>
@@ -193,7 +193,7 @@ export default function LandingClient({
                 <h2 className="text-[16px] font-black uppercase tracking-tight text-brand-light">{t.accessories}</h2>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-brand-light">{openSections.includes('accessories') ? t.close : t.open}</span>
+                <span className="text-[11px] font-black uppercase tracking-wide opacity-40 text-brand-light">{openSections.includes('accessories') ? t.close : t.open}</span>
                 <ChevronDown size={18} className={`opacity-40 transition-transform duration-300 ${openSections.includes('accessories') ? 'rotate-180' : ''}`} />
               </div>
             </button>
@@ -216,7 +216,7 @@ export default function LandingClient({
               <div className="p-2 bg-brand-secondary/20 rounded-xl"><ShoppingBag size={18} className="text-brand-secondary"/></div>
               <div className="text-left">
                 <div className="font-black uppercase text-[16px] leading-none mb-0.5">{getTotal()}<BahtSymbol /></div>
-                <span className="font-black uppercase text-[9px] text-brand-secondary leading-none">{items.length} {t.items}</span>
+                <span className="font-black uppercase text-[11px] text-brand-secondary leading-none">{items.length} {t.items}</span>
               </div>
             </div>
             <div className="flex items-center gap-2 text-brand-light opacity-80">
@@ -229,17 +229,17 @@ export default function LandingClient({
       
       {/* MODALS */}
       <Info isOpen={isDeliveryModalOpen} onClose={() => setIsDeliveryModalOpen(false)} title={t.deliveryPaymentTitle}>
-        <div className="flex items-center gap-4"><Timer size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.workingHours}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.workingHoursVal}</p></div></div>
-        <div className="flex items-center gap-4"><Plus size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.minOrder}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.minOrderVal}</p></div></div>
-        <div className="flex items-center gap-4"><Wallet size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.paymentMethods}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{t.paymentMethodsVal}</p></div></div>
-        <div className="flex items-center gap-4"><Bike size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.orderReceiving}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.orderReceivingVal}</p></div></div>
+        <div className="flex items-center gap-4"><Timer size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-1">{t.workingHours}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.workingHoursVal}</p></div></div>
+        <div className="flex items-center gap-4"><Plus size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-1">{t.minOrder}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.minOrderVal}</p></div></div>
+        <div className="flex items-center gap-4"><Wallet size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-1">{t.paymentMethods}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{t.paymentMethodsVal}</p></div></div>
+        <div className="flex items-center gap-4"><Bike size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-1">{t.orderReceiving}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.orderReceivingVal}</p></div></div>
       </Info>
 
       <Info isOpen={isGuaranteesModalOpen} onClose={() => setIsGuaranteesModalOpen(false)} title={t.guaranteesTitle}>
-        <div className="flex items-center gap-4"><Trophy size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.marketExp}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.marketExpVal}</p></div></div>
-        <div className="flex items-center gap-4"><Users size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.reputation}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.reputationVal}</p></div></div>
-        <div className="flex items-center gap-4"><CreditCard size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.paymentOnDelivery}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{t.paymentOnDeliveryVal}</p></div></div>
-        <div className="flex items-center gap-4"><Sparkles size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[8px] font-black uppercase tracking-[0.15em] text-brand-light/40 mb-1">{t.directSourcing}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{t.directSourcingVal}</p></div></div>
+        <div className="flex items-center gap-4"><Trophy size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-1">{t.marketExp}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.marketExpVal}</p></div></div>
+        <div className="flex items-center gap-4"><Users size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-1">{t.reputation}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em]">{t.reputationVal}</p></div></div>
+        <div className="flex items-center gap-4"><CreditCard size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-1">{t.paymentOnDelivery}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{t.paymentOnDeliveryVal}</p></div></div>
+        <div className="flex items-center gap-4"><Sparkles size={18} className="text-brand-secondary shrink-0" /><div><p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-1">{t.directSourcing}</p><p className="text-[13px] font-bold text-brand-light tracking-[0.1em] leading-tight">{t.directSourcingVal}</p></div></div>
       </Info>
 
       {isMedicalModalOpen && (
