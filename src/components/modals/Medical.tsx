@@ -163,11 +163,11 @@ export const Medical = ({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Award size={16} className="text-emerald-400" />
-                <span className="text-[11px] font-black uppercase tracking-wider text-emerald-400">
+                <span className="text-[11px] font-black uppercase tracking-wide text-emerald-400">
                   {mophTitle}
                 </span>
               </div>
-              <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              <span className="text-[11px] font-black uppercase tracking-wide px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                 Official
               </span>
             </div>
@@ -211,7 +211,7 @@ export const Medical = ({
               target="_blank" 
               rel="noreferrer"
               onClick={() => triggerHaptic('light')}
-              className="mt-1 w-full py-2 flex items-center justify-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-brand-light/40 hover:text-brand-secondary transition-colors"
+              className="mt-1 w-full py-2 flex items-center justify-center gap-1.5 text-[11px] font-black uppercase tracking-wide text-brand-light/40 hover:text-brand-secondary transition-colors"
             >
               <span>{mophPortalLink}</span>
               <ExternalLink size={10} />
@@ -220,7 +220,7 @@ export const Medical = ({
 
           {/* SYMPTOMS SELECTION */}
           <div>
-            <label className="text-[10px] font-black uppercase tracking-wider text-brand-light/50 block mb-2">
+            <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 block mb-2">
               {t.symptomsLabel}
             </label>
             <div className="grid grid-cols-2 gap-2">
