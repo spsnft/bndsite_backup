@@ -53,4 +53,17 @@
     color: var(--color-secondary);
     text-shadow: 0 2px 12px rgba(200, 158, 88, 0.25);
   }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite linear;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
 }
