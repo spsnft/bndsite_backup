@@ -1,6 +1,7 @@
 "use client"
 import * as React from "react"
 import Image from "next/image"
+import { motion } from "framer-motion"
 import { X, Plus, Minus, ShoppingBag, Sparkles } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { Language, TranslationDictionary } from "@/lib/translations"
@@ -48,12 +49,10 @@ export const Product = ({
   const defaultPrice = product.prices?.['1'] || product.price || 0;
   const currentPrice = defaultPrice;
 
-  // Считаем количество данного товара уже в корзине
   const cartItem = items.find(i => i.id === product.id);
   const cartQty = cartItem ? cartItem.quantity : 0;
   const totalQty = cartQty + quantity;
 
-  // Логика порогов скидок по категориям (joints vs всё остальное)
   const getNextDiscountTier = (category: string, qty: number) => {
     const tiers = category === 'joints' 
       ? [{ q: 3, p: 420 }, { q: 5, p: 650 }, { q: 10, p: 1200 }]
@@ -64,7 +63,6 @@ export const Product = ({
 
   const nextTier = getNextDiscountTier(product.category, totalQty);
 
-  // Определение локализованных единиц измерения (шт / г)
   const getUnitLabel = () => {
     const isPiece = product.category === 'accessories' || product.category === 'joints';
     if (safeLang === 'ru') return isPiece ? 'шт' : 'г';
@@ -84,8 +82,18 @@ export const Product = ({
     <div className={`fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={handleClose} />
       
-      <div className={`relative w-full max-w-md bg-brand-primary border border-white/10 sm:rounded-[2.5rem] rounded-t-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col transition-transform duration-300 ${isClosing ? 'translate-y-full sm:translate-y-12' : 'translate-y-0'}`}>
-        
+      <motion.div
+        drag="y"
+        dragConstraints={{ top: 0 }}
+        dragElastic={0.2}
+        onDragEnd={(_: any, info: any) => {
+          if (info.offset.y > 100) handleClose();
+        }}
+        initial={{ y: "100%" }}
+        animate={{ y: isClosing ? "100%" : 0 }}
+        transition={{ type: "spring", damping: 30, stiffness: 300 }}
+        className={`relative w-full max-w-md bg-brand-primary border border-white/10 sm:rounded-[2.5rem] rounded-t-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col`}
+      >
         {/* Мобильная плашка свайпа */}
         <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
 
@@ -204,7 +212,7 @@ export const Product = ({
           </button>
         </div>
 
-      </div>
+      </motion.div>
     </div>
   );
 };
