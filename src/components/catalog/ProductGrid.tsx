@@ -53,6 +53,8 @@ function isList(layout: "list" | "grid2" | "grid4"): boolean {
   return layout === "list";
 }
 
+const rimBorder = "border border-transparent [border-image:linear-gradient(135deg,rgba(200,158,88,0.3),rgba(255,255,255,0.05))_1]";
+
 interface ProductGridProps {
   categories: Record<string, any[]>;
   openSections: string[];
@@ -120,7 +122,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                 )}
 
                 <div className={`overflow-hidden transition-all duration-500 ${config.collapsible && !isOpen ? 'max-h-0 md:max-h-[3000px]' : 'max-h-[3000px]'}`}>
-                  <div className={`rounded-card overflow-hidden border border-white/10 bg-brand-primary h-full ${!isList(config.layout) ? 'p-3 ' + gridClass(config.layout) : ''}`}>
+                  <div className={`rounded-card overflow-hidden ${rimBorder} bg-brand-primary h-full ${!isList(config.layout) ? 'p-3 ' + gridClass(config.layout) : ''}`}>
                     {products.map((p: any) => (
                       isList(config.layout)
                         ? <ProductRow key={p.id} p={p} onClick={() => onSelect(p)} />
