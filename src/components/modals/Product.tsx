@@ -2,19 +2,21 @@
 import * as React from "react"
 import { X, Plus, Minus, ShoppingBag, Sparkles } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
-import { translations, Language } from "@/lib/translations"
+import { translations, Language, TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic, Baht } from "@/lib/utils"
 
 interface ProductModalProps {
   isOpen?: boolean;
   product: any;
+  t: TranslationDictionary;
   onClose: () => void;
   style?: { color?: string };
 }
 
 export const Product = ({ 
   isOpen = true,
-  product, 
+  product,
+  t,
   onClose, 
   style 
 }: ProductModalProps) => {
@@ -24,7 +26,6 @@ export const Product = ({
   const { addItem, items, lang } = useCart();
   
   const safeLang = (lang || 'en') as Language;
-  const t = translations[safeLang] || translations.en;
   const accentColor = style?.color || '#10B981';
 
   const handleClose = React.useCallback(() => {
