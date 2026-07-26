@@ -92,7 +92,7 @@ export const Product = ({
         initial={{ y: "100%" }}
         animate={{ y: isClosing ? "100%" : 0 }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
-        className={`relative w-full max-w-md bg-brand-primary border border-white/10 sm:rounded-modal rounded-t-modal p-6 pt-8 shadow-2xl flex flex-col`}
+        className="relative w-full max-w-md bg-brand-primary rim-border sm:rounded-modal rounded-t-modal p-6 pt-8 shadow-2xl flex flex-col"
       >
         <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
 
@@ -173,7 +173,7 @@ export const Product = ({
         )}
 
         <div className="flex items-center justify-between gap-4 relative z-10">
-          <div className="flex items-center gap-4 bg-black/40 border border-white/10 rounded-button p-2 h-14">
+          <div className="flex items-center gap-4 bg-black/40 rim-border rounded-button p-2 h-14">
             <button 
               type="button"
               onClick={() => { triggerHaptic('light'); setQuantity(Math.max(1, quantity - 1)); }} 
@@ -198,7 +198,7 @@ export const Product = ({
           <button 
             type="button"
             onClick={handleAdd} 
-            className="flex-1 h-14 bg-brand-secondary text-brand-primary font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-3 hover:bg-brand-secondary/90 shadow-xl"
+            className="flex-1 h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-3 hover:brightness-110 shadow-xl"
           >
             <ShoppingBag size={18} />
             <span>{currentPrice * quantity}</span>
