@@ -42,8 +42,10 @@ export default function LandingClient({
     setOpenSections(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
   };
 
+  const hasItems = items.length > 0;
+
   return (
-    <div className="min-h-screen bg-brand-primary text-brand-light p-4 pb-32 selection:bg-brand-secondary/30 font-sans">
+    <div className={`min-h-screen bg-brand-primary text-brand-light p-4 selection:bg-brand-secondary/30 font-sans ${hasItems ? 'pb-44' : 'pb-4'}`}>
       
       <AgeGate />
 
@@ -67,7 +69,7 @@ export default function LandingClient({
         onSelect={setSelectedProduct}
       />
 
-      {items.length > 0 && (
+      {hasItems && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] w-full max-w-sm px-4">
           <button onClick={() => { triggerHaptic('medium'); setIsCheckoutOpen(true); }} className="w-full bg-white/10 backdrop-blur-2xl text-brand-light py-3.5 px-6 rounded-modal border border-white/20 shadow-2xl flex justify-between items-center active:scale-95 transition-all">
             <div className="flex items-center gap-3 relative z-10">
@@ -78,7 +80,7 @@ export default function LandingClient({
               </div>
             </div>
             <div className="flex items-center gap-2 text-brand-light opacity-80">
-              <span className="text-[11px] font-black uppercase tracking-wider">{t.basket}</span>
+              <span className="text-[11px] font-black uppercase tracking-normal">{t.basket}</span>
               <span className="p-1.5 bg-white/10 rounded-full animate-pulse"><Send size={16}/></span>
             </div>
           </button>
