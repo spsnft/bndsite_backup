@@ -56,11 +56,7 @@ export const HighlightCard = React.memo(({ item, onClick, priority }: { item: an
   return (
     <div 
       onClick={() => { triggerHaptic('light'); onClick(); }} 
-      className="relative rounded-card active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden h-[200px] bg-brand-primary"
-      style={{
-        border: '1px solid transparent',
-        background: `linear-gradient(#161819, #161819) padding-box, linear-gradient(135deg, ${accentColor}60, rgba(255,255,255,0.05)) border-box`,
-      }}
+      className="relative rounded-card active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden h-[200px] bg-brand-primary card-premium"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/70 pointer-events-none" />
       <div className="absolute inset-0 opacity-30 pointer-events-none transition-opacity duration-500 group-hover:opacity-50" style={{ background: `radial-gradient(ellipse at 50% 80%, ${accentColor}15, transparent 70%)` }} />
@@ -71,7 +67,6 @@ export const HighlightCard = React.memo(({ item, onClick, priority }: { item: an
             {item.name}
           </h3>
         </div>
-        {/* 3D ореол под фото — мягкий, для превью */}
         <div className="relative flex-1 w-full min-h-0 flex items-center justify-center my-1">
           <div 
             className="absolute inset-0 rounded-full blur-xl opacity-20 group-hover:opacity-35 transition-opacity duration-500"
@@ -81,16 +76,17 @@ export const HighlightCard = React.memo(({ item, onClick, priority }: { item: an
             src={imgSrc}
             alt={item.name || "Product"}
             fill
-            className="object-contain transform group-hover:scale-105 transition-transform duration-300 filter drop-shadow-lg relative z-10"
+            className="object-contain transform group-hover:scale-105 transition-transform duration-300 relative z-10"
             sizes="160px"
             priority={priority}
+            style={{ filter: `drop-shadow(0 0 18px ${accentColor}40)` }}
             onError={() => setImgSrc(FALLBACK_IMAGE)}
           />
         </div>
       </div>
 
       <div className="relative z-10 flex justify-between items-end px-4 pb-3 mt-auto">
-        <span className="text-[11px] font-black uppercase tracking-wide brightness-125" style={{ color: accentColor }}>
+        <span className="text-[11px] font-black uppercase tracking-normal brightness-125" style={{ color: accentColor }}>
           {item.type}
         </span>
         <p className="text-[16px] font-black tracking-tighter leading-none text-brand-light">
@@ -131,7 +127,7 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
             {p.name}
           </span>
           {p.farm && p.farm !== "-" && (
-            <span className="text-[11px] font-bold text-brand-light/40 uppercase tracking-wide block truncate">
+            <span className="text-[11px] font-bold text-brand-light/40 uppercase tracking-normal block truncate">
               {p.farm}
             </span>
           )}
@@ -139,7 +135,7 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
       </div>
       
       <div className="flex items-center gap-4 shrink-0">
-        <span className="text-[11px] font-black uppercase tracking-wide" style={{ color: TYPE_COLORS[typeKey] || '#10B981' }}>
+        <span className="text-[11px] font-black uppercase tracking-normal" style={{ color: TYPE_COLORS[typeKey] || '#10B981' }}>
           {p.type}
         </span>
         <span className="text-[14px] font-black text-brand-light">
