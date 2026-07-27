@@ -58,7 +58,7 @@ export const AgeGate = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md transition-opacity duration-300">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 transition-opacity duration-300">
       <div className="relative w-full max-w-sm bg-brand-primary border border-white/10 rounded-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col items-center text-center animate-in fade-in zoom-in-95 duration-300">
         
         <div className="w-16 h-16 rounded-3xl bg-brand-secondary/15 border border-brand-secondary/40 flex items-center justify-center text-brand-secondary mb-4 shadow-[0_0_20px_rgba(200,158,88,0.25)]">
