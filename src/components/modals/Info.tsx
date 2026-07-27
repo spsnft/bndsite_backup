@@ -32,7 +32,7 @@ export const Info = ({ isOpen, onClose, title, children }: InfoModalProps) => {
 
   return (
     <div className={`fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={handleClose} />
+     <div className="absolute inset-0 bg-black/80" onClick={handleClose} />
 
       <motion.div
         drag="y"
